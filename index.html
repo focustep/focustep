@@ -696,6 +696,40 @@
       <button type="button" class="subject-modal-btn cancel" id="subject-modal-cancel-btn">Cancel</button>
       <button type="button" class="subject-modal-btn save" id="subject-modal-save-btn">Create Subject</button>
     </div>
+
+    <!-- Custom Color Picker Popover (Positioned to the left of the modal) -->
+    <div class="subject-color-picker-popover" id="subject-color-picker-popover" aria-hidden="true">
+      <div class="color-picker-header">
+        <span class="color-picker-title">Color Palette</span>
+        <button type="button" class="color-picker-close-btn" id="color-picker-close-btn" aria-label="Close picker">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- 2D Saturation / Value Gradient Canvas -->
+      <div class="color-picker-canvas-wrap" id="color-picker-canvas-wrap">
+        <canvas id="color-picker-canvas" class="color-picker-canvas" width="220" height="120"></canvas>
+        <div class="color-picker-cursor" id="color-picker-cursor"></div>
+      </div>
+
+      <!-- Rainbow Hue Slider -->
+      <div class="color-picker-slider-row">
+        <input type="range" id="color-picker-hue-slider" class="color-picker-hue-slider" min="0" max="360" value="260" aria-label="Hue Slider" />
+      </div>
+
+      <!-- Bottom Controls: Preview Dot + HEX input + Select button -->
+      <div class="color-picker-footer-row">
+        <div class="color-picker-preview-dot" id="color-picker-preview-dot"></div>
+        <div class="color-picker-hex-wrap">
+          <span class="color-picker-hex-hash">#</span>
+          <input type="text" id="color-picker-hex-input" class="color-picker-hex-input" value="6366F1" maxlength="6" spellcheck="false" autocomplete="off" />
+        </div>
+        <button type="button" id="color-picker-apply-btn" class="color-picker-apply-btn">Apply</button>
+      </div>
+    </div>
   </div>
 </div>
 

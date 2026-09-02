@@ -30,6 +30,58 @@ let customColorValue = '#6366f1';
 let isCustomSelected = false;
 let selectedIcon = PRESET_ICONS[0].id;
 
+let pickerHue = 238;
+let pickerSat = 0.58;
+let pickerVal = 0.94;
+let isDraggingCanvas = false;
+
+function hsvToHex(h, s, v) {
+  let r = 0, g = 0, b = 0;
+  const i = Math.floor(h / 60) % 6;
+  const f = h / 60 - Math.floor(h / 60);
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+  switch (i) {
+    case 0: r = v; g = t; b = p; break;
+    case 1: r = q; g = v; b = p; break;
+    case 2: r = p; g = v; b = t; break;
+    case 3: r = p; g = q; b = v; break;
+    case 4: r = t; g = p; b = v; break;
+    case 5: r = v; g = p; b = q; break;
+  }
+  const toHex = (x) => Math.round(x * 255).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function hexToHsv(hexStr) {
+  let hex = hexStr.replace(/^#/, '');
+  if (hex.length === 3) {
+    hex = hex.split('').map(c => c + c).join('');
+  }
+  if (hex.length !== 6) return { h: 240, s: 0.6, v: 0.9 };
+  const num = parseInt(hex, 16);
+  if (isNaN(num)) return { h: 240, s: 0.6, v: 0.9 };
+  const r = ((num >> 16) & 255) / 255;
+  const g = ((num >> 8) & 255) / 255;
+  const b = (num & 255) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  let h = 0;
+  const s = max === 0 ? 0 : d / max;
+  const v = max;
+  if (max !== min) {
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h *= 60;
+  }
+  return { h, s, v };
+}
+
 export function openSubjectModal() {
   const modal = document.getElementById('subject-custom-modal');
   if (!modal) return;
@@ -42,7 +94,9 @@ export function openSubjectModal() {
   // Reset to first color and icon
   selectedColor = PRESET_COLORS[Math.floor(Math.random() * PRESET_COLORS.length)];
   selectedIcon = PRESET_ICONS[0].id;
+  isCustomSelected = false;
 
+  closeColorPickerPopover();
   renderPalette();
   renderIconSelector();
   updateLivePreview();
@@ -58,6 +112,124 @@ export function closeSubjectModal() {
   if (modal) {
     modal.classList.remove('open');
   }
+  closeColorPickerPopover();
+}
+
+function openColorPickerPopover() {
+  const popover = document.getElementById('subject-color-picker-popover');
+  if (!popover) return;
+
+  const hsv = hexToHsv(customColorValue);
+  pickerHue = hsv.h;
+  pickerSat = hsv.s;
+  pickerVal = hsv.v;
+
+  initColorPickerUI();
+  popover.classList.add('open');
+  popover.setAttribute('aria-hidden', 'false');
+}
+
+function closeColorPickerPopover() {
+  const popover = document.getElementById('subject-color-picker-popover');
+  if (popover) {
+    popover.classList.remove('open');
+    popover.setAttribute('aria-hidden', 'true');
+  }
+}
+
+function initColorPickerUI() {
+  const slider = document.getElementById('color-picker-hue-slider');
+  const hexInput = document.getElementById('color-picker-hex-input');
+  const previewDot = document.getElementById('color-picker-preview-dot');
+
+  if (slider) slider.value = Math.round(pickerHue);
+  if (hexInput) hexInput.value = customColorValue.replace(/^#/, '').toUpperCase();
+  if (previewDot) previewDot.style.backgroundColor = customColorValue;
+
+  drawCanvasGradient();
+  updateCanvasCursor();
+}
+
+function drawCanvasGradient() {
+  const canvas = document.getElementById('color-picker-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const width = canvas.width;
+  const height = canvas.height;
+
+  ctx.clearRect(0, 0, width, height);
+
+  // 1. Horizontal gradient: White to Hue Color
+  const gradH = ctx.createLinearGradient(0, 0, width, 0);
+  gradH.addColorStop(0, '#ffffff');
+  gradH.addColorStop(1, `hsl(${pickerHue}, 100%, 50%)`);
+  ctx.fillStyle = gradH;
+  ctx.fillRect(0, 0, width, height);
+
+  // 2. Vertical gradient: Transparent to Black
+  const gradV = ctx.createLinearGradient(0, 0, 0, height);
+  gradV.addColorStop(0, 'rgba(0,0,0,0)');
+  gradV.addColorStop(1, '#000000');
+  ctx.fillStyle = gradV;
+  ctx.fillRect(0, 0, width, height);
+}
+
+function updateCanvasCursor() {
+  const canvas = document.getElementById('color-picker-canvas');
+  const cursor = document.getElementById('color-picker-cursor');
+  if (!canvas || !cursor) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const x = pickerSat * rect.width;
+  const y = (1 - pickerVal) * rect.height;
+
+  cursor.style.left = `${x}px`;
+  cursor.style.top = `${y}px`;
+}
+
+function handleCanvasPick(e) {
+  const canvas = document.getElementById('color-picker-canvas');
+  if (!canvas) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  let x = clientX - rect.left;
+  let y = clientY - rect.top;
+
+  x = Math.max(0, Math.min(rect.width, x));
+  y = Math.max(0, Math.min(rect.height, y));
+
+  pickerSat = x / rect.width;
+  pickerVal = 1 - (y / rect.height);
+
+  const hex = hsvToHex(pickerHue, pickerSat, pickerVal);
+  setCustomColor(hex);
+
+  const cursor = document.getElementById('color-picker-cursor');
+  if (cursor) {
+    cursor.style.left = `${x}px`;
+    cursor.style.top = `${y}px`;
+  }
+}
+
+function setCustomColor(hex, updatePaletteDom = false) {
+  customColorValue = hex;
+  selectedColor = hex;
+  isCustomSelected = true;
+
+  const hexInput = document.getElementById('color-picker-hex-input');
+  const previewDot = document.getElementById('color-picker-preview-dot');
+  if (hexInput) hexInput.value = hex.replace(/^#/, '').toUpperCase();
+  if (previewDot) previewDot.style.backgroundColor = hex;
+
+  updateLivePreview();
+  if (updatePaletteDom) {
+    renderPalette();
+  }
 }
 
 function renderPalette() {
@@ -66,7 +238,7 @@ function renderPalette() {
 
   paletteContainer.innerHTML = '';
 
-  // 1. Custom Rainbow Donut + Pencil Swatch (First position in Row 1)
+  // 1. Custom Rainbow Donut Swatch (First position in Row 1)
   const customBtn = document.createElement('button');
   customBtn.type = 'button';
   const isCustomActive = isCustomSelected || (!PRESET_COLORS.includes(selectedColor));
@@ -74,37 +246,17 @@ function renderPalette() {
   customBtn.setAttribute('aria-label', 'Custom Color');
   customBtn.title = 'Choose custom color';
 
-  const colorInput = document.createElement('input');
-  colorInput.type = 'color';
-  colorInput.className = 'subject-hidden-color-input';
-  colorInput.value = customColorValue || '#6366f1';
-
   customBtn.innerHTML = `
     <span class="rainbow-donut-circle"></span>
   `;
-  customBtn.appendChild(colorInput);
 
-  customBtn.addEventListener('click', () => {
+  customBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     isCustomSelected = true;
-    selectedColor = colorInput.value;
+    selectedColor = customColorValue;
     updateLivePreview();
     renderPalette();
-    colorInput.click();
-  });
-
-  colorInput.addEventListener('input', (e) => {
-    isCustomSelected = true;
-    customColorValue = e.target.value;
-    selectedColor = e.target.value;
-    updateLivePreview();
-  });
-
-  colorInput.addEventListener('change', (e) => {
-    isCustomSelected = true;
-    customColorValue = e.target.value;
-    selectedColor = e.target.value;
-    updateLivePreview();
-    renderPalette();
+    openColorPickerPopover();
   });
 
   paletteContainer.appendChild(customBtn);
@@ -125,6 +277,7 @@ function renderPalette() {
     sw.addEventListener('click', () => {
       isCustomSelected = false;
       selectedColor = color;
+      closeColorPickerPopover();
       renderPalette();
       updateLivePreview();
     });
@@ -182,9 +335,155 @@ export function initSubjectModal() {
   const saveBtn = document.getElementById('subject-modal-save-btn');
   const nameInput = document.getElementById('subject-modal-name-input');
 
+  // Color picker elements
+  const pickerCanvasWrap = document.getElementById('color-picker-canvas-wrap');
+  const pickerHueSlider = document.getElementById('color-picker-hue-slider');
+  const pickerHexInput = document.getElementById('color-picker-hex-input');
+  const pickerApplyBtn = document.getElementById('color-picker-apply-btn');
+  const pickerCloseBtn = document.getElementById('color-picker-close-btn');
+  const pickerPopover = document.getElementById('subject-color-picker-popover');
+
   if (backdrop) backdrop.addEventListener('click', closeSubjectModal);
   if (closeBtn) closeBtn.addEventListener('click', closeSubjectModal);
   if (cancelBtn) cancelBtn.addEventListener('click', closeSubjectModal);
+
+  // Prevent clicks inside color picker popover from bubbling and triggering unwanted handlers
+  if (pickerPopover) {
+    pickerPopover.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+    pickerPopover.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+    });
+    pickerPopover.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+    }, { passive: true });
+  }
+
+  // Handle Enter and Escape keys when color picker popover is open
+  document.addEventListener('keydown', (e) => {
+    if (pickerPopover && pickerPopover.classList.contains('open')) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        closeColorPickerPopover();
+        renderPalette();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        closeColorPickerPopover();
+        renderPalette();
+      }
+    }
+  });
+
+  // Close color picker popover ONLY when clicking genuinely outside both the popover and custom button
+  document.addEventListener('click', (e) => {
+    if (pickerPopover && pickerPopover.classList.contains('open')) {
+      const isInside = pickerPopover.contains(e.target) || (e.target.closest && e.target.closest('.subject-custom-color-swatch'));
+      if (!isInside) {
+        closeColorPickerPopover();
+        renderPalette();
+      }
+    }
+  });
+
+  if (pickerCloseBtn) {
+    pickerCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeColorPickerPopover();
+      renderPalette();
+    });
+  }
+
+  if (pickerApplyBtn) {
+    pickerApplyBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeColorPickerPopover();
+      renderPalette();
+    });
+  }
+
+  // 2D Canvas Drag / Click interactions
+  if (pickerCanvasWrap) {
+    pickerCanvasWrap.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      isDraggingCanvas = true;
+      handleCanvasPick(e);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDraggingCanvas) {
+        handleCanvasPick(e);
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDraggingCanvas) {
+        isDraggingCanvas = false;
+      }
+    });
+
+    pickerCanvasWrap.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+      isDraggingCanvas = true;
+      handleCanvasPick(e);
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (isDraggingCanvas) {
+        handleCanvasPick(e);
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      if (isDraggingCanvas) {
+        isDraggingCanvas = false;
+      }
+    });
+  }
+
+  // Hue Slider input
+  if (pickerHueSlider) {
+    pickerHueSlider.addEventListener('input', (e) => {
+      pickerHue = parseFloat(e.target.value);
+      drawCanvasGradient();
+      const hex = hsvToHex(pickerHue, pickerSat, pickerVal);
+      setCustomColor(hex);
+    });
+  }
+
+  // Hex text input & Enter key support
+  if (pickerHexInput) {
+    pickerHexInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/[^0-9a-fA-F]/g, '');
+      if (val.length > 6) val = val.substring(0, 6);
+      if (val.length === 6) {
+        const hex = '#' + val;
+        setCustomColor(hex);
+        const hsv = hexToHsv(hex);
+        pickerHue = hsv.h;
+        pickerSat = hsv.s;
+        pickerVal = hsv.v;
+        if (pickerHueSlider) pickerHueSlider.value = Math.round(pickerHue);
+        drawCanvasGradient();
+        updateCanvasCursor();
+      }
+    });
+
+    pickerHexInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        closeColorPickerPopover();
+        renderPalette();
+      }
+    });
+
+    pickerHexInput.addEventListener('blur', (e) => {
+      e.target.value = customColorValue.replace(/^#/, '').toUpperCase();
+    });
+  }
 
   if (nameInput) {
     nameInput.addEventListener('input', updateLivePreview);

@@ -256,7 +256,7 @@
   border-color: #1a2228;
 }
 
-/* Rainbow Donut Circle (Larger, perfectly centered, smooth spin deceleration on hover) */
+/* Rainbow Donut Circle (Mathematically perfect round hole via radial mask, smooth forward and reverse deceleration) */
 .rainbow-donut-circle {
   width: 22px;
   height: 22px;
@@ -273,40 +273,22 @@
     #ff33cc,
     #ff3366
   );
+  -webkit-mask: radial-gradient(circle, transparent 38%, #000 40%);
+  mask: radial-gradient(circle, transparent 38%, #000 40%);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 1.5px 6px rgba(0, 0, 0, 0.3);
-  transition: transform 0.6s ease-out;
+  transform: rotate(0deg);
+  transition: transform 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform;
 }
 
-.rainbow-donut-circle::after {
-  content: '';
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #141c22;
-  transition: background 0.2s ease;
-}
-
-[data-theme="light"] .rainbow-donut-circle::after {
-  background: #ffffff;
-}
-
 .subject-custom-color-swatch:hover .rainbow-donut-circle {
-  animation: donutSpinDecel 1.5s cubic-bezier(0.16, 0.88, 0.36, 1) forwards;
-}
-
-@keyframes donutSpinDecel {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(720deg);
-  }
+  transform: rotate(720deg);
+  transition: transform 1.5s cubic-bezier(0.16, 0.88, 0.36, 1);
 }
 
 .subject-hidden-color-input {
@@ -318,6 +300,257 @@
   margin: 0;
   padding: 0;
   border: 0;
+}
+
+/* Custom Color Picker Popover (Positioned to the left of the modal on desktop, centered controls, rounded corners) */
+.subject-color-picker-popover {
+  position: absolute;
+  right: calc(100% + 18px);
+  top: 50%;
+  transform: translateY(-50%) scale(0.95);
+  transform-origin: right center;
+  width: 258px;
+  background: #182026;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.35);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.subject-color-picker-popover.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+}
+
+[data-theme="light"] .subject-color-picker-popover {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.16), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 820px) {
+  .subject-color-picker-popover {
+    right: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    transform-origin: center center;
+    width: calc(100% - 36px);
+    max-width: 270px;
+  }
+
+  .subject-color-picker-popover.open {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.color-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.color-picker-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.color-picker-close-btn {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.color-picker-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+}
+
+[data-theme="light"] .color-picker-close-btn:hover {
+  background: var(--surface-2);
+}
+
+/* 2D Canvas Area */
+.color-picker-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: crosshair;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  user-select: none;
+  touch-action: none;
+}
+
+.color-picker-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.color-picker-cursor {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  top: 20%;
+  left: 80%;
+  transition: transform 0.05s ease-out;
+}
+
+/* Rainbow Hue Slider */
+.color-picker-slider-row {
+  width: 100%;
+}
+
+.color-picker-hue-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    #ff0000 0%,
+    #ffff00 17%,
+    #00ff00 33%,
+    #00ffff 50%,
+    #0000ff 67%,
+    #ff00ff 83%,
+    #ff0000 100%
+  );
+  outline: none;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.color-picker-hue-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.color-picker-hue-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.color-picker-hue-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+}
+
+/* Bottom Controls */
+.color-picker-footer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.color-picker-preview-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #6366f1;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .color-picker-preview-dot {
+  border-color: var(--border);
+}
+
+.color-picker-hex-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 0 8px;
+  height: 32px;
+}
+
+[data-theme="light"] .color-picker-hex-wrap {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+.color-picker-hex-hash {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-right: 2px;
+  user-select: none;
+}
+
+.color-picker-hex-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+
+.color-picker-apply-btn {
+  padding: 0 12px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.color-picker-apply-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
 }
 
 /* Icon Selector Grid */
