@@ -1,0 +1,7 @@
+/* Focus Mode CSS Modules */
+@import "./focus-mode/controls.css";
+@import "./focus-mode/layout.css";
+@import "./focus-mode/mode-picker.css";
+@import "./focus-mode/stadium.css";
+@import "./focus-mode/phase-themes.css";
+@import "./focus-mode/immersive-modal.css";

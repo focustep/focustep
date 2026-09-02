@@ -1,0 +1,55 @@
+/* Responsive Scaling for smaller displays */
+@media (max-width: 1200px) {
+  .header-nav-group {
+    gap: 36px;
+  }
+}
+@media (max-width: 1024px) {
+  .top-row {
+    width: calc(100% - 28px);
+    padding: 0 16px;
+  }
+}
+@media (max-width: 860px) {
+  .header-spotlight-zone {
+    display: none;
+  }
+  .top-row {
+    height: auto;
+    min-height: 60px;
+    padding: 10px 14px;
+    margin: 8px auto 10px auto;
+  }
+  .header-nav-group {
+    gap: 16px;
+  }
+  .header-logo-badge {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 20px;
+    border-radius: 11px;
+  }
+  .header-action-square {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 11px;
+  }
+  #nav-stats-btn,
+  #nav-calendar-btn,
+  #nav-ai-teacher-btn {
+    width: auto;
+    font-size: 14px;
+  }
+}
+@media (max-width: 540px) {
+  .header-brand-info {
+    display: none;
+  }
+  .header-nav-link:not(.active) {
+    display: none;
+  }
+}

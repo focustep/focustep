@@ -1,0 +1,92 @@
+/* Far-Right Mint Action Square (44px x 44px) */
+.header-action-square {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 12px;
+  background: #4ec9b0;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background 0.22s ease;
+  position: relative;
+  z-index: 2;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header-action-square .header-gear-icon {
+  stroke: #1d1d1d;
+  transform-origin: center center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.2s ease;
+}
+
+.header-action-square:hover {
+  transform: translateY(-2px) scale(1.12) !important;
+  background: #56d5bc !important;
+  box-shadow: 0 0 18px rgba(78, 201, 176, 0.65), 0 6px 16px rgba(0, 0, 0, 0.25) !important;
+  filter: none;
+}
+
+.header-action-square:hover .header-gear-icon {
+  stroke: #121c21 !important;
+  transform: rotate(45deg) scale(1.06);
+}
+
+.header-action-square.is-active .header-gear-icon {
+  transform: rotate(90deg) scale(1.05) !important;
+}
+
+.header-action-square:active {
+  transform: translateY(0) scale(0.95) !important;
+  background: #4ec9b0 !important;
+  box-shadow: 0 0 8px rgba(78, 201, 176, 0.4) !important;
+}
+
+/* Short Break Settings Button */
+body.phase-break .header-action-square,
+.focus-mode-view.phase-break .header-action-square {
+  background: #118F3B !important;
+  box-shadow: 0 3px 12px rgba(17, 143, 59, 0.25);
+}
+
+body.phase-break .header-action-square:hover,
+.focus-mode-view.phase-break .header-action-square:hover {
+  background: #15a544 !important;
+  box-shadow: 0 0 18px rgba(17, 143, 59, 0.7), 0 6px 16px rgba(0, 0, 0, 0.25) !important;
+  transform: translateY(-2px) scale(1.12) !important;
+}
+
+body.phase-break .header-action-square:active,
+.focus-mode-view.phase-break .header-action-square:active {
+  background: #118F3B !important;
+  box-shadow: 0 0 8px rgba(17, 143, 59, 0.4) !important;
+}
+
+/* Long Break Settings Button */
+body.phase-long-break .header-action-square,
+.focus-mode-view.phase-long-break .header-action-square {
+  background: #2B45C7 !important;
+  box-shadow: 0 3px 12px rgba(43, 69, 199, 0.25);
+}
+
+body.phase-long-break .header-action-square:hover,
+.focus-mode-view.phase-long-break .header-action-square:hover {
+  background: #3653dc !important;
+  box-shadow: 0 0 18px rgba(43, 69, 199, 0.7), 0 6px 16px rgba(0, 0, 0, 0.25) !important;
+  transform: translateY(-2px) scale(1.12) !important;
+}
+
+body.phase-long-break .header-action-square:active,
+.focus-mode-view.phase-long-break .header-action-square:active {
+  background: #2B45C7 !important;
+  box-shadow: 0 0 8px rgba(43, 69, 199, 0.4) !important;
+}
+
+.header-action-square.is-active .header-gear-icon {
+  transform: rotate(90deg);
+}

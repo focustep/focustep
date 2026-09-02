@@ -1,0 +1,142 @@
+/* ---------- header (Exact Width Matched to Left and Right Side Sections) ---------- */
+.top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 32px);
+  max-width: calc(min(94vw, 1640px) - 32px);
+  height: 70px;
+  min-height: 70px;
+  background-color: #253138;
+  border-radius: 18px;
+  padding: 0 clamp(16px, 2.5vw, 46px);
+  margin: 14px auto 8px auto;
+  position: relative;
+  box-sizing: border-box;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+}
+
+/* Left Brand Group */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+}
+
+/* Fs Logo Badge (Matching Group 1.png: 44px x 44px) */
+.header-logo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 12px;
+  background: transparent;
+  user-select: none;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(78, 201, 176, 0.25);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, filter 0.25s ease;
+  will-change: transform;
+}
+
+.header-logo-img {
+  display: block;
+  width: 44px;
+  height: 44px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.header-logo-bg {
+  transition: fill 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-logo-glyph {
+  transition: fill 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Short Break: Emerald Green Logo */
+body.phase-break .header-logo-badge,
+.focus-mode-view.phase-break .header-logo-badge {
+  box-shadow: 0 3px 12px rgba(17, 143, 59, 0.35);
+}
+
+body.phase-break .header-logo-badge:hover,
+.focus-mode-view.phase-break .header-logo-badge:hover {
+  box-shadow: 0 6px 18px rgba(17, 143, 59, 0.55);
+}
+
+body.phase-break .header-logo-bg,
+.focus-mode-view.phase-break .header-logo-bg {
+  fill: #118F3B !important;
+}
+
+/* Long Break: Royal Blue Logo */
+body.phase-long-break .header-logo-badge,
+.focus-mode-view.phase-long-break .header-logo-badge {
+  box-shadow: 0 3px 12px rgba(43, 69, 199, 0.35);
+}
+
+body.phase-long-break .header-logo-badge:hover,
+.focus-mode-view.phase-long-break .header-logo-badge:hover {
+  box-shadow: 0 6px 18px rgba(43, 69, 199, 0.55);
+}
+
+body.phase-long-break .header-logo-bg,
+.focus-mode-view.phase-long-break .header-logo-bg {
+  fill: #2B45C7 !important;
+}
+
+.header-logo-badge:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 18px rgba(78, 201, 176, 0.4);
+  filter: brightness(1.05);
+}
+
+.header-logo-badge:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* 1.2 focustep (76x22px) & just study it (84x18px) */
+.header-brand-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  user-select: none;
+}
+
+.header-brand-title {
+  width: 76px;
+  height: 22px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16.5px;
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.header-brand-tagline {
+  width: 84px;
+  height: 18px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: -0.01em;
+  color: #8da4a8;
+  white-space: nowrap;
+}

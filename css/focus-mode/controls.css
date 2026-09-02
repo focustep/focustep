@@ -1,0 +1,104 @@
+/* ---------- Focus Mode Control in Main Card (PC / Laptops) ---------- */
+.focus-mode-control-row {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 1024px) {
+  .focus-mode-control-row {
+    display: flex;
+  }
+}
+
+/* Compact button with icon */
+.focus-mode-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  background: var(--cta);
+  border: 1px solid var(--cta);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px -5px var(--cta);
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.focus-mode-btn:hover {
+  transform: translateY(-2px) scale(1.06);
+  background: var(--cta-hover);
+  border-color: var(--cta-hover);
+  box-shadow: 0 8px 20px -6px var(--cta);
+}
+
+.focus-mode-btn:active {
+  transform: translateY(0) scale(0.94);
+}
+
+.focus-mode-btn.is-active {
+  background: var(--accent-ink);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Toggle Switch */
+.focus-mode-fs-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.25s ease;
+}
+
+.focus-mode-fs-toggle:hover {
+  color: var(--text);
+}
+
+.focus-mode-fs-toggle input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mini-switch-slider {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  background: var(--border);
+  border-radius: 999px;
+  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  display: inline-block;
+}
+
+.mini-switch-slider::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.focus-mode-fs-toggle input:checked + .mini-switch-slider {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-soft);
+}
+
+.focus-mode-fs-toggle input:checked + .mini-switch-slider::after {
+  transform: translateX(14px);
+}

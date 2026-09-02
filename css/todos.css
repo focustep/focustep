@@ -1,0 +1,98 @@
+/* ---------- todos ---------- */
+.todo-list {
+  display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px;
+  max-height: 340px; overflow-y: auto; padding-right: 3px;
+  scroll-behavior: smooth;
+}
+.todo-list::-webkit-scrollbar { width: 5px; }
+.todo-list::-webkit-scrollbar-track { background: transparent; }
+.todo-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; transition: background 0.2s ease; }
+.todo-list::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+.todo-list { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+.no-limit-note {
+  text-align: center; font-size: 9.5px; font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-muted); opacity: 0.75;
+  margin: 0 0 10px; font-family: 'Inter', sans-serif; transition: opacity 0.2s ease, color 0.3s ease;
+}
+.no-limit-note:hover { opacity: 1; }
+
+.todo-item {
+  display: flex; align-items: flex-start; gap: 11px; padding: 10px 12px;
+  border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2);
+  opacity: 1; transform: translateY(0) scale(1);
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), background 0.2s ease, border-color 0.2s ease;
+}
+.todo-item.appear { opacity: 0; transform: translateY(-8px) scale(0.97); }
+.todo-item.leaving { opacity: 0; transform: translateX(18px) scale(0.97); }
+.todo-item:focus-within { border-color: var(--accent); }
+
+.checkbox-wrap { position: relative; width: 19px; height: 19px; flex-shrink: 0; }
+.todo-item input[type="checkbox"] {
+  width: 19px; height: 19px; margin: 2px 0 0 0; cursor: pointer; accent-color: var(--accent-ink);
+  transition: transform 0.25s var(--ease-spring);
+  flex-shrink: 0;
+}
+.todo-item input[type="checkbox"]:hover {
+  transform: scale(1.15);
+}
+.todo-item input[type="checkbox"]:active {
+  transform: scale(0.9);
+}
+
+.todo-item .todo-text {
+  flex: 1; font-size: 14px; line-height: 1.45; border: none; background: transparent; color: var(--text);
+  outline: none; padding: 0; font-family: inherit; transition: color 0.25s ease;
+  resize: none; overflow: hidden; min-height: 20px; box-sizing: border-box;
+  word-break: break-word; white-space: pre-wrap;
+}
+.todo-item.checked { background: var(--surface); border-color: var(--border); }
+.todo-item.checked .todo-text { color: var(--text-muted); text-decoration: line-through; }
+
+.todo-item .todo-remove {
+  border: none; background: transparent; color: var(--text-muted); padding: 3px;
+  cursor: pointer; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease, transform 0.25s var(--ease-spring);
+  opacity: 0.55; flex-shrink: 0; margin-top: 1px;
+}
+.todo-item .todo-remove:hover {
+  background: var(--red-soft); color: var(--red); opacity: 1;
+  transform: scale(1.18) rotate(90deg);
+}
+.todo-item .todo-remove:active { transform: scale(0.85); }
+
+.todo-add-row { display: flex; align-items: flex-end; gap: 8px; }
+.todo-add-row textarea,
+.todo-add-row input[type="text"] {
+  flex: 1; font-family: inherit; font-size: 14px; line-height: 1.4; padding: 10px 14px;
+  border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2);
+  color: var(--text); outline: none; transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  resize: none; overflow-y: auto; max-height: 120px; min-height: 42px; box-sizing: border-box;
+  word-break: break-word;
+}
+.todo-add-row textarea:focus,
+.todo-add-row input[type="text"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.todo-add-row button {
+  min-width: 44px; height: 42px; padding: 0 11px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease-spring), background 0.2s ease, border-color 0.2s ease, box-shadow 0.25s ease;
+}
+.todo-add-row button:hover {
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 4px 14px -6px var(--accent);
+}
+.todo-add-row button:hover svg {
+  transform: rotate(90deg);
+}
+.todo-add-row button svg {
+  transition: transform 0.3s var(--ease-spring);
+}
+.todo-add-row button:active { transform: translateY(0) scale(0.92); }
+
+.todo-empty { font-size: 13px; color: var(--text-muted); text-align: center; padding: 14px 0 16px; }
+#save-info { font-size: 11.5px; color: var(--text-muted); margin: 10px 0 0; text-align: center; transition: opacity 0.2s ease; }

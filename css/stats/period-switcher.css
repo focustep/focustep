@@ -1,0 +1,52 @@
+/* ---------- 1. Period Switcher (Week / Month / All time) ---------- */
+.stats-period-switcher-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.stats-period-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #151b1f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 4px 6px;
+  box-sizing: border-box;
+}
+
+[data-theme="light"] .stats-period-switcher {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+.stats-period-pill-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.stats-period-pill-btn:hover {
+  color: var(--text);
+}
+
+.stats-period-pill-btn.active {
+  background: #f4f2ea;
+  color: #151b1f;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] .stats-period-pill-btn.active {
+  background: var(--accent);
+  color: #ffffff;
+}

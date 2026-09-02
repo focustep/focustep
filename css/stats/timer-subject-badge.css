@@ -1,0 +1,222 @@
+/* Timer Screen Subject Switcher Badge & Pencil Edit Button (Top of Center Column) */
+.timer-subject-badge-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto 12px auto;
+  z-index: 50;
+  width: 100%;
+}
+
+.timer-subject-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: #151b1f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .timer-subject-badge {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.timer-subject-badge:hover {
+  background: #1c242a;
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+[data-theme="light"] .timer-subject-badge:hover {
+  background: var(--surface-2);
+  border-color: var(--accent);
+}
+
+.timer-subject-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease;
+}
+
+.timer-subject-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.timer-subject-chevron {
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.timer-subject-badge-wrapper.open .timer-subject-chevron {
+  transform: rotate(180deg);
+}
+
+/* Pencil Quick Edit Button */
+.timer-subject-edit-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #151b1f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="light"] .timer-subject-edit-btn {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.timer-subject-edit-btn:hover {
+  background: #1c242a;
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px) scale(1.05);
+}
+
+[data-theme="light"] .timer-subject-edit-btn:hover {
+  background: var(--surface-2);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Timer Subject Dropdown Menu */
+.timer-subject-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px) scale(0.96);
+  width: 200px;
+  background: #1a2228;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.18s ease;
+  z-index: 1000;
+}
+
+[data-theme="light"] .timer-subject-dropdown {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.timer-subject-badge-wrapper.open .timer-subject-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.timer-subject-dropdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.timer-subject-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.timer-subject-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+[data-theme="light"] .timer-subject-dropdown-item:hover {
+  background: var(--surface-2);
+}
+
+.timer-subject-dropdown-item.active {
+  font-weight: 700;
+  background: rgba(78, 201, 176, 0.12);
+  color: #4ec9b0;
+}
+
+[data-theme="light"] .timer-subject-dropdown-item.active {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.timer-subject-item-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timer-subject-dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 6px 0;
+}
+
+[data-theme="light"] .timer-subject-dropdown-divider {
+  background: var(--border);
+}
+
+.timer-subject-dropdown-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: #4ec9b0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.timer-subject-dropdown-add-btn span {
+  display: inline-block;
+  text-align: center;
+}
+
+[data-theme="light"] .timer-subject-dropdown-add-btn {
+  color: var(--accent);
+}
+
+.timer-subject-dropdown-add-btn:hover {
+  background: rgba(78, 201, 176, 0.1);
+}

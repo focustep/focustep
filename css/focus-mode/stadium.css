@@ -1,0 +1,578 @@
+/* Center Section (Lifted 20px higher for perfect optical balance) */
+.focus-skeleton-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  top: -20px;
+}
+
+/* Main Stadium Oval (Hero Workspace - Enlarged with responsive constraint) */
+.focus-skeleton-capsule-main {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  height: clamp(285px, 42vh, 395px);
+  background: var(--surface);
+  border: none;
+  border-radius: 9999px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease, width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+}
+
+/* On medium / half PC screen, make stadium oval morph into an exact circle */
+@media (max-width: 1100px) {
+  .focus-skeleton-capsule-main {
+    width: clamp(250px, 40vh, 360px);
+    height: clamp(250px, 40vh, 360px);
+    border-radius: 50%;
+    max-width: 100%;
+  }
+}
+
+.focus-skeleton-capsule-main.is-running {
+  box-shadow: var(--shadow), 0 0 18px -2px var(--accent-soft);
+}
+
+/* Responsive Adaptive Stadium Glow (Glued directly to the stadium edge) */
+.focus-stadium-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: radial-gradient(ellipse at center, var(--accent) 0%, transparent 70%);
+  opacity: 0.10; /* Paused / Stopped in light mode */
+  filter: blur(24px);
+  pointer-events: none;
+  transition: opacity 0.5s ease, background 0.4s ease, filter 0.5s ease;
+  z-index: 1;
+  will-change: opacity, transform;
+}
+
+[data-theme="dark"] .focus-stadium-glow {
+  opacity: 0.12; /* Paused / Stopped in dark mode */
+}
+
+.focus-skeleton-capsule-main.is-running .focus-stadium-glow {
+  opacity: 0.30; /* Running in light mode */
+  animation: stadiumBreathe 3.2s ease-in-out infinite;
+}
+
+[data-theme="dark"] .focus-skeleton-capsule-main.is-running .focus-stadium-glow {
+  opacity: 0.38; /* Running in dark mode */
+  animation: stadiumBreatheDark 3.2s ease-in-out infinite;
+}
+
+.focus-skeleton-capsule-main.done .focus-stadium-glow {
+  opacity: 0.20;
+  background: radial-gradient(ellipse at center, var(--red) 0%, transparent 70%);
+  animation: none;
+}
+
+@keyframes stadiumBreathe {
+  0%, 100% {
+    opacity: 0.22;
+    transform: scale(0.99);
+  }
+  50% {
+    opacity: 0.38;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes stadiumBreatheDark {
+  0%, 100% {
+    opacity: 0.28;
+    transform: scale(0.99);
+  }
+  50% {
+    opacity: 0.44;
+    transform: scale(1.02);
+  }
+}
+
+/* Stadium SVG Track & Progress Stroke */
+.focus-stadium-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+
+.focus-stadium-track {
+  stroke: var(--border);
+  stroke-width: 3.5;
+  transition: stroke 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.focus-stadium-progress {
+  stroke: var(--accent);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), stroke-dashoffset 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), stroke 0.2s ease, filter 0.35s ease;
+  will-change: opacity, stroke-dashoffset;
+  filter: drop-shadow(0 0 5px var(--accent-soft));
+}
+
+.focus-stadium-progress.is-visible {
+  opacity: 1;
+}
+
+.focus-skeleton-capsule-main.is-running .focus-stadium-progress {
+  transition: stroke-dashoffset 1s linear, opacity 0.3s ease, stroke 0.2s ease, filter 0.4s ease;
+  filter: drop-shadow(0 0 6px rgba(47, 111, 104, 0.4));
+}
+
+[data-theme="dark"] .focus-skeleton-capsule-main.is-running .focus-stadium-progress {
+  filter: drop-shadow(0 0 8px rgba(84, 203, 180, 0.55));
+}
+
+.focus-skeleton-capsule-main.paused .focus-stadium-progress {
+  filter: drop-shadow(0 0 3px rgba(47, 111, 104, 0.2));
+}
+
+[data-theme="dark"] .focus-skeleton-capsule-main.paused .focus-stadium-progress {
+  filter: drop-shadow(0 0 4px rgba(84, 203, 180, 0.3));
+}
+
+.focus-skeleton-capsule-main.done .focus-stadium-progress {
+  stroke: var(--border);
+  opacity: 0;
+  filter: none;
+}
+
+/* Main Digital Timer (Always white text in all modes and phases) */
+.focus-digital-timer {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: clamp(2.65rem, 5.7vw, 5.7rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.005em;
+  color: #ffffff !important;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.28);
+  line-height: 1;
+  user-select: none;
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(-42px, -5vh, -24px);
+  transition: transform 0.25s ease;
+}
+
+[data-theme="dark"] .focus-digital-timer {
+  color: #ffffff;
+}
+
+.focus-digital-timer.done {
+  color: var(--red);
+}
+
+.focus-timer-sub {
+  font-size: clamp(11px, 1.15vw, 12.5px);
+  color: var(--accent-ink);
+  font-weight: 500;
+  min-height: 16px;
+  margin: 2px 0 0;
+  position: relative;
+  z-index: 3;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+[data-theme="dark"] .focus-timer-sub {
+  color: var(--accent);
+}
+
+/* Actions Button Group inside Stadium (Start centered, positioned higher with breathing room) */
+.focus-stadium-actions {
+  position: absolute;
+  bottom: clamp(24px, 4.4vh, 38px);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  width: max-content;
+  max-width: 90%;
+  pointer-events: auto;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dynamic Start / Stop Button with Soft White Shine Effect & Neon Glow */
+.focus-stadium-start-btn {
+  position: relative;
+  margin: 0 auto;
+  width: max-content;
+  min-width: clamp(130px, 14.8vw, 166px);
+  height: clamp(42px, 5.2vh, 52px);
+  padding: 0 clamp(18px, 2.2vw, 26px);
+  border-radius: clamp(12px, 1.4vw, 15px);
+  background: var(--cta);
+  border: 1px solid rgba(78, 201, 176, 0.7);
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: clamp(15px, 1.6vw, 17px);
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  overflow: hidden;
+  user-select: none;
+  /* Glowing neon outline and subtle ambient radiance */
+  box-shadow: 0 0 0 1px rgba(78, 201, 176, 0.35), 0 4px 18px -3px rgba(78, 201, 176, 0.45), 0 0 20px -4px rgba(78, 201, 176, 0.3);
+  animation: startNeonPulse 3.6s ease-in-out infinite alternate;
+  transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, color 0.25s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s ease, height 0.25s ease;
+  will-change: transform, box-shadow;
+}
+
+/* Pleasant & Soft White Shine / Sheen Effect (Noticeable and smooth) */
+.focus-stadium-start-btn::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -80%;
+  width: 48%;
+  height: 220%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 20%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.12) 80%,
+    transparent 100%
+  );
+  transform: rotate(26deg);
+  pointer-events: none;
+  animation: startBtnSoftShine 5.2s cubic-bezier(0.35, 0, 0.25, 1) infinite;
+}
+
+@keyframes startBtnSoftShine {
+  0%, 18% {
+    left: -80%;
+    opacity: 0;
+  }
+  24% {
+    opacity: 0.95;
+  }
+  64% {
+    left: 160%;
+    opacity: 0.95;
+  }
+  70%, 100% {
+    left: 160%;
+    opacity: 0;
+  }
+}
+
+[data-theme="light"] .focus-stadium-start-btn {
+  border: 1px solid rgba(13, 148, 136, 0.6);
+  box-shadow: 0 0 0 1px rgba(13, 148, 136, 0.3), 0 4px 16px -3px rgba(13, 148, 136, 0.35), 0 0 18px -4px rgba(13, 148, 136, 0.22);
+}
+
+@keyframes startNeonPulse {
+  0% {
+    box-shadow: 0 0 0 1px rgba(78, 201, 176, 0.3), 0 4px 16px -3px rgba(78, 201, 176, 0.4), 0 0 18px -4px rgba(78, 201, 176, 0.25);
+  }
+  100% {
+    box-shadow: 0 0 0 1.5px rgba(78, 201, 176, 0.55), 0 6px 22px -3px rgba(78, 201, 176, 0.55), 0 0 26px -2px rgba(78, 201, 176, 0.38);
+  }
+}
+
+.focus-stadium-start-btn:hover {
+  background: var(--cta-hover);
+  border-color: rgba(78, 201, 176, 0.95);
+  transform: translateY(-1.5px) scale(1.02);
+  box-shadow: 0 0 0 2px rgba(78, 201, 176, 0.7), 0 8px 26px -2px rgba(78, 201, 176, 0.7), 0 0 32px -2px rgba(78, 201, 176, 0.5);
+  animation-play-state: paused;
+}
+
+.focus-stadium-start-btn:active {
+  transform: translateY(0) scale(0.97);
+  background: var(--cta);
+  box-shadow: 0 0 0 1px rgba(78, 201, 176, 0.5), 0 2px 10px -2px rgba(78, 201, 176, 0.4);
+}
+
+.focus-stadium-start-btn svg,
+#focus-start-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: clamp(14px, 1.4vw, 16px);
+  height: clamp(14px, 1.4vw, 16px);
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.25s ease;
+}
+
+#focus-start-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+}
+
+/* Stadium Restart Wrapper & Button (Placed underneath Stadium Oval, Centered) */
+.focus-stadium-restart-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 12px auto 8px auto;
+  width: 100%;
+  z-index: 10;
+}
+
+.focus-stadium-restart-btn,
+.focus-btn-reset {
+  min-width: clamp(94px, 11vw, 122px);
+  height: clamp(27px, 3.2vh, 32px);
+  padding: 0 clamp(10px, 1.3vw, 15px);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  outline: none !important;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: clamp(11.5px, 1.2vw, 12.8px);
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: none;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] .focus-stadium-restart-btn,
+[data-theme="light"] .focus-btn-reset {
+  background: var(--surface);
+  border-color: var(--border) !important;
+  color: var(--text-muted);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .focus-stadium-restart-btn,
+[data-theme="dark"] .focus-btn-reset {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(253, 252, 249, 0.72);
+}
+
+.focus-stadium-restart-btn svg,
+.focus-stadium-restart-btn .focus-restart-icon,
+.focus-btn-reset svg,
+.focus-btn-reset .focus-restart-icon {
+  width: clamp(12px, 1.2vw, 14px);
+  height: clamp(12px, 1.2vw, 14px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin: 0;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#focus-restart-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.focus-stadium-restart-btn:hover,
+.focus-btn-reset:hover {
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  outline: none !important;
+  color: #ffffff !important;
+  background: rgba(116, 198, 187, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px var(--accent-soft);
+}
+
+[data-theme="light"] .focus-stadium-restart-btn:hover,
+[data-theme="light"] .focus-btn-reset:hover {
+  background: var(--surface-2);
+  color: var(--text) !important;
+  border-color: var(--border-strong) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .focus-stadium-restart-btn:hover,
+[data-theme="dark"] .focus-btn-reset:hover {
+  color: #ffffff !important;
+  background: rgba(116, 198, 187, 0.24);
+}
+
+.focus-stadium-restart-btn:hover svg,
+.focus-stadium-restart-btn:hover .focus-restart-icon,
+.focus-btn-reset:hover svg,
+.focus-btn-reset:hover .focus-restart-icon {
+  transform: rotate(-45deg);
+}
+
+.focus-stadium-restart-btn.anim-spin svg,
+.focus-stadium-restart-btn.anim-spin .focus-restart-icon,
+.focus-btn-reset.anim-spin svg,
+.focus-btn-reset.anim-spin .focus-restart-icon {
+  animation: resetSpinAnim 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.focus-stadium-restart-btn:active,
+.focus-btn-reset:active {
+  transform: translateY(0) scale(0.96);
+  border: none !important;
+  outline: none !important;
+}
+
+/* Controls below Oval (Lifted up by 5px preserving fluid responsiveness) */
+.focus-skeleton-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(10px, 2vh, 18px);
+  position: relative;
+  top: -5px;
+  width: 100%;
+}
+
+.focus-skeleton-pill {
+  min-width: clamp(56px, 7vw, 64px);
+  padding: clamp(7px, 1vh, 9px) clamp(10px, 1.5vw, 16px);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: clamp(11.5px, 1.15vw, 12.5px);
+  font-weight: 500;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.3s ease, color 0.25s ease;
+  user-select: none;
+  will-change: transform;
+}
+
+.focus-skeleton-pill:hover {
+  transform: translateY(-2px) scale(1.05);
+  border-color: var(--accent);
+  color: #ffffff !important;
+  background: var(--surface-2);
+  box-shadow: 0 6px 16px -4px var(--accent-soft);
+}
+
+[data-theme="dark"] .focus-skeleton-pill:hover {
+  color: #ffffff !important;
+}
+
+.focus-skeleton-pill:active {
+  transform: translateY(0) scale(0.93);
+}
+
+/* Pop animation for extra time added */
+.focus-skeleton-pill.pop-added {
+  animation: extraPopAnim 0.44s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Row 2: Custom Extra Time Pill Button (Soft Border & Smooth Styling) */
+.focus-custom-pill {
+  min-width: clamp(84px, 10vw, 104px);
+  height: clamp(29px, 3.6vh, 34px);
+  padding: 0 clamp(10px, 1.2vw, 16px);
+  font-weight: 600;
+  border: 1px solid rgba(74, 222, 128, 0.28);
+  color: var(--accent-ink);
+  background: var(--surface);
+  box-shadow: 0 2px 10px -2px rgba(74, 222, 128, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.25s ease, box-shadow 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.25s ease;
+}
+
+[data-theme="dark"] .focus-custom-pill {
+  border: 1px solid rgba(116, 198, 187, 0.32);
+  color: var(--accent);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: 0 2px 10px -2px rgba(116, 198, 187, 0.1);
+}
+
+.focus-custom-pill:hover {
+  background: var(--surface-2);
+  border-color: rgba(74, 222, 128, 0.55);
+  color: #ffffff !important;
+  box-shadow: 0 6px 18px -4px var(--accent-soft);
+  transform: translateY(-2px) scale(1.05);
+}
+
+[data-theme="dark"] .focus-custom-pill:hover {
+  border-color: rgba(116, 198, 187, 0.6);
+  background: rgba(255, 255, 255, 0.045);
+  color: #ffffff !important;
+}
+
+.focus-custom-prefix {
+  font-weight: 600;
+  font-size: clamp(11.5px, 1.2vw, 12.8px);
+  margin-right: 1px;
+}
+
+.focus-custom-num {
+  font-weight: 700;
+  font-size: clamp(12px, 1.25vw, 13.5px);
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+  text-align: center;
+  min-width: 9px;
+  transition: transform 0.15s ease;
+}
+
+.focus-custom-suffix {
+  font-weight: 500;
+  font-size: clamp(11.5px, 1.2vw, 12.8px);
+  opacity: 0.9;
+  margin-left: 1.5px;
+}
+
+/* Row 1: Preset Extra Buttons */
+.focus-skeleton-pill-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.2vw, 12px);
+}
+
+.focus-extra-time-btn {
+  min-width: clamp(60px, 8vw, 80px);
+  height: clamp(28px, 3.5vh, 34px);
+}

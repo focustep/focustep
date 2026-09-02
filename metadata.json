@@ -1,0 +1,6 @@
+{
+  "name": "FocusStep - Study Timer",
+  "description": "Clean, modular study timer application with Pomodoro cycles, streak calendar, task lists, and focus modes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

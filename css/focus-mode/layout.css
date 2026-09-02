@@ -1,0 +1,324 @@
+/* ---------- Fullscreen Focus Mode Canvas ---------- */
+.wrap.focus-mode-view,
+.focus-mode-view {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transition: background 0.85s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.85s ease, color 0.6s ease;
+}
+
+.focus-mode-view.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Top Controls Header */
+.focus-mode-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-shrink: 0;
+  opacity: 1;
+  transform: translateY(0);
+  position: relative;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 2px;
+}
+
+.focus-mode-view.is-active .focus-mode-top-bar {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.focus-top-cluster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.focus-top-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Current Session Status Indicator Row (Hidden on stop, smoothly visible on start) */
+.focus-session-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+  pointer-events: none;
+}
+
+.focus-session-header-row.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.focus-session-status-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s var(--ease-spring);
+}
+
+.focus-session-status-text {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+/* Session Count Badge (Only visible in pomodoro and ultradian) */
+.focus-session-info-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  user-select: none;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.focus-session-label {
+  color: #ffffff !important;
+}
+
+.focus-session-num {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+/* Small Dot Indicator (No border / obvodkasiz) */
+.focus-session-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: #54CBB1;
+  opacity: 0;
+  transform: scale(0.3);
+  pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.45s ease, background 0.7s ease;
+  box-shadow: 0 0 0 rgba(84, 203, 177, 0);
+}
+
+/* Smooth steady active state when running (Yagona turg'un yorug'lik - yonib-o'chmaydi) */
+.focus-session-status-dot.is-running {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 0 8px #54CBB1, 0 0 14px rgba(84, 203, 177, 0.65);
+  animation: none !important;
+}
+
+.focus-mode-top-bar .focus-mode-btn {
+  width: 36px;
+  height: 36px;
+}
+
+/* Three-Column Workspace Layout */
+.focus-skeleton-frame {
+  width: 100%;
+  max-width: min(94vw, 1640px);
+  height: calc(100vh - 110px);
+  max-height: 740px;
+  display: grid;
+  grid-template-columns: clamp(310px, 24vw, 390px) 1fr clamp(290px, 22vw, 360px);
+  align-items: center;
+  gap: clamp(18px, 2.8vw, 48px);
+  margin: auto 0;
+  padding: 0 16px;
+  box-sizing: border-box;
+  position: relative;
+  top: -20px;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.focus-mode-view.is-active .focus-skeleton-frame {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (max-width: 1280px) {
+  .focus-skeleton-frame {
+    grid-template-columns: clamp(280px, 26vw, 340px) 1fr clamp(260px, 24vw, 320px);
+    gap: clamp(12px, 2vw, 24px);
+    max-height: 700px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .focus-skeleton-frame {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    height: auto;
+    max-height: none;
+    overflow-y: auto;
+    padding: 16px 14px 40px;
+    gap: 20px;
+  }
+  .focus-skeleton-card {
+    height: auto;
+    max-height: none;
+    min-height: auto;
+    display: flex;
+  }
+  .focus-skeleton-left {
+    order: 2;
+  }
+  .focus-skeleton-center {
+    order: 1;
+    min-height: 380px;
+  }
+  .focus-skeleton-right {
+    order: 3;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 1025px) {
+  .focus-skeleton-frame {
+    height: calc(100vh - 80px);
+    max-height: 620px;
+    gap: 16px;
+  }
+  .focus-skeleton-card {
+    padding: 16px 14px;
+    max-height: 560px;
+    min-height: 420px;
+  }
+  .focus-set-time-card {
+    padding: 10px 10px 12px;
+  }
+  .focus-ios-wheel-box {
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    border: none;
+  }
+}
+
+/* Left & Right Column Cards (Clean borderless surface design) */
+.focus-skeleton-card {
+  position: relative;
+  height: 92%;
+  max-height: 620px;
+  min-height: 480px;
+  background: var(--surface);
+  border: none;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  padding: 22px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.focus-skeleton-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.focus-skeleton-corner-box {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.focus-skeleton-corner-box.top-right {
+  top: 18px;
+  right: 18px;
+}
+
+.focus-skeleton-corner-box.top-left {
+  top: 18px;
+  left: 18px;
+}
+
+/* Card header in focus mode */
+.focus-card-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.focus-mode-select-header {
+  justify-content: flex-start;
+  position: relative;
+}
+
+.focus-mode-select-head-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.focus-card-icon-box.focus-mode-gear-box {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--accent-soft);
+  transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.focus-mode-select-title {
+  margin: 0;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}

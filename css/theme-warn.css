@@ -1,0 +1,61 @@
+/* ---------- theme-switch notification ---------- */
+.theme-warn {
+  position: fixed;
+  width: 195px;
+  max-width: calc(100vw - 24px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px -6px rgba(0,0,0,0.35), 0 4px 12px -2px rgba(0,0,0,0.18);
+  padding: 10px 12px 9px;
+  z-index: 999999;
+  opacity: 0;
+  transform: translateX(-50%) translateY(-6px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease-out), transform 0.3s var(--ease-spring);
+}
+.theme-warn::before {
+  content: '';
+  position: absolute;
+  top: -5.5px;
+  left: var(--arrow-x, 50%);
+  transform: translateX(-50%) rotate(45deg);
+  width: 9px;
+  height: 9px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+.theme-warn.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); pointer-events: auto; }
+.theme-warn p { margin: 0; font-size: 11.5px; line-height: 1.35; color: var(--text); font-weight: 500; text-align: center; }
+.theme-warn-actions { display: flex; gap: 6px; margin-top: 9px; }
+.theme-warn-btn {
+  flex: 1; padding: 5px 0; font-size: 11px; font-weight: 600; border-radius: 7px;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s var(--ease-out), box-shadow 0.25s ease;
+}
+.theme-warn-btn:hover { transform: translateY(-1px); }
+.theme-warn-yes { background: var(--cta); border-color: var(--cta); color: rgba(253,252,249,0.92); }
+.theme-warn-yes:hover { background: var(--cta-hover); border-color: var(--cta-hover); box-shadow: 0 6px 16px -8px var(--cta); }
+.theme-warn-no:hover { border-color: var(--text-muted); }
+.theme-warn-dismiss-row {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-top: 8px; font-size: 10.5px; color: var(--text-muted); cursor: pointer;
+}
+.theme-warn-dismiss-row input[type="checkbox"] {
+  position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
+}
+.theme-warn-check {
+  width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0;
+  border: 1.5px solid var(--border); background: var(--surface-2); color: #fdfcf9;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.32s var(--ease-out), border-color 0.32s var(--ease-out), transform 0.2s var(--ease-spring);
+}
+.theme-warn-check svg {
+  opacity: 0; transform: scale(0.4);
+  transition: opacity 0.28s var(--ease-out), transform 0.4s var(--ease-spring);
+}
+.theme-warn-dismiss-row.checked .theme-warn-check {
+  background: var(--accent-ink); border-color: var(--accent-ink); transform: scale(1.08);
+}
+.theme-warn-dismiss-row.checked .theme-warn-check svg { opacity: 1; transform: scale(1); }

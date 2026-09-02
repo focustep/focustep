@@ -1,0 +1,529 @@
+/* Mode Selection Tabs */
+.focus-modes-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.focus-modes-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.focus-mode-tab {
+  flex: 1;
+  padding: 10px 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s var(--ease-spring), box-shadow 0.2s ease;
+}
+
+.focus-mode-tab:hover {
+  border-color: var(--accent);
+  color: #ffffff !important;
+  background: rgba(116, 198, 187, 0.12);
+  transform: translateY(-1px);
+}
+
+.focus-mode-tab.is-active {
+  background: var(--surface);
+  border-color: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 0 12px var(--accent-soft), inset 0 0 6px rgba(116, 198, 187, 0.15);
+  position: relative;
+}
+
+[data-theme="dark"] .focus-mode-tab.is-active {
+  border-color: var(--accent);
+  background: rgba(116, 198, 187, 0.16);
+  color: #ffffff;
+  box-shadow: 0 0 14px var(--accent-soft), inset 0 0 8px rgba(116, 198, 187, 0.2);
+}
+
+/* Set Time Subcard */
+.focus-set-time-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 18px 16px 20px;
+  flex: 1;
+  min-height: 0;
+  justify-content: space-between;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.focus-set-time-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+/* Pomodoro Phase Selector Inside Subcard (Focus time / Short break / Long break) */
+.focus-pomo-phase-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.focus-pomo-phase-btn {
+  flex: 1;
+  padding: 8px 6px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.focus-pomo-phase-btn {
+  flex: 1;
+  padding: 6px 4px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s var(--ease-spring), box-shadow 0.2s ease;
+}
+
+.focus-pomo-phase-btn:hover {
+  border-color: var(--accent);
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+.focus-pomo-phase-btn.is-active {
+  background: var(--surface-2);
+  border-color: var(--accent-ink);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 0 10px var(--accent-soft), inset 0 0 6px rgba(116, 198, 187, 0.15);
+}
+
+[data-theme="dark"] .focus-pomo-phase-btn.is-active {
+  border-color: var(--accent);
+  background: rgba(116, 198, 187, 0.18);
+  color: #ffffff;
+  box-shadow: 0 0 12px var(--accent-soft), inset 0 0 8px rgba(116, 198, 187, 0.2);
+}
+
+.focus-pomo-phase-btn[data-phase="work"].is-active {
+  border-color: var(--accent) !important;
+  background: rgba(116, 198, 187, 0.18) !important;
+  box-shadow: 0 0 10px var(--accent-soft), inset 0 0 6px rgba(116, 198, 187, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.focus-pomo-phase-btn[data-phase="short_break"].is-active,
+.focus-pomo-phase-btn[data-phase="break"].is-active {
+  border-color: #118F3B !important;
+  background: rgba(17, 143, 59, 0.2) !important;
+  box-shadow: 0 0 12px rgba(17, 143, 59, 0.45), inset 0 0 6px rgba(17, 143, 59, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.focus-pomo-phase-btn[data-phase="long_break"].is-active {
+  border-color: #2B45C7 !important;
+  background: rgba(43, 69, 199, 0.22) !important;
+  box-shadow: 0 0 12px rgba(43, 69, 199, 0.45), inset 0 0 6px rgba(43, 69, 199, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.focus-ios-wheel-box {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  flex: none;
+  height: 200px;
+  min-height: 200px;
+  max-height: 200px;
+  background: var(--surface);
+  border: none;
+  border-radius: 16px;
+  padding: 8px 6px;
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* When Timer mode is active (or by default when not in Pomodoro): Center the wheel inside Set Time Card */
+.focus-mode-view.is-timer-mode .focus-set-time-card,
+.focus-mode-view:not(.is-pomodoro-mode) .focus-set-time-card {
+  justify-content: center;
+  gap: 14px;
+}
+
+.focus-mode-view.is-timer-mode .focus-ios-wheel-box,
+.focus-mode-view:not(.is-pomodoro-mode) .focus-ios-wheel-box {
+  margin: auto 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 4px;
+  height: 200px;
+  min-height: 200px;
+  max-height: 200px;
+  border: none;
+}
+
+.focus-mode-view.is-timer-mode .focus-ios-wheel-box .wheel-col,
+.focus-mode-view:not(.is-pomodoro-mode) .focus-ios-wheel-box .wheel-col {
+  flex: 1 1 0;
+  max-width: 58px;
+  min-width: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.focus-mode-view.is-timer-mode .focus-ios-wheel-box .wheel-viewport,
+.focus-mode-view:not(.is-pomodoro-mode) .focus-ios-wheel-box .wheel-viewport {
+  width: 100%;
+  max-width: 58px;
+  height: 120px;
+}
+
+.focus-mode-view.is-timer-mode .focus-ios-wheel-box .duration-colon,
+.focus-mode-view:not(.is-pomodoro-mode) .focus-ios-wheel-box .duration-colon {
+  flex-shrink: 0;
+  padding: 0 1px;
+}
+
+/* When Pomodoro mode is active: Hide Hours column and expand Minutes & Seconds centered (1-rasm) */
+.focus-mode-view.is-pomodoro-mode #col-hours-wheel-focus,
+.focus-mode-view.is-pomodoro-mode .col-hours-focus-wrap,
+.focus-mode-view.is-pomodoro-mode .col-hours-focus-colon {
+  display: none !important;
+}
+
+.focus-mode-view.is-pomodoro-mode .focus-ios-wheel-box {
+  justify-content: center;
+  gap: 26px;
+  padding: 12px 16px;
+}
+
+.focus-mode-view.is-pomodoro-mode .focus-ios-wheel-box .wheel-viewport {
+  width: 72px;
+  height: 126px;
+}
+
+.focus-mode-view.is-pomodoro-mode .focus-ios-wheel-box .wheel-item {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Auto-start focus blocks Toggle Switch Container (Image 2) */
+.focus-autostart-container {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  transition: border-color 0.2s ease, background 0.2s ease, opacity 0.3s ease;
+}
+
+.focus-autostart-label-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.focus-autostart-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.focus-autostart-desc {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 8px 0 0 0;
+  opacity: 0.92;
+}
+
+/* Ultradian Rhythm Subcard (Maket bo'yicha) - To'liq kvadrat bo'yicha cho'zilgan va kattalashtirilgan */
+.focus-mode-view.is-ultradian-mode .focus-set-time-card,
+body.is-ultradian-mode .focus-set-time-card {
+  padding: 12px !important;
+  justify-content: stretch !important;
+}
+
+.focus-ultradian-card {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  box-sizing: border-box;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px 18px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.focus-ultradian-autostart-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.focus-ultradian-autostart-box .focus-autostart-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.focus-ultradian-autostart-box .focus-autostart-desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #8da4b8;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.focus-ultradian-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  opacity: 0.7;
+  margin: 4px 0;
+}
+
+.focus-ultradian-note-box {
+  padding: 6px 2px 2px;
+}
+
+.focus-ultradian-note-text {
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.55;
+  color: #9cb3c7;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.focus-mode-view.is-ultradian-mode .focus-ios-wheel-box,
+.focus-mode-view.is-ultradian-mode .focus-pomo-phase-row,
+.focus-mode-view.is-ultradian-mode .focus-autostart-container {
+  display: none !important;
+}
+
+.focus-mode-view.is-ultradian-mode #focus-ultradian-card {
+  display: flex !important;
+}
+
+.focus-mode-view.is-ultradian-mode .focus-set-time-head {
+  display: none !important;
+}
+
+.focus-ios-wheel-box .wheel-viewport {
+  height: 120px;
+  width: 56px;
+}
+
+.focus-ios-wheel-box .wheel-selection-highlight {
+  height: 40px;
+  background: rgba(125, 125, 125, 0.12);
+  border: none;
+  box-shadow: none;
+  outline: none;
+  border-radius: 10px;
+}
+
+.focus-ios-wheel-box .wheel-item {
+  height: 40px;
+  line-height: 40px;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.focus-ios-wheel-box .duration-colon {
+  font-size: 22px;
+  padding-bottom: 18px;
+}
+
+.focus-ios-wheel-box .duration-colon i {
+  width: 4.5px;
+  height: 4.5px;
+}
+
+.focus-ios-wheel-box .duration-col-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
+.focus-reset-center-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.focus-btn-reset {
+  min-width: clamp(106px, 13vw, 138px);
+  height: clamp(29px, 3.5vh, 35px);
+  padding: 0 clamp(12px, 1.5vw, 18px);
+  border-radius: 999px;
+  border: none !important;
+  outline: none !important;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff !important;
+  font-family: inherit;
+  font-size: clamp(12px, 1.25vw, 13.5px);
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background 0.25s ease, transform 0.2s var(--ease-spring), box-shadow 0.25s ease, color 0.25s ease;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.focus-btn-reset:hover {
+  border: none !important;
+  outline: none !important;
+  color: #ffffff !important;
+  background: rgba(116, 198, 187, 0.24);
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 0 14px var(--accent-soft), inset 0 0 8px rgba(116, 198, 187, 0.15);
+}
+
+[data-theme="dark"] .focus-btn-reset:hover {
+  border: none !important;
+  color: #ffffff !important;
+}
+
+.focus-btn-reset:active {
+  transform: translateY(0) scale(0.96);
+  border: none !important;
+}
+
+.focus-card-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--accent-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+[data-theme="dark"] .focus-card-icon-box {
+  color: var(--accent);
+}
+
+.focus-card-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.focus-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.focus-card-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.focus-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.focus-todo-list {
+  flex: 1;
+  max-height: none;
+  min-height: 0;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.focus-save-info {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin: 8px 0 0;
+  text-align: center;
+  transition: opacity 0.2s ease;
+}

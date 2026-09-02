@@ -1,0 +1,80 @@
+.icon-btn,
+.menu-item {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 44px;
+  max-height: 44px;
+  padding: 0;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #181f24;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #d2dee4;
+  cursor: pointer;
+  box-sizing: border-box;
+  transform-origin: center center;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              background 0.2s ease, 
+              border-color 0.2s ease, 
+              color 0.2s ease, 
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.icon-btn:active,
+.menu-item:active { 
+  transform: translateY(0) scale(0.95) !important; 
+}
+.icon-btn svg,
+.menu-item svg { 
+  display: block; 
+  width: 19px;
+  height: 19px;
+  stroke: currentColor;
+  fill: none;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.2s ease, color 0.2s ease; 
+}
+.icon-btn svg path,
+.menu-item svg path,
+.icon-btn svg circle,
+.menu-item svg circle,
+.icon-btn svg line,
+.menu-item svg line,
+.icon-btn svg g,
+.menu-item svg g {
+  stroke: currentColor;
+  transition: stroke 0.2s ease;
+}
+
+.lang-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  perspective: 400px;
+}
+.lang-btn.anim-flip {
+  animation: langFlipAnim 0.48s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes langFlipAnim {
+  0% { transform: scale(1) rotateY(0deg); }
+  50% { transform: scale(1.22) rotateY(180deg); }
+  100% { transform: scale(1) rotateY(360deg); }
+}
+
+.fullscreen-btn.anim-pop svg {
+  animation: fsPopAnim 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes fsPopAnim {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.32) rotate(8deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}

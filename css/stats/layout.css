@@ -1,0 +1,53 @@
+/* ---------- Stats & Goals Subview Layout (Matching Header Width and Standalone Cards) ---------- */
+.subview-panel.stats-subview-panel {
+  width: calc(100% - 32px);
+  max-width: calc(min(94vw, 1640px) - 32px);
+  margin: 14px auto 40px auto;
+  padding: 0;
+  box-sizing: border-box;
+  min-height: calc(100vh - 120px);
+}
+
+.stats-screen-container {
+  display: grid;
+  grid-template-columns: 1fr clamp(320px, 26vw, 380px);
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+  min-height: calc(100vh - 120px);
+  box-sizing: border-box;
+}
+
+/* Left Main Card (Stats & Goals Standalone Container) */
+.stats-main-card {
+  background: #1c242a;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
+  min-height: 680px;
+  box-sizing: border-box;
+}
+
+[data-theme="light"] .stats-main-card {
+  background: var(--surface);
+}
+
+.stats-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 20px;
+}
+
+.stats-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  letter-spacing: -0.01em;
+}

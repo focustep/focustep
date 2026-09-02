@@ -1,0 +1,362 @@
+/* --------------------------------------------------------------------------
+   6. SUBTLE WATERMARK & IMMERSIVE AUTO-HIDE (VIDEO-PLAYER STYLE)
+   - When idle for 2s while running (or in Clock mode), UI elements fade out.
+   - Central stadium oval expands to occupy ~90% of workspace.
+   - Watermark "focustep" appears subtly at bottom center.
+   - Any mouse move, click or keypress brings everything smoothly back.
+   -------------------------------------------------------------------------- */
+
+/* Bottom Subtle Watermark (Maket bo'yicha) - Centered and only smoothly appears during Immersive Idle */
+.focus-watermark {
+  position: fixed;
+  bottom: clamp(18px, 3.5vh, 36px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  opacity: 0;
+  visibility: hidden;
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s ease, color 0.5s ease;
+  z-index: 10;
+  white-space: nowrap;
+  text-align: center;
+}
+
+[data-theme="dark"] .focus-watermark {
+  color: #a0b2c6;
+}
+
+/* Base transitions for elements fading during idle */
+.focus-top-controls-row {
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.focus-skeleton-left {
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, background 0.2s ease;
+}
+
+.focus-skeleton-right {
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, background 0.2s ease;
+}
+
+.focus-skeleton-controls {
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.focus-stadium-start-btn {
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.focus-skeleton-center {
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* IMMERSIVE IDLE STATE (2s Inactivity) */
+.focus-mode-view.is-idle,
+.focus-mode-view.is-idle * {
+  cursor: none !important;
+}
+
+.focus-mode-view.is-idle {
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 !important;
+}
+
+/* Hide Header when idle */
+.focus-mode-view.is-idle .top-row,
+body.is-idle .top-row {
+  position: absolute !important;
+  top: clamp(12px, 2vh, 20px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  transform: translateY(-16px) !important;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Hide Top Controls (Back button, fullscreen switch) */
+.focus-mode-view.is-idle .focus-mode-top-bar {
+  position: absolute !important;
+  top: clamp(14px, 2.5vh, 24px) !important;
+  left: 0 !important;
+  right: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  transform: translateY(-16px) !important;
+}
+
+.focus-mode-view.is-idle .focus-top-controls-row {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-16px) !important;
+}
+
+/* Hide Left and Right Panels smoothly */
+.focus-mode-view.is-idle .focus-skeleton-left,
+.focus-mode-view.is-idle .focus-skeleton-right {
+  position: absolute !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: scale(0.92) !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
+
+/* Hide Bottom Extra Controls (+5, +15, +30, custom min, reset) */
+.focus-mode-view.is-idle .focus-skeleton-controls {
+  position: absolute !important;
+  bottom: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  transform: translateY(28px) !important;
+}
+
+/* Hide Center Action Buttons (Start + Restart) */
+.focus-mode-view.is-idle .focus-stadium-actions,
+.focus-mode-view.is-idle #focus-start-btn,
+.focus-mode-view.is-idle #focus-btn-reset {
+  position: absolute !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(16px) !important;
+}
+
+/* Expand Skeleton Frame to full center when idle */
+.focus-mode-view.is-idle .focus-skeleton-frame {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  grid-template-columns: none !important;
+  gap: 0 !important;
+  max-width: 100vw !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.focus-mode-view.is-idle .focus-skeleton-center {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+}
+
+/* Expand Central Oval Capsule to occupy ~90% (Maket 2-dagi kabi) */
+.focus-mode-view.is-idle .focus-skeleton-capsule-main {
+  width: min(90vw, 1380px) !important;
+  max-width: 90vw !important;
+  height: clamp(340px, 58vh, 520px) !important;
+  border-radius: 9999px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  transition: width 0.65s cubic-bezier(0.16, 1, 0.3, 1), height 0.65s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.65s ease !important;
+}
+
+.focus-mode-view.is-idle .focus-digital-timer {
+  font-size: clamp(3.2rem, 7.8vw, 7.8rem) !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  transition: font-size 0.55s cubic-bezier(0.16, 1, 0.3, 1), margin-top 0.45s ease !important;
+}
+
+.focus-mode-view.is-idle .focus-watermark {
+  opacity: 0.38 !important;
+  visibility: visible !important;
+  transform: translateX(-50%) translateY(0) !important;
+}
+
+[data-theme="dark"] .focus-mode-view.is-idle .focus-watermark {
+  opacity: 0.30 !important;
+}
+
+/* Clock mode in Immersive Auto-Hide: Oval is even taller vertically, dead-centered in both normal and fullscreen modes */
+.focus-mode-view.is-idle.is-clock-mode .focus-skeleton-capsule-main,
+body.is-clock-mode .focus-mode-view.is-idle .focus-skeleton-capsule-main {
+  width: min(92vw, 1420px) !important;
+  max-width: 92vw !important;
+  height: clamp(380px, 68vh, 620px) !important;
+  border-radius: 9999px !important;
+  margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.focus-mode-view.is-idle.is-clock-mode .focus-digital-timer,
+body.is-clock-mode .focus-mode-view.is-idle .focus-digital-timer {
+  font-size: clamp(4.2rem, 10vw, 10rem) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.02em !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* ---------- FAQ Modal Dialog ---------- */
+.faq-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.faq-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.faq-modal-dialog {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow);
+  transform: scale(0.94) translateY(10px);
+  transition: transform 0.3s var(--ease-spring);
+  overflow: hidden;
+}
+
+.faq-modal-overlay.open .faq-modal-dialog {
+  transform: scale(1) translateY(0);
+}
+
+.faq-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-modal-icon-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.faq-modal-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-theme="dark"] .faq-modal-icon {
+  color: var(--accent);
+}
+
+.faq-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.faq-modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.faq-modal-close:hover {
+  color: var(--text);
+  background: var(--surface);
+  border-color: var(--text-muted);
+}
+
+.faq-modal-body {
+  padding: 20px 24px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.faq-item {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.faq-q {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.faq-a {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}

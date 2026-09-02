@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusStep - Study Timer</title>
+  <meta name="description" content="Clean, modular study timer application with Pomodoro cycles, streak calendar, task lists, and focus modes.">
+  <meta property="og:title" content="FocusStep - Study Timer">
+  <meta property="og:description" content="Clean, modular study timer application with Pomodoro cycles, streak calendar, task lists, and focus modes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap focus-mode-view is-active" id="focus-mode-view">
+  <!-- Top Header Row (Matching Exact Image Design) -->
+  <header class="top-row" id="main-header">
+    <!-- Left Logo and Brand Info -->
+    <div class="header-left">
+      <button type="button" class="header-logo-badge" id="header-logo-btn" title="focustep - Taymerga qaytish" aria-label="focustep">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="44" height="44" class="header-logo-img">
+          <!-- Background from Group 1.png -->
+          <rect class="header-logo-bg" width="512" height="512" rx="115" fill="#4ec9b0"/>
+          <!-- Cleaner, thinner Bold (700) Fs glyphs -->
+          <path class="header-logo-glyph" d="M142.55 374.69L94.89 374.69L94.89 141.88L248.02 141.88L248.02 181.41L142.55 181.41L142.55 246.41L237.70 246.41L237.70 285.31L142.55 285.31L142.55 374.69M338.98 378.13Q317.89 378.13 301.64 372.11Q285.39 366.09 275.08 354.61Q264.77 343.13 261.80 326.88L305.39 319.38Q308.83 331.56 317.42 337.66Q326.02 343.75 340.39 343.75Q353.83 343.75 361.56 338.67Q369.30 333.59 369.30 325.78Q369.30 318.91 363.75 314.53Q358.20 310.16 346.80 307.81L316.64 301.56Q291.33 296.41 278.83 283.98Q266.33 271.56 266.33 252.03Q266.33 235.16 275.55 223.05Q284.77 210.94 301.17 204.38Q317.58 197.81 339.77 197.81Q360.39 197.81 375.55 203.52Q390.70 209.22 400.08 219.69Q409.45 230.16 412.58 244.38L371.02 251.72Q368.36 242.81 360.78 237.11Q353.20 231.41 340.39 231.41Q328.83 231.41 321.02 236.25Q313.20 241.09 313.20 249.22Q313.20 255.78 318.28 260.31Q323.36 264.84 335.70 267.34L367.11 273.59Q392.42 278.75 404.77 290.39Q417.11 302.03 417.11 320.78Q417.11 337.97 407.11 350.86Q397.11 363.75 379.53 370.94Q361.95 378.13 338.98 378.13" fill="#15191d"/>
+        </svg>
+      </button>
+      <div class="header-brand-info" id="header-brand-text-btn">
+        <span class="header-brand-title">focustep</span>
+        <span class="header-brand-tagline">just study it</span>
+      </div>
+    </div>
+
+    <!-- Center Interactive Spotlight Typography Cloud -->
+    <div class="header-spotlight-zone" id="header-spotlight-zone" aria-hidden="true">
+      <div class="header-spotlight-cloud"></div>
+    </div>
+
+    <!-- Right Navigation & Action Items -->
+    <div class="header-nav-group" id="header-nav-group">
+      <button type="button" class="header-nav-link" id="nav-stats-btn">
+        <span class="nav-text">Stats &amp; Goals</span>
+      </button>
+      <button type="button" class="header-nav-link" id="nav-calendar-btn">
+        <span class="nav-text">Calendar &amp; History</span>
+      </button>
+      <button type="button" class="header-nav-link" id="nav-ai-teacher-btn">
+        <span class="nav-text">AI Teacher</span>
+      </button>
+
+      <!-- Far-Right Mint Action / Settings Menu Trigger -->
+      <div class="menu-wrap">
+        <button id="menu-toggle" class="header-action-square" type="button" aria-haspopup="true" aria-expanded="false" title="Menu & Settings" aria-label="Settings">
+          <!-- Classic Gear (шестеренка) Icon with dark tone -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="header-gear-icon">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+
+        <div class="menu-panel" id="menu-panel">
+          <!-- 5. FAQ Modal Button in Menu -->
+          <button id="faq-btn" class="icon-btn faq-btn menu-item" type="button" title="FAQ" aria-label="FAQ">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </button>
+
+          <!-- 4. Fullscreen Button -->
+          <button id="fullscreen-toggle" class="icon-btn fullscreen-btn menu-item" type="button" data-i18n-title="fullscreenTitle" data-i18n-aria="fullscreenAria" title="To'liq ekran" aria-label="To'liq ekran">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <g class="fs-enter"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></g>
+              <g class="fs-exit"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></g>
+            </svg>
+          </button>
+
+          <!-- 3. Mute Sound -->
+          <button id="mute-toggle" class="icon-btn menu-item" data-i18n-title="muteTitle" data-i18n-aria="muteAria" title="Ovozni yoqish/o'chirish" aria-label="Ovoz"></button>
+
+          <!-- 2. Switch Theme -->
+          <button id="theme-toggle" class="icon-btn menu-item" data-i18n-title="themeTitle" data-i18n-aria="themeAria" title="Rejimni almashtirish" aria-label="Mavzu"></button>
+
+          <!-- Switch Language -->
+          <button id="lang-toggle" class="icon-btn lang-btn menu-item" type="button" data-i18n-title="langTitle" title="Tilni almashtirish" aria-label="Til">UZ</button>
+
+          <!-- 1. Sign In / Sign Up Button (Far Right, closest to Gear) -->
+          <button id="auth-btn" class="icon-btn auth-btn menu-item" type="button" title="Sign In / Sign Up" aria-label="Sign In / Sign Up">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Current Session Status Indicator Row (Appears smoothly when active/started) -->
+  <div class="focus-session-header-row" id="focus-session-header-row">
+    <div class="focus-session-status-container" id="focus-session-container">
+      <span class="focus-session-status-text" id="focus-session-status-text">Focus time</span>
+      <span class="focus-session-status-dot" id="focus-session-status-dot" aria-hidden="true"></span>
+    </div>
+    <div class="focus-session-info-badge" id="focus-session-info-badge">
+      <span class="focus-session-label" data-i18n="sessionLabel">Session</span>
+      <span class="focus-session-num" id="focus-session-num">1</span>
+    </div>
+  </div>
+
+  <!-- Full Focus Mode Skeleton Frame -->
+  <main class="focus-skeleton-frame" id="focus-main-frame">
+    <!-- Left Card (Select/Custom Mode in Focus Mode) -->
+    <div class="focus-skeleton-card focus-skeleton-left">
+      <div class="focus-card-header focus-mode-select-header">
+        <div class="focus-mode-select-head-group">
+          <div class="focus-card-icon-box focus-mode-gear-box">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+          <h2 class="focus-card-title focus-mode-select-title" data-i18n="selectCustomMode">Select/Custom Mode</h2>
+        </div>
+      </div>
+
+      <!-- Mode Selector Buttons Group -->
+      <div class="focus-modes-wrapper">
+        <!-- Row 1: Timer | Pomodoro | Ultradian Rythm -->
+        <div class="focus-modes-row row-1">
+          <button type="button" class="focus-mode-tab is-active" id="tab-mode-timer" data-mode="timer" data-i18n="modeTimer">Timer</button>
+          <button type="button" class="focus-mode-tab" id="tab-mode-pomodoro" data-mode="pomodoro" data-i18n="modePomodoro">Pomodoro</button>
+          <button type="button" class="focus-mode-tab" id="tab-mode-ultradian" data-mode="ultradian" data-i18n="modeUltradian">Ultradian Rythm</button>
+        </div>
+
+        <!-- Row 2: Clock | Stopwatch -->
+        <div class="focus-modes-row row-2">
+          <button type="button" class="focus-mode-tab" id="tab-mode-clock" data-mode="clock" data-i18n="modeClock">Clock</button>
+          <button type="button" class="focus-mode-tab" id="tab-mode-stopwatch" data-mode="stopwatch" data-i18n="modeStopwatch">Stopwatch</button>
+        </div>
+      </div>
+
+      <!-- Subcard: Set Time / Set Duration Container -->
+      <div class="focus-set-time-card" id="focus-set-time-card">
+        <div class="focus-set-time-head">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+          <span class="focus-set-time-title" id="focus-set-time-title" data-i18n="setTimeLabel">SET TIME</span>
+        </div>
+
+        <!-- Pomodoro Phase Tabs Row (Visible in Pomodoro mode) -->
+        <div class="focus-pomo-phase-row" id="focus-pomo-phase-row" style="display: none;">
+          <button type="button" class="focus-pomo-phase-btn is-active" data-phase="work" data-i18n="focusTime">Focus time</button>
+          <button type="button" class="focus-pomo-phase-btn" data-phase="short_break" data-i18n="shortBreak">Short break</button>
+          <button type="button" class="focus-pomo-phase-btn" data-phase="long_break" data-i18n="longBreak">Long break</button>
+        </div>
+
+        <!-- iOS Wheel Picker for Focus Mode -->
+        <div class="duration-timer-box ios-wheel-box focus-ios-wheel-box">
+          <div class="duration-col wheel-col col-hours-focus-wrap" data-unit="hours" id="col-hours-wheel-focus">
+            <div class="wheel-viewport">
+              <div class="wheel-overlay-top"></div>
+              <div class="wheel-selection-highlight"></div>
+              <div class="wheel-overlay-bottom"></div>
+              <div class="wheel-ribbon" id="ribbon-hours-focus"></div>
+            </div>
+            <input type="hidden" id="dur-hours-focus" value="00">
+            <span class="duration-col-label" data-i18n="hoursLabel">HOURS</span>
+          </div>
+          <span class="duration-colon col-hours-focus-colon" aria-hidden="true"><i></i><i></i></span>
+          <div class="duration-col wheel-col" data-unit="minutes" id="col-minutes-wheel-focus">
+            <div class="wheel-viewport">
+              <div class="wheel-overlay-top"></div>
+              <div class="wheel-selection-highlight"></div>
+              <div class="wheel-overlay-bottom"></div>
+              <div class="wheel-ribbon" id="ribbon-minutes-focus"></div>
+            </div>
+            <input type="hidden" id="dur-minutes-focus" value="00">
+            <span class="duration-col-label" data-i18n="minutesLabel">MINUTES</span>
+          </div>
+          <span class="duration-colon" aria-hidden="true"><i></i><i></i></span>
+          <div class="duration-col wheel-col" data-unit="seconds" id="col-seconds-wheel-focus">
+            <div class="wheel-viewport">
+              <div class="wheel-overlay-top"></div>
+              <div class="wheel-selection-highlight"></div>
+              <div class="wheel-overlay-bottom"></div>
+              <div class="wheel-ribbon" id="ribbon-seconds-focus"></div>
+            </div>
+            <input type="hidden" id="dur-seconds-focus" value="00">
+            <span class="duration-col-label" data-i18n="secondsLabel">SECONDS</span>
+          </div>
+        </div>
+
+        <!-- Auto-start focus blocks Toggle Switch -->
+        <div class="focus-autostart-container" id="focus-autostart-container" style="display: none;">
+          <label class="focus-mode-fs-toggle focus-autostart-label-toggle" title="Auto-start focus blocks">
+            <input type="checkbox" id="focus-autostart-checkbox" checked>
+            <span class="mini-switch-slider"></span>
+            <span class="focus-autostart-title" id="focus-autostart-title" data-i18n="autoStartBlocks">Auto-start focus blocks</span>
+          </label>
+          <p class="focus-autostart-desc" id="focus-autostart-desc" data-i18n="autoStartDesc">
+            Automatically starts the next focus timer when rest ends. Toggle off to start manually.
+          </p>
+        </div>
+
+        <!-- Ultradian Rhythm Settings & Science Note Card -->
+        <div class="focus-ultradian-card" id="focus-ultradian-card" style="display: none;">
+          <div class="focus-ultradian-autostart-box">
+            <label class="focus-clock-toggle-item" title="Auto-start focus blocks">
+              <input type="checkbox" id="focus-ultradian-autostart-checkbox" checked>
+              <span class="focus-clock-pill-switch">
+                <span class="focus-clock-pill-knob"></span>
+              </span>
+              <span class="focus-autostart-title" data-i18n="autoStartBlocks">Auto-start focus blocks</span>
+            </label>
+            <p class="focus-autostart-desc" data-i18n="autoStartCyclesDesc">
+              Automatically starts the next focus timer when rest ends. Toggle off to start manually.
+            </p>
+          </div>
+          <div class="focus-ultradian-divider"></div>
+          <div class="focus-ultradian-note-box">
+            <p class="focus-ultradian-note-text" data-i18n="ultradianNote">
+              The duration of the cycles (90 min work / 20 min rest) is fixed on the basis of the biological rhythms of the human brain and is not subject to change.
+            </p>
+          </div>
+        </div>
+
+        <!-- Clock Mode Settings Card -->
+        <div class="focus-clock-card" id="focus-clock-card" style="display: none;">
+          <div class="focus-clock-header">
+            <svg class="focus-clock-hdr-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span data-i18n="modeClock">CLOCK</span>
+          </div>
+
+          <div class="focus-clock-switches-list">
+            <label class="focus-clock-toggle-item" title="Show seconds">
+              <input type="checkbox" id="focus-clock-seconds-checkbox" checked>
+              <span class="focus-clock-pill-switch">
+                <span class="focus-clock-pill-knob"></span>
+              </span>
+              <span class="focus-clock-item-label" data-i18n="showSeconds">Show seconds</span>
+            </label>
+
+            <label class="focus-clock-toggle-item" title="12-hour format">
+              <input type="checkbox" id="focus-clock-12h-checkbox">
+              <span class="focus-clock-pill-switch">
+                <span class="focus-clock-pill-knob"></span>
+              </span>
+              <span class="focus-clock-item-label" data-i18n="use12HourFormat">12-hour format</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Stopwatch Mode Settings Card -->
+        <div class="focus-stopwatch-card" id="focus-stopwatch-card" style="display: none;">
+          <div class="focus-stopwatch-msg-box">
+            <p class="focus-stopwatch-msg-text" data-i18n="stopwatchNote">
+              Use a stopwatch to track tasks for free
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Section -->
+    <div class="focus-skeleton-center">
+      <!-- Subject Switcher Badge + Pencil Quick Edit Button (Above Stadium Oval) -->
+      <div class="timer-subject-badge-wrapper" id="timer-subject-badge-wrapper">
+        <div class="timer-subject-badge" id="timer-subject-badge" data-tooltip="Click to switch subject">
+          <span class="timer-subject-dot" id="timer-subject-dot"></span>
+          <span class="timer-subject-name" id="timer-subject-name">Math</span>
+          <svg class="timer-subject-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <button type="button" class="timer-subject-edit-btn" id="timer-subject-edit-btn" data-tooltip="Quick edit in Stats & Goals" aria-label="Edit subjects in Stats & Goals">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu for Timer Subject Badge -->
+        <div class="timer-subject-dropdown" id="timer-subject-dropdown">
+          <div class="timer-subject-dropdown-list" id="timer-subject-dropdown-list">
+            <!-- Dynamically populated subjects -->
+          </div>
+          <div class="timer-subject-dropdown-divider"></div>
+          <button type="button" class="timer-subject-dropdown-add-btn" id="timer-subject-dropdown-add-btn">
+            <span>+ Add subject</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Stadium Oval -->
+      <div class="focus-skeleton-capsule-main" id="focus-stadium-capsule">
+        <!-- Stadium Glow -->
+        <div id="focus-stadium-glow" class="focus-stadium-glow"></div>
+
+        <!-- Stadium SVG Track & Progress Ring -->
+        <svg class="focus-stadium-svg" aria-hidden="true">
+          <!-- Background Track -->
+          <path class="focus-stadium-track" fill="none"/>
+          <!-- Dynamic Progress Stroke -->
+          <path id="focus-stadium-progress" class="focus-stadium-progress" fill="none" stroke-linecap="round"/>
+        </svg>
+
+        <!-- Main Digital Timer (Dead Center) -->
+        <div id="focus-time-display" class="focus-digital-timer">04:00:00</div>
+        <p id="focus-extra-info" class="focus-timer-sub"></p>
+
+        <!-- Start Button inside Stadium (Lower center, prominent neon glow & shine) -->
+        <div class="focus-stadium-actions" id="focus-stadium-actions">
+          <button type="button" id="focus-start-btn" class="primary focus-stadium-start-btn" aria-label="Start or Stop Timer">
+            <svg id="focus-start-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <span id="focus-start-label" data-i18n="start">Boshlash</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Restart Button underneath Stadium Oval (Centered) -->
+      <div class="focus-stadium-restart-wrapper" id="focus-stadium-restart-wrapper">
+        <button type="button" class="focus-btn-reset focus-stadium-restart-btn" id="focus-btn-reset" aria-label="Restart Timer" title="Restart">
+          <svg class="focus-restart-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          <span id="focus-restart-label" data-i18n="reset">Qayta boshlash</span>
+        </button>
+      </div>
+
+      <!-- Controls below Oval (Extra Time Buttons Layout) -->
+      <div class="focus-skeleton-controls">
+        <!-- Row 1: Horizontal Grid of Preset Extra Time Buttons (+5 min, +15 min, +30 min) -->
+        <div class="focus-skeleton-pill-row">
+          <button type="button" class="focus-skeleton-pill focus-extra-time-btn" data-min="5" aria-label="Add 5 minutes">
+            +5 min
+          </button>
+          <button type="button" class="focus-skeleton-pill focus-extra-time-btn" data-min="15" aria-label="Add 15 minutes">
+            +15 min
+          </button>
+          <button type="button" class="focus-skeleton-pill focus-extra-time-btn" data-min="30" aria-label="Add 30 minutes">
+            +30 min
+          </button>
+        </div>
+
+        <!-- Row 2: Custom Extra Time Button (Scroll to adjust minutes) -->
+        <button type="button" id="focus-custom-extra-btn" class="focus-skeleton-pill focus-custom-pill" title="Scroll mouse wheel to change minutes (+/-)" aria-label="Add custom minutes">
+          <span class="focus-custom-prefix">+</span><span id="focus-custom-extra-val" class="focus-custom-num">5</span><span class="focus-custom-suffix"> min</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Card (Bugungi rejalar / Today's plans in Focus Mode) -->
+    <div class="focus-skeleton-card focus-skeleton-right">
+      <div class="focus-card-header">
+        <div class="focus-card-icon-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div class="focus-card-titles">
+          <h2 class="focus-card-title" data-i18n="todoTitle">Bugungi rejalar</h2>
+          <p class="focus-card-sub" data-i18n="todoSub">Nimalarni bajarishni xohlaysiz?</p>
+        </div>
+      </div>
+
+      <div class="focus-card-content">
+        <div id="focus-todo-list" class="todo-list focus-todo-list"></div>
+        <p class="no-limit-note" data-i18n="noLimitLabel">Cheklov yo'q</p>
+        <div class="todo-add-row">
+          <textarea id="focus-todo-input" rows="1" data-i18n-placeholder="todoPlaceholder" placeholder="Yangi reja qo'shish..."></textarea>
+          <button id="focus-todo-add-btn" class="primary" data-i18n-aria="addAria" aria-label="Qo'shish">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+        <p id="focus-save-info" class="focus-save-info" data-i18n="autoSave">Avtomatik saqlanadi</p>
+      </div>
+    </div>
+
+    <!-- Bottom Subtle Watermark -->
+    <div class="focus-watermark" id="focus-watermark">focustep</div>
+  </main>
+
+  <!-- 1. Stats & Goals Subview -->
+  <section class="subview-panel stats-subview-panel" id="stats-subview" style="display: none;" aria-label="Stats and Goals">
+    <div class="stats-screen-container">
+      <!-- Left Column (Stats & Goals) -->
+      <div class="stats-main-card">
+        <div class="stats-section-header">
+          <h2 class="stats-section-title">Stats &amp; Goals</h2>
+        </div>
+
+        <!-- 1. Period Switcher (Week / Month / All time) -->
+        <div class="stats-period-switcher-wrapper">
+          <div class="stats-period-switcher" id="stats-period-switcher" role="tablist">
+            <button type="button" class="stats-period-pill-btn active" data-period="week" role="tab" aria-selected="true" data-tooltip="Show stats for current week">Week</button>
+            <button type="button" class="stats-period-pill-btn" data-period="month" role="tab" aria-selected="false" data-tooltip="Show stats for current month">Month</button>
+            <button type="button" class="stats-period-pill-btn" data-period="all" role="tab" aria-selected="false" data-tooltip="Show all-time statistics">All time</button>
+          </div>
+        </div>
+
+        <!-- 2. 4 Aggregated Metrics Cards -->
+        <div class="stats-metrics-row">
+          <div class="stats-metric-card" data-tooltip="Total time focused in selected period">
+            <span class="stats-metric-label">Study time</span>
+            <span class="stats-metric-val" id="metric-study-time">14h 20m</span>
+          </div>
+          <div class="stats-metric-card" data-tooltip="Total completed study sessions">
+            <span class="stats-metric-label">Sessions</span>
+            <span class="stats-metric-val" id="metric-sessions">23</span>
+          </div>
+          <div class="stats-metric-card" data-tooltip="Consecutive days with study activity">
+            <span class="stats-metric-label">Streak</span>
+            <span class="stats-metric-val" id="metric-streak">12 days</span>
+          </div>
+          <div class="stats-metric-card" data-tooltip="Day of week with highest focus time">
+            <span class="stats-metric-label">Best day</span>
+            <span class="stats-metric-val" id="metric-best-day">Tue</span>
+          </div>
+        </div>
+
+        <!-- 3. Daily Goal Card (Part 3) -->
+        <div class="stats-daily-goal-card" id="stats-daily-goal-card">
+          <!-- Left side: Circular Progress Ring -->
+          <div class="daily-goal-left">
+            <div class="daily-goal-ring-wrapper">
+              <svg class="daily-goal-ring-svg" width="96" height="96" viewBox="0 0 96 96">
+                <circle class="daily-goal-ring-bg" cx="48" cy="48" r="40" stroke-width="7" fill="none" />
+                <circle class="daily-goal-ring-fill" id="daily-goal-ring-circle" cx="48" cy="48" r="40" stroke-width="7" fill="none" stroke-linecap="round" />
+              </svg>
+              <div class="daily-goal-ring-center">
+                <span class="daily-goal-percent" id="daily-goal-percent-text">0%</span>
+              </div>
+            </div>
+            
+            <div class="daily-goal-info">
+              <span class="daily-goal-title">Daily goal</span>
+              <div class="daily-goal-time-row">
+                <span class="daily-goal-time" id="daily-goal-time-text">0h 00m / 2h 00m</span>
+                <button type="button" class="daily-goal-edit-btn" id="daily-goal-edit-btn" title="Change goal time" aria-label="Change goal time" data-tooltip="Edit daily target">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: Subject Selector Dropdown -->
+          <div class="daily-goal-right">
+            <div class="daily-goal-subject-wrapper" id="daily-goal-subject-select-wrapper">
+              <button type="button" class="daily-goal-subject-trigger" id="daily-goal-subject-trigger" data-tooltip="Select active subject">
+                <span class="daily-goal-subject-dot" id="daily-goal-subject-dot"></span>
+                <span class="daily-goal-subject-name" id="daily-goal-subject-name">Math</span>
+                <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="daily-goal-subject-menu" id="daily-goal-subject-menu">
+                <!-- Injected dynamically via daily-goal.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. By Subject Card (Matching Mockup) -->
+        <div class="stats-by-subject-card">
+          <div class="stats-by-subject-header">
+            <h3 class="stats-by-subject-title">By subject</h3>
+          </div>
+          <div class="by-subject-list" id="by-subject-list">
+            <!-- Injected via by-subject.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Activity (Standalone Card Matching Mockup) -->
+      <div class="stats-activity-card">
+        <div class="stats-activity-header">
+          <h3 class="stats-activity-title">Activity</h3>
+        </div>
+        <div class="stats-activity-list" id="stats-activity-list">
+          <!-- Rendered via activity.js -->
+        </div>
+        <button type="button" class="stats-activity-clear-btn" id="stats-activity-clear-btn" data-tooltip="Clear all activities">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          <span>Clear all activities</span>
+        </button>
+        <button type="button" class="stats-activity-full-history-btn" id="stats-activity-full-history-btn" data-tooltip="Open full calendar & history">
+          <span>Full history</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Calendar & History Subview -->
+  <section class="subview-panel" id="calendar-subview" style="display: none;" aria-label="Calendar and History">
+    <div class="subview-inner-card">
+      <div class="subview-header">
+        <div class="subview-title-group">
+          <div class="subview-icon-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <h2 class="subview-main-title">Calendar &amp; History</h2>
+            <p class="subview-subtitle">Kunlik fokus davomiyligi va rejalar tarixi</p>
+          </div>
+        </div>
+        <!-- Close (krestik) Button returning to timer -->
+        <button type="button" class="subview-close-x-btn" id="calendar-subview-close" aria-label="Taymerga qaytish" title="Taymerga qaytish">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="subview-body">
+        <div class="streak-badge" id="streak-badge">🔥 0 kun ketma-ket</div>
+        <div class="cal-header">
+          <button type="button" id="cal-prev" aria-label="Oldingi oy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span class="cal-month-label" id="cal-month-label">Oy Yil</span>
+          <button type="button" id="cal-next" aria-label="Keyingi oy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+        <div class="cal-weekdays">
+          <span>Du</span><span>Se</span><span>Ch</span><span>Pa</span><span>Ju</span><span>Sh</span><span>Ya</span>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-legend">
+          <span><span class="legend-dot" style="background:#54CBB4"></span> Bajarildi</span>
+          <span><span class="legend-dot" style="background:#EAB308"></span> Qisman</span>
+          <span><span class="legend-dot" style="background:var(--border)"></span> Bajarilmadi</span>
+        </div>
+
+        <div class="day-detail" id="day-detail">
+          <h3 class="day-detail-date" id="day-detail-date">Tanlangan kun</h3>
+          <p class="day-detail-status" id="day-detail-status"></p>
+          <div class="day-detail-todos" id="day-detail-todos"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. AI Teacher Subview -->
+  <section class="subview-panel" id="ai-teacher-subview" style="display: none;" aria-label="AI Teacher">
+    <div class="subview-inner-card">
+      <div class="subview-header">
+        <div class="subview-title-group">
+          <div class="subview-icon-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 3.4 2.1 6.3 5.1 7.4V20a2 2 0 0 0 2 2h1.8a2 2 0 0 0 2-2v-2.6C17.9 16.3 20 13.4 20 10a8 8 0 0 0-8-8z"/><line x1="10" y1="14" x2="14" y2="14"/><line x1="9" y1="18" x2="15" y2="18"/></svg>
+          </div>
+          <div>
+            <h2 class="subview-main-title">AI Teacher &amp; Mentor</h2>
+            <p class="subview-subtitle">O'qish rejasini tuzish, savollarga javob olish va diqqatni oshirish bo'yicha yordamchi</p>
+          </div>
+        </div>
+        <!-- Close (krestik) Button returning to timer -->
+        <button type="button" class="subview-close-x-btn" id="ai-teacher-subview-close" aria-label="Taymerga qaytish" title="Taymerga qaytish">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="subview-body ai-teacher-body">
+        <div class="ai-teacher-welcome-card">
+          <h3>Salom! Men sizning shaxsiy AI o'quv ustozingizman.</h3>
+          <p>O'qish rejangizni tuzish, murakkab mavzularni oddiy tilda tushunish yoki diqqatni jamlash bo'yicha maslahat so'rashingiz mumkin.</p>
+        </div>
+
+        <div class="ai-quick-prompts">
+          <button type="button" class="ai-prompt-pill" data-prompt="Pomodoro texnikasi bo'yicha 2 soatlik dars rejasini tuzib ber">⏱ Pomodoro rejasi</button>
+          <button type="button" class="ai-prompt-pill" data-prompt="Diqqatni jamlash va chalg'imaslik bo'yicha eng yaxshi 3 ta ilmiy maslahat">🧠 Fokus maslahatlari</button>
+          <button type="button" class="ai-prompt-pill" data-prompt="Bugungi darslarimni qanday samarali tartiblasam bo'ladi?">📚 Dars tartibi</button>
+        </div>
+
+        <div class="ai-chat-output" id="ai-chat-output">
+          <div class="ai-message assistant">
+            <p>O'rganmoqchi bo'lgan faningiz yoki bugungi maqsadlaringiz haqida yozing, darsingizni samarali rejalashtiramiz!</p>
+          </div>
+        </div>
+
+        <div class="ai-input-row">
+          <input type="text" id="ai-teacher-input" placeholder="Ustozdan savol so'rang yoki mavzuni yozing..." aria-label="AI Teacher savoli">
+          <button type="button" id="ai-teacher-send-btn" class="primary" aria-label="Yuborish">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Time Target Picker Modal -->
+<div id="goal-wheel-modal" class="goal-wheel-modal-container" aria-hidden="true">
+  <div class="goal-wheel-backdrop" id="goal-wheel-backdrop"></div>
+  <div class="goal-wheel-dialog" role="dialog" aria-modal="true" aria-labelledby="goal-wheel-title">
+    <div class="goal-wheel-header">
+      <h3 id="goal-wheel-title" class="goal-wheel-title">Daily Goal Target</h3>
+      <p class="goal-wheel-subtitle">Set your target study time for this subject</p>
+    </div>
+    
+    <div class="goal-wheel-body">
+      <!-- Minimalist Dual Rounded Square Boxes -->
+      <div class="goal-minimal-boxes-container">
+        <!-- Hours Square Box -->
+        <div class="goal-time-box" id="goal-time-box-hours" title="Scroll wheel to change hours or click to type">
+          <input type="number" class="goal-time-input" id="goal-input-hours" min="0" max="23" value="2" inputmode="numeric" autocomplete="off" />
+          <span class="goal-time-unit">hrs</span>
+        </div>
+
+        <div class="goal-time-colon">:</div>
+
+        <!-- Minutes Square Box -->
+        <div class="goal-time-box" id="goal-time-box-minutes" title="Scroll wheel to change minutes or click to type">
+          <input type="number" class="goal-time-input" id="goal-input-minutes" min="0" max="59" value="00" inputmode="numeric" autocomplete="off" />
+          <span class="goal-time-unit">min</span>
+        </div>
+      </div>
+
+      <p class="goal-wheel-tip">Scroll mouse wheel or tap to type</p>
+
+      <!-- Quick Preset Buttons -->
+      <div class="goal-presets-row">
+        <button type="button" class="goal-preset-chip" data-mins="30">30m</button>
+        <button type="button" class="goal-preset-chip" data-mins="45">45m</button>
+        <button type="button" class="goal-preset-chip" data-mins="60">1h</button>
+        <button type="button" class="goal-preset-chip" data-mins="90">1.5h</button>
+        <button type="button" class="goal-preset-chip" data-mins="120">2h</button>
+        <button type="button" class="goal-preset-chip" data-mins="180">3h</button>
+      </div>
+    </div>
+
+    <div class="goal-wheel-footer">
+      <button type="button" class="goal-wheel-btn cancel" id="goal-wheel-cancel-btn">Cancel</button>
+      <button type="button" class="goal-wheel-btn save" id="goal-wheel-save-btn">Save Goal</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Subject Modal -->
+<div id="subject-custom-modal" class="subject-custom-modal-container" aria-hidden="true">
+  <div class="subject-modal-backdrop" id="subject-modal-backdrop"></div>
+  <div class="subject-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="subject-modal-title">
+    <div class="subject-modal-header">
+      <h3 id="subject-modal-title" class="subject-modal-title">Add New Subject</h3>
+      <button type="button" class="subject-modal-close-btn" id="subject-modal-close-btn" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="subject-modal-body">
+      <!-- Live Preview Badge -->
+      <div class="subject-modal-preview-wrapper">
+        <span class="subject-modal-preview-badge" id="subject-modal-preview-badge">
+          <span class="subject-modal-preview-dot" id="subject-modal-preview-dot"></span>
+          <span class="subject-modal-preview-text" id="subject-modal-preview-text">New Subject</span>
+        </span>
+      </div>
+
+      <!-- 1. Subject Name Input -->
+      <div class="subject-modal-field">
+        <label for="subject-modal-name-input" class="subject-modal-label">SUBJECT NAME</label>
+        <input type="text" id="subject-modal-name-input" class="subject-modal-input" placeholder="e.g. Biology, History, Chemistry" maxlength="28" autocomplete="off" />
+      </div>
+
+      <!-- 2. Color Palette Selector -->
+      <div class="subject-modal-field">
+        <span class="subject-modal-label">COLOR THEME</span>
+        <div class="subject-modal-colors" id="subject-modal-colors">
+          <!-- Injected via subject-modal.js -->
+        </div>
+      </div>
+
+      <!-- 3. Icon Selector -->
+      <div class="subject-modal-field">
+        <span class="subject-modal-label">ICON</span>
+        <div class="subject-modal-icons" id="subject-modal-icons">
+          <!-- Injected via subject-modal.js -->
+        </div>
+      </div>
+    </div>
+
+    <div class="subject-modal-footer">
+      <button type="button" class="subject-modal-btn cancel" id="subject-modal-cancel-btn">Cancel</button>
+      <button type="button" class="subject-modal-btn save" id="subject-modal-save-btn">Create Subject</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ Modal Dialog -->
+<div id="faq-modal-overlay" class="faq-modal-overlay" aria-hidden="true">
+  <div class="faq-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="faq-modal-title">
+    <div class="faq-modal-header">
+      <div class="faq-modal-icon-title">
+        <div class="faq-modal-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <h3 id="faq-modal-title">Focustep — Tez-tez beriladigan savollar</h3>
+      </div>
+      <button type="button" id="faq-modal-close" class="faq-modal-close" aria-label="Yopish">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="faq-modal-body">
+      <div class="faq-item">
+        <h4 class="faq-q">Focustep nima?</h4>
+        <p class="faq-a">Focustep — o'qish va diqqatni jamlash uchun yaratilgan ilmiy asoslangan minimalistik taymer ilovasi. Unda Timer, Pomodoro, Ultradian Rhythm, Clock va Stopwatch rejimlari mavjud.</p>
+      </div>
+      <div class="faq-item">
+        <h4 class="faq-q">Immersive Auto-Hide qanday ishlaydi?</h4>
+        <p class="faq-a">Taymer ishlayotganda yoki Clock rejimida sichqoncha 2 soniya qimirlamasa, barcha tugmalar va yon panellar sekin yo'qolib, markaziy oval ekran o'rtasiga joylashadi. Sichqonchani qimirlatish orqali barchasi qaytadi.</p>
+      </div>
+      <div class="faq-item">
+        <h4 class="faq-q">Ultradian Rhythm qanday rejim?</h4>
+        <p class="faq-a">Inson miyasining 90 daqiqa yuqori konsentratsiya va 20 daqiqa tabiiy dam olish biologik tsikliga asoslangan ilmiy fokus rejimi.</p>
+      </div>
+      <div class="faq-item">
+        <h4 class="faq-q">Qisqa klavishlar (Shortcuts) bormi?</h4>
+        <p class="faq-a">Ha! <strong>Bo'shliq (Spacebar)</strong> — taymerni boshlash/to'xtatish, <strong>ESC</strong> — oynalarni yopish, <strong>F11</strong> yoki yuqoridagi tugma — to'liq ekran rejimi.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/main.js"></script>
+</body>
+</html>

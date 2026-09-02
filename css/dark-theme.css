@@ -1,0 +1,27 @@
+/* ---------- DARK MODE #54CBB4 OVERRIDES (Menu toggle, primary buttons, ring progress) ---------- */
+[data-theme="dark"] .menu-toggle {
+  background: #54CBB4 !important;
+  border-color: #54CBB4 !important;
+  color: #0c1815 !important;
+}
+[data-theme="dark"] .menu-toggle:hover {
+  background: #45bfa8 !important;
+  border-color: #45bfa8 !important;
+  color: #0c1815 !important;
+}
+[data-theme="dark"] button.primary {
+  background: #54CBB4 !important;
+  border-color: #54CBB4 !important;
+  color: #0c1815 !important;
+  box-shadow: 0 4px 12px -9px #54CBB4 !important;
+}
+[data-theme="dark"] button.primary:hover {
+  background: #45bfa8 !important;
+  border-color: #45bfa8 !important;
+}
+[data-theme="dark"] .time {
+  color: #ffffff !important;
+}
+[data-theme="dark"] .ring-progress {
+  stroke: #54CBB4 !important;
+}
