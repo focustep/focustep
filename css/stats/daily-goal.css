@@ -172,11 +172,27 @@
   transition: background-color 0.2s ease;
 }
 
+.daily-goal-subject-dot.has-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 0;
+  background: transparent !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.daily-goal-subject-dot.has-icon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
 .daily-goal-subject-menu {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  width: 200px;
+  width: 220px;
   background: #182026;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
@@ -236,6 +252,22 @@
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+.daily-goal-dropdown-item .subject-icon-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.daily-goal-dropdown-item .subject-icon-box svg {
+  width: 16px;
+  height: 16px;
+  display: block;
 }
 
 .daily-goal-dropdown-item .subject-item-name {

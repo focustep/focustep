@@ -58,24 +58,27 @@
   gap: 12px;
 }
 
-/* Current Session Status Indicator Row (Hidden on stop, smoothly visible on start) */
+/* Current Session Status Indicator Row (Appears smoothly inside center column top bar when active) */
 .focus-session-header-row {
-  display: flex;
+  display: none !important;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  margin: 0 auto;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-4px);
+  transform: translateY(0);
   transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
   pointer-events: none;
 }
 
-.focus-session-header-row.is-visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  pointer-events: auto;
+.focus-session-header-row.is-visible,
+.focus-mode-view.is-timer-running .focus-session-header-row {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
 }
 
 .focus-session-status-container {

@@ -70,6 +70,9 @@ export function updateStartStopLabel() {
   const focusStartLabel = document.getElementById('focus-start-label');
   const focusStartIcon = document.getElementById('focus-start-icon');
   const focusStadiumCapsule = document.querySelector('.focus-skeleton-capsule-main');
+  const focusView = document.getElementById('focus-mode-view');
+  const badgeWrap = document.getElementById('timer-subject-badge-wrapper');
+  const sessionHeaderRow = document.getElementById('focus-session-header-row');
 
   if (focusStartLabel) {
     focusStartLabel.textContent = timerState.running ? tr().stop : tr().start;
@@ -82,6 +85,15 @@ export function updateStartStopLabel() {
   }
   if (focusStadiumCapsule) {
     focusStadiumCapsule.classList.toggle('is-running', timerState.running);
+  }
+  if (focusView) {
+    focusView.classList.toggle('is-timer-running', timerState.running);
+  }
+  if (badgeWrap) {
+    badgeWrap.classList.toggle('is-hidden', timerState.running);
+  }
+  if (sessionHeaderRow) {
+    sessionHeaderRow.classList.toggle('is-visible', timerState.running);
   }
 }
 

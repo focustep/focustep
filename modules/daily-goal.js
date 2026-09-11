@@ -1,6 +1,7 @@
 import { getSubjects, getActiveSubjectId, setActiveSubjectId, getGoalForSubject, setGoalForSubject, getSessions } from './subjects.js';
 import { openSubjectModal } from './subject-modal.js';
 import { renderTimerSubjectBadge } from './timer-subject-badge.js';
+import { getSubjectSvg } from './subjects-db.js';
 
 let isWheelOpen = false;
 let isSubjectDropdownOpen = false;
@@ -51,7 +52,30 @@ export function renderDailyGoalCard() {
   const subjectName = document.getElementById('daily-goal-subject-name');
   
   if (subjectDot) {
-    subjectDot.style.backgroundColor = currentSubject.color;
+    const svg = getSubjectSvg(currentSubject.icon || currentSubject.id);
+    if (svg) {
+      subjectDot.className = 'daily-goal-subject-dot has-icon';
+      subjectDot.style.backgroundColor = 'transparent';
+      subjectDot.innerHTML = svg;
+      const svgEl = subjectDot.querySelector('svg');
+      if (svgEl) {
+        const isFillOnly = svgEl.getAttribute('fill') === 'currentColor' && (!svgEl.getAttribute('stroke') || svgEl.getAttribute('stroke') === 'none');
+        if (isFillOnly) {
+          svgEl.style.fill = currentSubject.color;
+          svgEl.style.color = currentSubject.color;
+          svgEl.style.stroke = 'none';
+        } else {
+          svgEl.style.stroke = currentSubject.color;
+          svgEl.style.color = currentSubject.color;
+        }
+        svgEl.style.width = '16px';
+        svgEl.style.height = '16px';
+      }
+    } else {
+      subjectDot.className = 'daily-goal-subject-dot';
+      subjectDot.innerHTML = '';
+      subjectDot.style.backgroundColor = currentSubject.color;
+    }
   }
   if (subjectName) {
     subjectName.textContent = currentSubject.name;
@@ -90,11 +114,35 @@ function renderSubjectDropdownList() {
   subjects.forEach(sub => {
     const item = document.createElement('div');
     item.className = `daily-goal-dropdown-item ${sub.id === activeSubjectId ? 'selected' : ''}`;
-    item.innerHTML = `
+    const svg = getSubjectSvg(sub.icon || sub.id);
+    const iconHtml = svg ? `
+      <div class="subject-icon-box" style="color: ${sub.color}; background-color: ${sub.color}18;">
+        ${svg}
+      </div>
+    ` : `
       <span class="subject-color-bullet" style="background-color: ${sub.color};"></span>
+    `;
+
+    item.innerHTML = `
+      ${iconHtml}
       <span class="subject-item-name">${sub.name}</span>
       ${sub.id === activeSubjectId ? '<svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
     `;
+
+    const svgEl = item.querySelector('.subject-icon-box svg');
+    if (svgEl) {
+      const isFillOnly = svgEl.getAttribute('fill') === 'currentColor' && (!svgEl.getAttribute('stroke') || svgEl.getAttribute('stroke') === 'none');
+      if (isFillOnly) {
+        svgEl.style.fill = sub.color;
+        svgEl.style.color = sub.color;
+        svgEl.style.stroke = 'none';
+      } else {
+        svgEl.style.stroke = sub.color;
+        svgEl.style.color = sub.color;
+      }
+      svgEl.style.width = '16px';
+      svgEl.style.height = '16px';
+    }
     item.addEventListener('click', () => {
       setActiveSubjectId(sub.id);
       closeSubjectDropdown();

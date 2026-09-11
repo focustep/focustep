@@ -98,18 +98,6 @@
     </div>
   </header>
 
-  <!-- Current Session Status Indicator Row (Appears smoothly when active/started) -->
-  <div class="focus-session-header-row" id="focus-session-header-row">
-    <div class="focus-session-status-container" id="focus-session-container">
-      <span class="focus-session-status-text" id="focus-session-status-text">Focus time</span>
-      <span class="focus-session-status-dot" id="focus-session-status-dot" aria-hidden="true"></span>
-    </div>
-    <div class="focus-session-info-badge" id="focus-session-info-badge">
-      <span class="focus-session-label" data-i18n="sessionLabel">Session</span>
-      <span class="focus-session-num" id="focus-session-num">1</span>
-    </div>
-  </div>
-
   <!-- Full Focus Mode Skeleton Frame -->
   <main class="focus-skeleton-frame" id="focus-main-frame">
     <!-- Left Card (Select/Custom Mode in Focus Mode) -->
@@ -268,29 +256,48 @@
 
     <!-- Center Section -->
     <div class="focus-skeleton-center">
-      <!-- Subject Switcher Badge + Pencil Quick Edit Button (Above Stadium Oval) -->
-      <div class="timer-subject-badge-wrapper" id="timer-subject-badge-wrapper">
-        <div class="timer-subject-badge" id="timer-subject-badge" data-tooltip="Click to switch subject">
-          <span class="timer-subject-dot" id="timer-subject-dot"></span>
-          <span class="timer-subject-name" id="timer-subject-name">Math</span>
-          <svg class="timer-subject-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </div>
-        <button type="button" class="timer-subject-edit-btn" id="timer-subject-edit-btn" data-tooltip="Quick edit in Stats & Goals" aria-label="Edit subjects in Stats & Goals">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-          </svg>
-        </button>
-
-        <!-- Dropdown Menu for Timer Subject Badge -->
-        <div class="timer-subject-dropdown" id="timer-subject-dropdown">
-          <div class="timer-subject-dropdown-list" id="timer-subject-dropdown-list">
-            <!-- Dynamically populated subjects -->
+      <!-- Center Top Bar (Holds Subject Switcher Badge when idle, or Focus Time & Session Info when active) -->
+      <div class="timer-center-top-bar" id="timer-center-top-bar">
+        <!-- Subject Switcher Badge + Pencil Quick Edit Button (Above Stadium Oval) -->
+        <div class="timer-subject-badge-wrapper" id="timer-subject-badge-wrapper">
+          <div class="timer-subject-badge" id="timer-subject-badge" data-tooltip="Click to switch subject">
+            <span class="timer-subject-dot" id="timer-subject-dot"></span>
+            <span class="timer-subject-name" id="timer-subject-name">Math</span>
+            <svg class="timer-subject-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </div>
-          <div class="timer-subject-dropdown-divider"></div>
-          <button type="button" class="timer-subject-dropdown-add-btn" id="timer-subject-dropdown-add-btn">
-            <span>+ Add subject</span>
+          <button type="button" class="timer-subject-edit-btn" id="timer-subject-edit-btn" data-tooltip="Quick edit in Stats & Goals" aria-label="Edit subjects in Stats & Goals">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
           </button>
+
+          <!-- Dropdown Menu for Timer Subject Badge -->
+          <div class="timer-subject-dropdown" id="timer-subject-dropdown">
+            <div class="timer-subject-dropdown-list" id="timer-subject-dropdown-list">
+              <!-- Dynamically populated subjects -->
+            </div>
+            <div class="timer-subject-dropdown-divider"></div>
+            <button type="button" class="timer-subject-dropdown-add-btn" id="timer-subject-dropdown-add-btn" aria-label="Add subject">
+              <svg class="timer-add-subject-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Add subject</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Current Session Status Indicator Row (Appears smoothly in place of switch subject when active/started) -->
+        <div class="focus-session-header-row" id="focus-session-header-row">
+          <div class="focus-session-status-container" id="focus-session-container">
+            <span class="focus-session-status-text" id="focus-session-status-text">Focus time</span>
+            <span class="focus-session-status-dot" id="focus-session-status-dot" aria-hidden="true"></span>
+          </div>
+          <div class="focus-session-info-badge" id="focus-session-info-badge">
+            <span class="focus-session-label" data-i18n="sessionLabel">Session</span>
+            <span class="focus-session-num" id="focus-session-num">1</span>
+          </div>
         </div>
       </div>
 
@@ -369,14 +376,13 @@
 
       <div class="focus-card-content">
         <div id="focus-todo-list" class="todo-list focus-todo-list"></div>
-        <p class="no-limit-note" data-i18n="noLimitLabel">Cheklov yo'q</p>
         <div class="todo-add-row">
           <textarea id="focus-todo-input" rows="1" data-i18n-placeholder="todoPlaceholder" placeholder="Yangi reja qo'shish..."></textarea>
           <button id="focus-todo-add-btn" class="primary" data-i18n-aria="addAria" aria-label="Qo'shish">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
         </div>
-        <p id="focus-save-info" class="focus-save-info" data-i18n="autoSave">Avtomatik saqlanadi</p>
+        <p class="no-limit-note" id="focus-todo-nolimit" data-i18n="noLimitLabel">Cheklov yo'q</p>
       </div>
     </div>
 
@@ -669,10 +675,14 @@
         </span>
       </div>
 
-      <!-- 1. Subject Name Input -->
+      <!-- 1. Subject Name Input with Auto-suggest -->
       <div class="subject-modal-field">
         <label for="subject-modal-name-input" class="subject-modal-label">SUBJECT NAME</label>
-        <input type="text" id="subject-modal-name-input" class="subject-modal-input" placeholder="e.g. Biology, History, Chemistry" maxlength="28" autocomplete="off" />
+        <div class="subject-modal-input-wrap" id="subject-modal-input-wrap">
+          <input type="text" id="subject-modal-name-input" class="subject-modal-input" placeholder="e.g. AI, Python, Kiberxavfsizlik" maxlength="32" autocomplete="off" />
+          <!-- Auto-suggest Dropdown -->
+          <div class="subject-name-autosuggest" id="subject-name-autosuggest" aria-hidden="true"></div>
+        </div>
       </div>
 
       <!-- 2. Color Palette Selector -->
@@ -728,6 +738,34 @@
           <input type="text" id="color-picker-hex-input" class="color-picker-hex-input" value="6366F1" maxlength="6" spellcheck="false" autocomplete="off" />
         </div>
         <button type="button" id="color-picker-apply-btn" class="color-picker-apply-btn">Apply</button>
+      </div>
+    </div>
+
+    <!-- Custom Icon Picker Popover (Positioned to the right of the modal) -->
+    <div class="subject-icon-picker-popover" id="subject-icon-picker-popover" aria-hidden="true">
+      <div class="icon-picker-header">
+        <div class="icon-picker-title-row">
+          <span class="icon-picker-title">Choose Custom Icon</span>
+          <button type="button" class="icon-picker-close-btn" id="icon-picker-close-btn" aria-label="Close icon picker">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <!-- Search input for icons -->
+        <div class="icon-picker-search-wrap">
+          <svg class="icon-picker-search-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="icon-picker-search-input" class="icon-picker-search-input" placeholder="Qidirish / Поиск / Search..." autocomplete="off" />
+        </div>
+      </div>
+
+      <!-- Icon Categories and Grid list -->
+      <div class="icon-picker-scroll-area" id="icon-picker-scroll-area">
+        <!-- Dynamically populated categories & icons -->
       </div>
     </div>
   </div>

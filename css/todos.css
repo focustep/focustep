@@ -1,4 +1,29 @@
 /* ---------- todos ---------- */
+.focus-skeleton-right .focus-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.focus-skeleton-right .focus-todo-list {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.focus-skeleton-right .todo-add-row {
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.focus-skeleton-right .no-limit-note {
+  margin: 10px 0 2px;
+  flex-shrink: 0;
+}
+
 .todo-list {
   display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px;
   max-height: 340px; overflow-y: auto; padding-right: 3px;
@@ -11,9 +36,16 @@
 .todo-list { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 
 .no-limit-note {
-  text-align: center; font-size: 9.5px; font-weight: 500; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--text-muted); opacity: 0.75;
-  margin: 0 0 10px; font-family: 'Inter', sans-serif; transition: opacity 0.2s ease, color 0.3s ease;
+  text-align: center;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.75;
+  margin: 10px 0 2px;
+  font-family: 'Inter', sans-serif;
+  transition: opacity 0.2s ease, color 0.3s ease;
 }
 .no-limit-note:hover { opacity: 1; }
 

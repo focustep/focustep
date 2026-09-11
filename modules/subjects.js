@@ -5,7 +5,8 @@
 const DEFAULT_SUBJECTS = [
   { id: 'math', name: 'Math', color: '#7c3aed', icon: 'calculator' },
   { id: 'english', name: 'English', color: '#f97316', icon: 'languages' },
-  { id: 'physics', name: 'Physics', color: '#10b981', icon: 'flask-conical' }
+  { id: 'physics', name: 'Physics', color: '#10b981', icon: 'flask-conical' },
+  { id: 'other', name: 'Other', color: '#4ec9b0', icon: 'more-horizontal' }
 ];
 
 const SUBJECTS_KEY = 'focustep_subjects';
@@ -25,7 +26,8 @@ export function getSubjectGoals() {
   const defaultGoals = {
     math: 120, // 2 hours
     english: 60, // 1 hour
-    physics: 90 // 1.5 hours
+    physics: 90, // 1.5 hours
+    other: 60 // 1 hour
   };
   saveSubjectGoals(defaultGoals);
   return defaultGoals;
@@ -53,7 +55,14 @@ export function getSubjects() {
     const raw = localStorage.getItem(SUBJECTS_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        // Ensure Other subject is present at the bottom
+        if (!parsed.some(s => s.id === 'other' || s.name.toLowerCase() === 'other')) {
+          parsed.push({ id: 'other', name: 'Other', color: '#4ec9b0', icon: 'more-horizontal' });
+          saveSubjects(parsed);
+        }
+        return parsed;
+      }
     }
   } catch (e) {}
   saveSubjects(DEFAULT_SUBJECTS);
