@@ -45,7 +45,7 @@ export const BUSINESS_SUBJECTS = [
     },
     aliases: ['moliya', 'investitsiya', 'bank ishi', 'kapital', 'finance', 'banking', 'финансы', 'инвестиции'],
     defaultColor: '#eab308',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10"/><path d="M15 9.5a2.5 2.5 0 0 0-5 0c0 3 5 2 5 5a2.5 2.5 0 0 1-5 0"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M10.8 1.5h2.4v2.05c2.8.3 4.8 1.8 5.6 4.15l-2.6 1.1c-.5-1.4-1.6-2.2-3-2.35v5.3c3.2.8 5.5 2.1 5.5 5.25 0 2.8-2.2 4.6-5.5 5.05v2.45h-2.4v-2.4c-2.9-.35-5-2-5.8-4.55l2.6-1.1c.5 1.6 1.7 2.6 3.2 2.75v-5.45c-3.2-.8-5.5-2.1-5.5-5.15 0-2.8 2.2-4.5 5.5-4.95V1.5Zm0 5.1c-1.4.3-2.3 1.1-2.3 2.15 0 1.05.8 1.7 2.3 2.1v-4.25Zm2.4 7.6v4.35c1.5-.3 2.4-1.2 2.4-2.25 0-1.1-.9-1.7-2.4-2.1Z"/></svg>`
   },
   {
     id: 'accounting',
@@ -105,6 +105,6 @@ export const BUSINESS_SUBJECTS = [
     },
     aliases: ['loyihalarni boshqarish', 'project management', 'agile', 'scrum', 'pmp', 'kanban', 'управление проектами'],
     defaultColor: '#8b5cf6',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/><path d="M3 9h18"/><path d="M3 15h18"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 3.5A9 9 0 1 0 20.8 11.8"/><path d="m7.5 11.5 4 4.5 8.5-11"/></svg>`
   }
 ];

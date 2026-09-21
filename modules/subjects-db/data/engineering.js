@@ -9,7 +9,7 @@ export const ENGINEERING_SUBJECTS = [
     },
     aliases: ['elektrotexnika muhandisligi', 'elektrotexnika', 'elektronika', 'sxemotexnika', 'electrical engineering', 'электротехника', 'электроинженерия'],
     defaultColor: '#eab308',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8.5V2.2a1.5 1.5 0 0 1 3 0V8.5"/><path d="M14 8.5V2.2a1.5 1.5 0 0 1 3 0V8.5"/><path d="M3.5 11c0-1.4 1.1-2.5 2.5-2.5h12c1.4 0 2.5 1.1 2.5 2.5"/><path d="M5 11c0 4.2 2.8 7.2 5.5 7.6h3c2.7-.4 5.5-3.4 5.5-7.6"/><path d="M10.5 18.6V23h3v-4.4"/></svg>`
   },
   {
     id: 'mechanical_eng',
@@ -45,7 +45,7 @@ export const ENGINEERING_SUBJECTS = [
     },
     aliases: ['kimyoviy muhandislik', 'kimyo muhandisligi', 'neft-gaz', 'chemical engineering', 'химическая инженерия', 'нефтехимия'],
     defaultColor: '#0284c7',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v6l3 4v8a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-8l3-4V2"/><path d="M4 2h16"/><path d="M9 16h6"/><circle cx="10" cy="19" r="1" fill="currentColor"/><circle cx="14" cy="18" r="1" fill="currentColor"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5h8"/><path d="M9.2 2.5v6L4.2 19a2.5 2.5 0 0 0 2.2 2.5h11.2a2.5 2.5 0 0 0 2.2-2.5L14.8 8.5v-6"/><path d="M7 14c1.4-.9 2.9-.9 5 .2s3.6 1.1 5-.2"/></svg>`
   },
   {
     id: 'aerospace_eng',
@@ -69,7 +69,7 @@ export const ENGINEERING_SUBJECTS = [
     },
     aliases: ['avtomobilsozlik muhandisligi', 'avtomobilsozlik', 'avtomobil', 'automotive engineering', 'mashinasozlik', 'автомобилестроение', 'автопром'],
     defaultColor: '#dc2626',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.7 2 11.3 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.8 17.2 11.2 9.8a5.6 5.6 0 0 1 8.2-7.2l-3.4 3.4 2.4 2.4 3.8-3.8a5.6 5.6 0 0 1-7.2 8.2L7.8 20.2a2.5 2.5 0 0 1-4-3Z"/><circle cx="5.3" cy="18.7" r="1.3"/></svg>`
   },
   {
     id: 'energy_eng',
@@ -81,7 +81,7 @@ export const ENGINEERING_SUBJECTS = [
     },
     aliases: ['energetika muhandisligi', 'energetika', 'quyosh energiyasi', 'shamol energiyasi', 'energy engineering', 'power engineering', 'энергетика'],
     defaultColor: '#10b981',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M12 12l5-5a4 4 0 0 1-5.66-5.66L12 2v10z"/><path d="M12 12l-5 5a4 4 0 0 1 5.66 5.66L12 22V12z"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>`
   },
   {
     id: 'biomedical_eng',

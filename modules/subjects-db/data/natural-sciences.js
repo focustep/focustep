@@ -9,7 +9,7 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['matematika', 'algebra', 'geometriya', 'oliy matematika', 'math', 'mathematics', 'математика', 'алгебра', 'геометрия'],
     defaultColor: '#7c3aed',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.8 8.2c.8-2.5 2.8-3.7 5.8-3.7h9.8"/><path d="M9.8 4.5v9.8c0 2.4-1.5 4.5-4 4.5"/><path d="M16.2 4.5v12.2c0 1.3.7 2.1 2.2 2.1"/></svg>`
   },
   {
     id: 'physics',
@@ -21,7 +21,7 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['fizika', 'physics', 'kvant fizikasi', 'mexanika', 'физика'],
     defaultColor: '#10b981',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.5" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h4.5v9.5a4.5 4.5 0 0 0 9 0V2.5H21v9.5a9 9 0 0 1-18 0Z"/></svg>`
   },
   {
     id: 'chemistry',
@@ -33,7 +33,7 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['kimyo', 'chemistry', 'organik kimyo', 'anorganik kimyo', 'химия'],
     defaultColor: '#06b6d4',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/><circle cx="10" cy="19" r="1" fill="currentColor"/><circle cx="14" cy="18" r="1" fill="currentColor"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5v13" stroke-width="2.6"/><path d="M13 4.5v13" stroke-width="2.6"/><path d="M4 11h9" stroke-width="2.6"/><path d="M16.8 14.2a2.3 2.3 0 0 1 4.5.9c0 1.9-4.5 3.1-4.5 5.2h4.8" stroke-width="2.2"/></svg>`
   },
   {
     id: 'biology',
@@ -57,7 +57,7 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['astronomiya', 'astronomy', 'astrofizika', 'kosmos', 'space', 'астрономия'],
     defaultColor: '#6366f1',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"/><ellipse cx="12" cy="12" rx="11" ry="3.5" transform="rotate(-25 12 12)"/><path d="M19 4l.5 1.5L21 6l-1.5.5L19 8l-.5-1.5L17 6l1.5-.5z"/><circle cx="5" cy="5" r="1" fill="currentColor"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 21.5 6.5-8.7"/><path d="M11.5 12.8v8.7"/><path d="m18 21.5-6.5-8.7"/><g transform="translate(11.5 10.5) rotate(-28)"><path d="M-8.5-1.3h2.2v-1h3.5v-1h5.3v-.9a.8.8 0 0 1 .8-.8h1.7a.8.8 0 0 1 .8.8v6.8a.8.8 0 0 1-.8.8h-1.7a.8.8 0 0 1-.8-.8v-.9h-5.3v-1h-3.5v-1h-2.2a.6.6 0 0 1-.6-.6v-1.4a.6.6 0 0 1 .6-.6Z"/></g></svg>`
   },
   {
     id: 'geology',
@@ -81,7 +81,7 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['ekologiya', 'ecology', 'atrof-muhit', 'tabiat', 'экология'],
     defaultColor: '#059669',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7c2.5 0 4.5 2 4.5 4.5S14.5 16 12 16"/><path d="M12 16v3"/><path d="M9.5 13.5C9.5 11.5 10.5 9 12 7"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><text x="12" y="17.2" text-anchor="middle" font-size="13" font-weight="900" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" transform="matrix(0.98 0 0 1.35 0.24 -4.2)" letter-spacing="-0.2">ECO</text></svg>`
   },
   {
     id: 'genetics',
@@ -105,7 +105,7 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['neyrobiologiya', 'neurobiology', 'neuroscience', 'neyroilm', 'miya', 'нейробиология'],
     defaultColor: '#9333ea',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04Z"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 7.5 C10.8 8.8 13.2 8.8 14.5 7.5 C15.8 9 17 11 16.5 13.5 C15.8 15.5 13.8 16.8 11.5 17 C9.5 16.8 7.8 15.5 7.5 13.5 C7 11 8.2 9 9.5 7.5Z"/><path d="M9.5 7.5 C9 5 7.5 3 5.5 2"/><path d="M14.5 7.5 C15.5 5 16 3 17 2"/><path d="M15.5 5 C17.5 5.5 19 4.8 20 4"/><path d="M16.5 11.5 C18.5 11.5 20.5 11 22 10.5"/><path d="M19 11.2 C20 12.5 21 13.5 22 14"/><path d="M15.5 15.5 C16.5 17.5 18 19 20.5 19.5"/><path d="M11.5 17 C11.5 18.5 10.5 20.5 9 22.5"/><path d="M11.5 17 C12.5 18.5 13 20.5 13.5 22.5"/><path d="M7.5 15 C6.5 16.5 5.5 18 4 19"/><path d="M7.2 12.5 C5.5 13 4 13.5 3 14"/><path d="M7.5 10 C5.8 9.5 4.5 8.5 2.5 8.5"/><circle cx="12" cy="12.2" r="2.2"/></svg>`
   },
   {
     id: 'statistics',
@@ -117,6 +117,6 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['statistika', 'statistics', 'stats', 'ehtimollar nazariyasi', 'статистика'],
     defaultColor: '#ea580c',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/><path d="M4 11l4-3 5 5 6-7"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m4 15 5-5 4 4 7-7"/><path d="M15 7h5v5"/></svg>`
   }
 ];

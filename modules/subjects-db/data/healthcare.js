@@ -9,7 +9,7 @@ export const HEALTHCARE_SUBJECTS = [
     },
     aliases: ['umumiy tibbiyot', 'tibbiyot', 'davolash ishi', 'shifokor', 'doktor', 'terapiya', 'jarrohlik', 'medicine', 'общая медицина', 'лечебное дело'],
     defaultColor: '#ef4444',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 3v5a5.5 5.5 0 0 0 11 0V3"/><path d="M4 3h1"/><path d="M15 3h1"/><path d="M10 13.5V17a3 3 0 0 0 3 3h1a3 3 0 0 0 3-3v-1"/><circle cx="17" cy="13" r="2"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 5C5 3.2 3.5 5 3.5 7.5l3.3 8a6 6 0 0 0 10.4 0l3.3-8c0-2.5-1.5-4.3-3-2.5"/><circle cx="7.5" cy="4" r="1.4"/><circle cx="16.5" cy="4" r="1.4"/><path d="M12 18.2V23.5"/></svg>`
   },
   {
     id: 'dentistry',
@@ -21,7 +21,7 @@ export const HEALTHCARE_SUBJECTS = [
     },
     aliases: ['stomatologiya', 'tish', 'tish shifokori', 'dentistry', 'dental', 'ortodontiya', 'стоматология', 'зубной'],
     defaultColor: '#06b6d4',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.5 2 7 4.5 7 8c0 3.5 1 10 2.5 13 1.5 0 2-3 2.5-6 .5 3 1 6 2.5 6 1.5-3 2.5-9.5 2.5-13 0-3.5-1.5-6-5-6Z"/><path d="M9 7.5c.5-.5 1.5-.5 3 0 1.5-.5 2.5-.5 3 0"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8c-2.5-1.6-5.5-1.6-7.5.7-2 2.3-2 5-.5 6.5l1.5 6.5c.5 2.3 1.5 4.3 3 4.3s2-2.8 2.5-6.8c.3-1.8 1.7-1.8 2 0 .5 4 1 6.8 2.5 6.8s2.5-2 3-4.3l1.5-6.5c1.5-1.5 1.5-4.2-.5-6.5-2-2.3-5-2.3-7.5-.7Z"/></svg>`
   },
   {
     id: 'pharmacy',
@@ -33,7 +33,7 @@ export const HEALTHCARE_SUBJECTS = [
     },
     aliases: ['farmatsevtika', 'farmakologiya', 'dori', 'dorishunoslik', 'apteka', 'pharmacy', 'pharmacology', 'фармацевтика', 'фармакология'],
     defaultColor: '#10b981',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/><circle cx="6" cy="18" r="2.5"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9.5 17.5 6a3.2 3.2 0 0 0-4.5-4.5L3.5 11a3.2 3.2 0 0 0 4.5 4.5L10.5 13"/><path d="m7.8 5.8 4.7 4.7"/><circle cx="15.8" cy="15.8" r="5.5"/><path d="m11.9 17.8 7.8-4"/></svg>`
   },
   {
     id: 'nursing',
@@ -57,18 +57,6 @@ export const HEALTHCARE_SUBJECTS = [
     },
     aliases: ['psixologiya', 'ruhshunoslik', 'kognitiv psixologiya', 'psychology', 'психология'],
     defaultColor: '#8b5cf6',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2a5 5 0 0 0-5 5v2a5 5 0 0 0 2 4.1V18a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-4.9A5 5 0 0 0 16.5 9v-2a5 5 0 0 0-5-5Z"/><path d="M9 10h6"/><path d="M12 7v6"/></svg>`
-  },
-  {
-    id: 'psychiatry',
-    categoryId: 'healthcare',
-    names: {
-      uz: "Psixiatriya",
-      ru: "Психиатрия",
-      en: "Psychiatry"
-    },
-    aliases: ['psixiatriya', 'ruhiy salomatlik', 'psychiatry', 'mental health', 'психиатрия'],
-    defaultColor: '#6366f1',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M5 8v5a7 7 0 0 0 14 0V8"/><line x1="8" y1="22" x2="16" y2="22"/><line x1="4" y1="8" x2="6" y2="8"/><line x1="18" y1="8" x2="20" y2="8"/></svg>`
   },
   {
@@ -81,7 +69,7 @@ export const HEALTHCARE_SUBJECTS = [
     },
     aliases: ['fizioterapiya', 'reabilitatsiya', 'davolash jismoniy tarbiyasi', 'physiotherapy', 'physical therapy', 'физиотерапия', 'реабилитация'],
     defaultColor: '#0ea5e9',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"/><path d="m5 9 4-1 3 4 3-2 4 3"/><path d="m9 12-2 9"/><path d="m12 15 3 7"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 22.5c0-2.8-.8-5.5-3.2-7.5-1.5-1.2-3.8-1.8-4.5-2.8-.8-1.1 0-2 1.5-1.8 2 .2 4.2 1.5 5.5 2.8.2-3.5-.8-6.8-1.5-9.2-.4-1.3 1.2-2 2-1 1.2 1.5 2.2 4.8 2.5 7.5.3-4.2.8-7.5 1.5-8.2.8-.8 2-.6 2.2.6.4 2.5.5 5.5.3 7.8.8-3.2 2-5.5 3-5.8.9-.3 1.8.5 1.5 1.6-.6 2.2-1.5 4.8-1.8 6.8 1.2-2 2.8-3.5 3.8-3.2.9.3 1 1.5.2 2.5-1.8 2.2-3.8 5.8-4.8 8.8-.4 1.2-.7 2.2-.7 3.5"/></svg>`
   },
   {
     id: 'nutrition',
@@ -93,7 +81,7 @@ export const HEALTHCARE_SUBJECTS = [
     },
     aliases: ['ozuqalanish va dietologiya', 'nutrition', 'dietologiya', 'soglom ovqatlanish', 'parhez', 'нутрициология', 'диетология'],
     defaultColor: '#84cc16',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.88-1.1 4-3.54 4-7.94a6 6 0 0 0-6-6 6 6 0 0 0-6 6c0 4.4 2.12 6.84 4 7.94"/><path d="M12 3a3 3 0 0 0 3 3h1"/><path d="M12 7v13"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5c-1.8-2-5.5-2-7.8.8-2.5 3-2 8 .8 11.2 2.2 2.5 5 2.5 7 1 2 1.5 4.8 1.5 7-1 2.8-3.2 3.3-8.2.8-11.2-2.3-2.8-6-2.8-7.8-.8Z"/><path d="M12 7.5c-.8-2.5-2.5-4.2-4.8-4.8"/><path d="M12 7.2c1.2-2.8 3.5-4.2 5.5-4.2 0 2.5-1.5 4.8-5.5 4.2Z"/></svg>`
   },
   {
     id: 'veterinary',
@@ -105,6 +93,6 @@ export const HEALTHCARE_SUBJECTS = [
     },
     aliases: ['veterinariya', 'veterinar', 'hayvonlar shifokori', 'veterinary', 'vet', 'ветеринария'],
     defaultColor: '#d97706',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 0-5 5v3a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-3a5 5 0 0 0-5-5Z"/><path d="M7 16h4"/><path d="M9 14v4"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11.5c-4.5 0-7.5 3-7.5 6.5 0 2.5 2 4 4.5 4 1.8 0 2.5-1.5 3-1.5s1.2 1.5 3 1.5c2.5 0 4.5-1.5 4.5-4 0-3.5-3-6.5-7.5-6.5Z"/><ellipse cx="3.8" cy="11.8" rx="2" ry="3.2" transform="rotate(-15 3.8 11.8)"/><ellipse cx="8.5" cy="5.8" rx="2.3" ry="3.8" transform="rotate(-5 8.5 5.8)"/><ellipse cx="15.5" cy="5.8" rx="2.3" ry="3.8" transform="rotate(5 15.5 5.8)"/><ellipse cx="20.2" cy="11.8" rx="2" ry="3.2" transform="rotate(15 20.2 11.8)"/></svg>`
   }
 ];
