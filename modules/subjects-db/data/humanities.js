@@ -57,7 +57,7 @@ export const HUMANITIES_SUBJECTS = [
     },
     aliases: ['tilshunoslik', 'lingvistika', 'filologiya', 'grammatika', 'linguistics', 'лингвистика', 'языкознание'],
     defaultColor: '#0284c7',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h8"/><path d="M12 6v8"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.4 3h3.2l6.2 18h-2.9l-1.6-6H8.7l-1.6 6H4.2L10.4 3Zm1.6 4.2 1.8 5.6h-3.6l1.8-5.6Z"/></svg>`
   },
   {
     id: 'archaeology',
@@ -69,7 +69,7 @@ export const HUMANITIES_SUBJECTS = [
     },
     aliases: ['arxeologiya', 'qazilmalar', 'qadimgi buyumlar', 'archaeology', 'археология'],
     defaultColor: '#b45309',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8v3H8z"/><path d="M7 6h10c2 0 3 3 3 7 0 5-3 8-8 8s-8-3-8-8c0-4 1-7 3-7Z"/><path d="M4 10c-1.5 0-2 1.5-2 3s.5 3 2 3"/><path d="M20 10c1.5 0 2 1.5 2 3s-.5 3-2 3"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 3.2 12.5 6.8c1 .4 1.3 1.8.4 2.4l-3.7 3.7c-.6.9-2 .6-2.4-.4L3.2 4.2c-.3-.9.4-1.6 1-1Z"/><path d="m11 11 3.5 3.5"/><path d="m13.4 15.6 2.2-2.2 4 4a1.55 1.55 0 0 1-2.2 2.2Z"/></svg>`
   },
   {
     id: 'cultural_studies',
@@ -81,6 +81,6 @@ export const HUMANITIES_SUBJECTS = [
     },
     aliases: ['madaniyatshunoslik', 'kulturologiya', 'madaniyat', 'cultural studies', 'культурология'],
     defaultColor: '#db2777',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><path d="M7 8h.01"/><path d="M11 8h.01"/><path d="M7 11c.5 1 2.5 1 3 0"/><circle cx="16" cy="14" r="5"/><path d="M14.5 13.5h.01"/><path d="M17.5 13.5h.01"/><path d="M14.5 16.5c.5-.8 2.5-.8 3 0"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 3.8C8 5.4 12 5.8 12 5.8s4-.4 6.5-2c1.3.8 2 3 1.8 6-.3 5-2.5 9.5-8.3 11.7C6.2 19.3 4 14.8 3.7 9.8c-.2-3 .5-5.2 1.8-6Z"/><path d="M7.2 11.2c.7-1.8 2.5-1.8 3.2 0" stroke-width="2.4"/><path d="M13.6 11.2c.7-1.8 2.5-1.8 3.2 0" stroke-width="2.4"/><path d="M8.8 15.2c1.2 2.6 5.2 2.6 6.4 0" stroke-width="2.4"/></svg>`
   }
 ];

@@ -33,7 +33,7 @@ export const SOCIAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['xalqaro munosabatlar', 'diplomatiya', 'xalqaro siyosat', 'international relations', 'diplomacy', 'международные отношения', 'дипломатия'],
     defaultColor: '#3b82f6',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/><path d="M7 9a4 4 0 0 1 4 4"/><path d="M17 15a4 4 0 0 1-4-4"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3.5 6.5 21"/><path d="M4.8 5.8c3.5-1.5 7.5.5 14.8-2.6l.8 8.4c-7.3 3.1-11.3 1.1-14.8 2.6Z"/></svg>`
   },
   {
     id: 'anthropology',
@@ -45,7 +45,7 @@ export const SOCIAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['antropologiya', 'insoniyat tarixi', 'madaniy antropologiya', 'anthropology', 'антропология'],
     defaultColor: '#d97706',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="11" r="7"/><path d="M12 4v2"/><path d="M5 11h2"/><path d="M17 11h2"/><path d="M9 18l-1 4"/><path d="M15 18l1 4"/><path d="M9 14h6"/><circle cx="9.5" cy="10.5" r="1" fill="currentColor"/><circle cx="14.5" cy="10.5" r="1" fill="currentColor"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.2c-5.5 0-9.8 4.3-9.8 9.8 0 2.8 1.2 5 2.8 6.5-.3.8-.4 1.6.2 2.5.8 1.2 2.2 1.8 4.3 1.8h5c2.1 0 3.5-.6 4.3-1.8.6-.9.5-1.7.2-2.5 1.6-1.5 2.8-3.7 2.8-6.5 0-5.5-4.3-9.8-9.8-9.8Z"/><ellipse cx="7.8" cy="12.8" rx="2.4" ry="2.2" transform="rotate(-10 7.8 12.8)" fill="currentColor" stroke="none"/><ellipse cx="16.2" cy="12.8" rx="2.4" ry="2.2" transform="rotate(10 16.2 12.8)" fill="currentColor" stroke="none"/><path d="M12 14.6c.7 1 1.5 2.2 1 3-.4.6-.9.5-1 .2-.1.3-.6.4-1-.2-.5-.8.3-2 1-3Z" fill="currentColor" stroke="none"/></svg>`
   },
   {
     id: 'law',
@@ -93,6 +93,6 @@ export const SOCIAL_SCIENCES_SUBJECTS = [
     },
     aliases: ['ijtimoiy ish', 'social work', 'ijtimoiy himoya', 'volontyorlik', 'социальная работа', 'соцзащита'],
     defaultColor: '#ec4899',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 11h.01"/><path d="M8 15h8"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.8" r="4.2" fill="currentColor" stroke="none"/><path d="M12 12.2c-1.5-2.2-4.2-3-6.5-1.5-3 1.9-3.2 5.8-.5 8.8 3.2 3.4 7 4.3 7 4.3s3.8-.9 7-4.3c2.7-3 2.5-6.9-.5-8.8-2.3-1.5-5-.7-6.5 1.5Z"/></svg>`
   }
 ];
