@@ -1,4 +1,4 @@
-import { getSubjects, getActiveSubjectId, setActiveSubjectId } from './subjects.js';
+import { getSubjects, getActiveSubjectId, setActiveSubjectId, getSubjectName } from './subjects.js';
 import { renderDailyGoalCard } from './daily-goal.js';
 import { renderStats } from './stats.js';
 import { openSubjectModal } from './subject-modal.js';
@@ -45,7 +45,7 @@ export function renderTimerSubjectBadge() {
     dotEl.style.boxShadow = `0 0 10px ${color}99`;
   }
   
-  nameEl.textContent = activeSubject.name;
+  nameEl.textContent = getSubjectName(activeSubject);
   nameEl.style.color = '#ffffff';
   
   badgeEl.style.borderColor = `${color}66`;
@@ -58,6 +58,8 @@ export function renderTimerSubjectBadge() {
   if (editBtn) {
     editBtn.style.borderColor = `${color}44`;
   }
+
+  renderTimerSubjectDropdown();
 }
 
 export function renderTimerSubjectDropdown() {
@@ -94,7 +96,7 @@ export function renderTimerSubjectDropdown() {
     item.innerHTML = `
       <div class="timer-subject-item-left">
         ${iconHtml}
-        <span class="timer-subject-item-text" style="color: #ffffff !important;">${subject.name}</span>
+        <span class="timer-subject-item-text" style="color: #ffffff !important;">${getSubjectName(subject)}</span>
       </div>
       ${isSelected ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
     `;

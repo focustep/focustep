@@ -3,6 +3,7 @@ import { modalState } from './state.js';
 import { updateLivePreview } from './preview.js';
 import { closeColorPickerPopover } from './color-picker.js';
 import { SUBJECT_CATEGORIES, SUBJECTS_DATABASE, getSubjectSvg } from '../subjects-db.js';
+import { getLang } from '../i18n.js';
 
 export function openIconPickerPopover() {
   closeColorPickerPopover();
@@ -35,6 +36,8 @@ export function renderIconPickerContent(query = '') {
   scrollArea.innerHTML = '';
   const q = query.trim().toLowerCase();
 
+  const lang = getLang();
+
   SUBJECT_CATEGORIES.forEach(cat => {
     let items = SUBJECTS_DATABASE.filter(item => item.categoryId === cat.id);
     if (q) {
@@ -54,7 +57,7 @@ export function renderIconPickerContent(query = '') {
 
     const titleEl = document.createElement('span');
     titleEl.className = 'icon-picker-category-title';
-    titleEl.textContent = `${cat.names?.uz || cat.id} (${items.length})`;
+    titleEl.textContent = `${cat.names?.[lang] || cat.names?.uz || cat.id} (${items.length})`;
     groupEl.appendChild(titleEl);
 
     const gridEl = document.createElement('div');
@@ -67,9 +70,11 @@ export function renderIconPickerContent(query = '') {
       btn.className = `icon-picker-item ${isSelected ? 'selected' : ''}`;
       btn.title = `${item.names?.uz || ''} / ${item.names?.ru || ''} / ${item.names?.en || ''}`;
 
+      const localizedItemName = item.names?.[lang] || item.names?.uz || item.id;
+
       btn.innerHTML = `
         ${item.svg}
-        <span class="icon-picker-item-label">${item.names?.uz || item.id}</span>
+        <span class="icon-picker-item-label">${localizedItemName}</span>
       `;
 
       btn.addEventListener('click', (e) => {
@@ -79,7 +84,7 @@ export function renderIconPickerContent(query = '') {
 
         const nameInput = document.getElementById('subject-modal-name-input');
         if (nameInput && !nameInput.value.trim()) {
-          nameInput.value = item.names?.uz || '';
+          nameInput.value = localizedItemName;
         }
 
         renderIconSelector();

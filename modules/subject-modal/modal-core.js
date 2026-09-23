@@ -304,8 +304,10 @@ export function initSubjectModal() {
         return;
       }
 
+      const matched = getSubjectByMatch(name);
       const created = addSubject({
         name,
+        names: matched ? matched.names : undefined,
         color: modalState.selectedColor,
         icon: modalState.selectedIcon,
         defaultGoal: 60 // 1 hour default

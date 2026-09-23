@@ -1,4 +1,4 @@
-import { getSubjects, getActiveSubjectId, setActiveSubjectId, getGoalForSubject, setGoalForSubject, getSessions } from './subjects.js';
+import { getSubjects, getActiveSubjectId, setActiveSubjectId, getGoalForSubject, setGoalForSubject, getSessions, getSubjectName } from './subjects.js';
 import { openSubjectModal } from './subject-modal.js';
 import { renderTimerSubjectBadge } from './timer-subject-badge.js';
 import { getSubjectSvg } from './subjects-db.js';
@@ -78,7 +78,7 @@ export function renderDailyGoalCard() {
     }
   }
   if (subjectName) {
-    subjectName.textContent = currentSubject.name;
+    subjectName.textContent = getSubjectName(currentSubject);
   }
 
   if (percentEl) {
@@ -125,7 +125,7 @@ function renderSubjectDropdownList() {
 
     item.innerHTML = `
       ${iconHtml}
-      <span class="subject-item-name">${sub.name}</span>
+      <span class="subject-item-name">${getSubjectName(sub)}</span>
       ${sub.id === activeSubjectId ? '<svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
     `;
 

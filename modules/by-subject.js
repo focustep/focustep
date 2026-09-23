@@ -1,4 +1,4 @@
-import { getSubjects, getSessions } from './subjects.js';
+import { getSubjects, getSessions, getSubjectName } from './subjects.js';
 import { getPeriod } from './period-metrics.js';
 import { getSubjectSvg } from './subjects-db.js';
 import { standardIcons } from './subjects-db/standard-icons.js';
@@ -157,16 +157,17 @@ export function renderBySubjectCard() {
     const rawSvg = getSubjectSvg(item.icon) || getSubjectSvg(item.id) || standardIcons['book'] || '';
 
     // Extract SVG inner paths or wrap nicely
+    const subjDisplayName = getSubjectName(item);
     petalsSvgMarkup += `
       <g class="by-subject-petal-group" 
          data-subject-id="${item.id}"
-         data-subject-name="${encodeURIComponent(item.name)}"
+         data-subject-name="${encodeURIComponent(subjDisplayName)}"
          data-subject-color="${color}"
          data-subject-time="${formatSubjectDuration(item.timeSec)}"
          data-subject-pct="${item.pct}%"
          tabindex="0"
          role="button"
-         aria-label="${item.name}: ${formatSubjectDuration(item.timeSec)} (${item.pct}%)">
+         aria-label="${subjDisplayName}: ${formatSubjectDuration(item.timeSec)} (${item.pct}%)">
         <!-- Track Petal -->
         <path class="by-subject-petal-track" d="${trackPath}" fill="${color}" />
         <!-- Progress Fill Petal -->
@@ -214,19 +215,20 @@ export function renderBySubjectCard() {
         ${subjectStats.map(item => {
           const color = item.color || '#4ec9b0';
           const iconHtml = getSubjectSvg(item.icon) || getSubjectSvg(item.id) || standardIcons['book'] || '';
+          const subjDisplayName = getSubjectName(item);
           return `
             <div class="by-subject-chip" 
                  data-subject-id="${item.id}"
                  data-subject-color="${color}"
-                 data-subject-name="${encodeURIComponent(item.name)}"
+                 data-subject-name="${encodeURIComponent(subjDisplayName)}"
                  data-subject-time="${formatSubjectDuration(item.timeSec)}"
                  data-subject-pct="${item.pct}%"
-                 data-tooltip="${item.name}: ${formatSubjectDuration(item.timeSec)} (${item.pct}%)">
+                 data-tooltip="${subjDisplayName}: ${formatSubjectDuration(item.timeSec)} (${item.pct}%)">
               <div class="by-subject-chip-icon" style="background-color: ${color}20; color: ${color}; border-color: ${color}40;">
                 ${iconHtml}
               </div>
               <div class="by-subject-chip-info">
-                <span class="by-subject-chip-name">${item.name}</span>
+                <span class="by-subject-chip-name">${subjDisplayName}</span>
                 <span class="by-subject-chip-time">${formatSubjectDuration(item.timeSec)}</span>
               </div>
               <span class="by-subject-chip-pct" style="color: ${color};">${item.pct}%</span>

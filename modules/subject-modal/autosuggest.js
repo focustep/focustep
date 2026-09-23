@@ -2,6 +2,7 @@ import { modalState } from './state.js';
 import { updateLivePreview } from './preview.js';
 import { renderIconSelector } from './icon-picker.js';
 import { findMatchingSubjects } from '../subjects-db.js';
+import { getLang } from '../i18n.js';
 
 export function closeAutosuggest() {
   const box = document.getElementById('subject-name-autosuggest');
@@ -33,11 +34,17 @@ export function handleAutosuggestSearch(query) {
   modalState.autosuggestActiveIndex = -1;
   box.innerHTML = '';
 
+  const lang = getLang();
+
   matches.forEach((item, index) => {
     const itemBtn = document.createElement('button');
     itemBtn.type = 'button';
     itemBtn.className = 'subject-autosuggest-item';
     itemBtn.dataset.index = index;
+
+    const primaryName = item.names?.[lang] || item.names?.uz || item.id;
+    const otherLangs = ['uz', 'ru', 'en'].filter(l => l !== lang);
+    const subText = otherLangs.map(l => item.names?.[l]).filter(Boolean).join(' · ');
 
     itemBtn.innerHTML = `
       <div class="subject-autosuggest-left">
@@ -45,8 +52,8 @@ export function handleAutosuggestSearch(query) {
           ${item.svg}
         </div>
         <div class="subject-autosuggest-text">
-          <span class="subject-autosuggest-name">${item.names.uz}</span>
-          <span class="subject-autosuggest-sub">${item.names.ru} · ${item.names.en}</span>
+          <span class="subject-autosuggest-name">${primaryName}</span>
+          <span class="subject-autosuggest-sub">${subText}</span>
         </div>
       </div>
       <span class="subject-autosuggest-category-tag">${item.category || item.categoryId || ''}</span>
@@ -66,8 +73,9 @@ export function handleAutosuggestSearch(query) {
 
 export function selectAutosuggestItem(item) {
   const nameInput = document.getElementById('subject-modal-name-input');
+  const lang = getLang();
   if (nameInput) {
-    nameInput.value = item.names.uz;
+    nameInput.value = item.names?.[lang] || item.names?.uz || item.id;
   }
 
   modalState.selectedIcon = item.id;

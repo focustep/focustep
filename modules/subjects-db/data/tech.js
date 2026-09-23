@@ -15,8 +15,8 @@ export const TECH_SUBJECTS = [
     id: 'ml',
     categoryId: 'tech',
     names: {
-      uz: "Mashinali o'rganish (Machine Learning)",
-      ru: "Машинное обучение (Machine Learning)",
+      uz: "Mashinali o'rganish (ML)",
+      ru: "Машинное обучение (ML)",
       en: "Machine Learning (ML)"
     },
     aliases: ['ml', 'mashinali organish', 'mashinali o\'rganish', 'machine learning', 'машинное обучение'],
@@ -27,9 +27,9 @@ export const TECH_SUBJECTS = [
     id: 'cs',
     categoryId: 'tech',
     names: {
-      uz: "Kompyuter fanlari (Computer Science)",
-      ru: "Компьютерные науки (Computer Science)",
-      en: "Computer Science"
+      uz: "Kompyuter fanlari (CS)",
+      ru: "Компьютерные науки (CS)",
+      en: "Computer Science (CS)"
     },
     aliases: ['cs', 'computer science', 'kompyuter fanlari', 'информатика', 'компьютерные науки'],
     defaultColor: '#0ea5e9',
@@ -51,8 +51,8 @@ export const TECH_SUBJECTS = [
     id: 'data_science',
     categoryId: 'tech',
     names: {
-      uz: "Ma'lumotlar fanlari (Data Science)",
-      ru: "Наука о данных (Data Science)",
+      uz: "Ma'lumotlar tahlili (Data Science)",
+      ru: "Анализ данных (Data Science)",
       en: "Data Science"
     },
     aliases: ['data science', 'malumotlar fanlari', 'ma\'lumotlar fanlari', 'наука о данных', 'analiz dannix', 'data analytics', 'big data'],
@@ -63,8 +63,8 @@ export const TECH_SUBJECTS = [
     id: 'cybersecurity',
     categoryId: 'tech',
     names: {
-      uz: "Kiberxavfsizlik",
-      ru: "Кибербезопасность",
+      uz: "Kiberxavfsizlik (Security)",
+      ru: "Кибербезопасность (Security)",
       en: "Cybersecurity"
     },
     aliases: ['kiberxavfsizlik', 'cybersecurity', 'кибербезопасность', 'xavfsizlik', 'security', 'infosec'],
@@ -75,8 +75,8 @@ export const TECH_SUBJECTS = [
     id: 'cloud_computing',
     categoryId: 'tech',
     names: {
-      uz: "Bulutli texnologiyalar (Cloud Computing)",
-      ru: "Облачные технологии (Cloud Computing)",
+      uz: "Bulutli texnologiyalar (Cloud)",
+      ru: "Облачные сервисы (Cloud)",
       en: "Cloud Computing"
     },
     aliases: ['cloud computing', 'bulutli texnologiyalar', 'cloud', 'облачные технологии', 'aws', 'azure', 'gcp'],
@@ -87,9 +87,9 @@ export const TECH_SUBJECTS = [
     id: 'mobile_dev',
     categoryId: 'tech',
     names: {
-      uz: "Mobil ilovalar yaratish",
-      ru: "Мобильная разработка",
-      en: "Mobile App Development"
+      uz: "Mobil dasturlash (Mobile Dev)",
+      ru: "Мобильная разработка (Mobile)",
+      en: "Mobile App Dev"
     },
     aliases: ['mobil ilovalar yaratish', 'mobil dasturlash', 'mobile app development', 'мобильная разработка', 'flutter', 'react native', 'ios', 'android'],
     defaultColor: '#8b5cf6',
@@ -99,8 +99,8 @@ export const TECH_SUBJECTS = [
     id: 'web_dev',
     categoryId: 'tech',
     names: {
-      uz: "Veb-dasturlash",
-      ru: "Веб-разработка",
+      uz: "Veb-dasturlash (Web Dev)",
+      ru: "Веб-разработка (Web Dev)",
       en: "Web Development"
     },
     aliases: ['veb-dasturlash', 'veb dasturlash', 'web development', 'веб-разработка', 'frontend', 'backend', 'fullstack'],
@@ -111,8 +111,8 @@ export const TECH_SUBJECTS = [
     id: 'blockchain',
     categoryId: 'tech',
     names: {
-      uz: "Blokcheyn va kriptovalyutalar",
-      ru: "Блокcheйн и криптовалюты",
+      uz: "Blokcheyn va Kripto",
+      ru: "Блокчейн и Криптовалюта",
       en: "Blockchain & Crypto"
     },
     aliases: ['blokcheyn', 'kriptovalyuta', 'blokcheyn va kriptovalyutalar', 'blockchain', 'crypto', 'блокчейн', 'криптовалюта'],
@@ -123,8 +123,8 @@ export const TECH_SUBJECTS = [
     id: 'robotics',
     categoryId: 'tech',
     names: {
-      uz: "Robototexnika",
-      ru: "Робототехника",
+      uz: "Robototexnika (Robotics)",
+      ru: "Робототехника (Robotics)",
       en: "Robotics"
     },
     aliases: ['robototexnika', 'robotics', 'робототехника', 'robot', 'automation'],
@@ -135,8 +135,8 @@ export const TECH_SUBJECTS = [
     id: 'ux_ui',
     categoryId: 'tech',
     names: {
-      uz: "UX/UI dizayn",
-      ru: "UX/UI дизайн",
+      uz: "UX/UI Dizayn",
+      ru: "UX/UI Дизайн",
       en: "UX/UI Design"
     },
     aliases: ['ux/ui dizayn', 'ux/ui', 'ui/ux', 'ux ui', 'дизайн', 'ux/ui дизайн', 'figma', 'design'],
@@ -159,7 +159,7 @@ export const TECH_SUBJECTS = [
     id: 'iot',
     categoryId: 'tech',
     names: {
-      uz: "Internet buyumlari (IoT)",
+      uz: "Aqlli qurilmalar (IoT)",
       ru: "Интернет вещей (IoT)",
       en: "Internet of Things (IoT)"
     },
@@ -171,8 +171,8 @@ export const TECH_SUBJECTS = [
     id: 'vr_ar',
     categoryId: 'tech',
     names: {
-      uz: "Virtual va kengaytirilgan reallik (VR/AR)",
-      ru: "Виртуальная и дополненная реальность (VR/AR)",
+      uz: "VR / AR Texnologiyalar",
+      ru: "VR / AR Технологии",
       en: "Virtual & Augmented Reality (VR/AR)"
     },
     aliases: ['virtual reallik', 'vr/ar', 'vr', 'ar', 'virtual va kengaytirilgan reallik', 'виртуальная реальность', 'дополненная реальность'],

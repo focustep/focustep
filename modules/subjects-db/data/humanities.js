@@ -3,8 +3,8 @@ export const HUMANITIES_SUBJECTS = [
     id: 'history',
     categoryId: 'humanities',
     names: {
-      uz: "Tarix",
-      ru: "История",
+      uz: "Tarix (History)",
+      ru: "История (History)",
       en: "History"
     },
     aliases: ['tarix', 'jahon tarixi', 'ozbekiston tarixi', 'o\'zbekiston tarixi', 'qadimgi dunyo', 'history', 'история', 'всемирная история'],
@@ -15,8 +15,8 @@ export const HUMANITIES_SUBJECTS = [
     id: 'philosophy',
     categoryId: 'humanities',
     names: {
-      uz: "Falsafa",
-      ru: "Философия",
+      uz: "Falsafa (Philosophy)",
+      ru: "Философия (Philosophy)",
       en: "Philosophy"
     },
     aliases: ['falsafa', 'falsafiy tafakkur', 'mantiq', 'etika', 'philosophy', 'философия', 'логика'],
@@ -27,9 +27,9 @@ export const HUMANITIES_SUBJECTS = [
     id: 'religious_studies',
     categoryId: 'humanities',
     names: {
-      uz: "Din tarixi va diniyot",
-      ru: "Религиоведение и теология",
-      en: "Religious Studies & Theology"
+      uz: "Dinshunoslik (Theology)",
+      ru: "Религиоведение (Theology)",
+      en: "Religious Studies"
     },
     aliases: ['din tarixi va diniyot', 'dinshunoslik', 'islomshunoslik', 'teologiya', 'din', 'religious studies', 'theology', 'религиоведение', 'теология'],
     defaultColor: '#059669',
@@ -39,48 +39,12 @@ export const HUMANITIES_SUBJECTS = [
     id: 'literature',
     categoryId: 'humanities',
     names: {
-      uz: "Adabiyot",
-      ru: "Литература",
+      uz: "Adabiyot (Literature)",
+      ru: "Литература (Literature)",
       en: "Literature"
     },
     aliases: ['adabiyot', 'badiiy adabiyot', 'ozbek adabiyoti', 'o\'zbek adabiyoti', 'jahon adabiyoti', 'literature', 'литература'],
     defaultColor: '#ef4444',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 2 4 4-12 12H6v-4L18 2Z"/><path d="m15 5 3 3"/><path d="M2 22h20"/></svg>`
-  },
-  {
-    id: 'linguistics',
-    categoryId: 'humanities',
-    names: {
-      uz: "Tilshunoslik",
-      ru: "Лингвистика и языкознание",
-      en: "Linguistics"
-    },
-    aliases: ['tilshunoslik', 'lingvistika', 'filologiya', 'grammatika', 'linguistics', 'лингвистика', 'языкознание'],
-    defaultColor: '#0284c7',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.4 3h3.2l6.2 18h-2.9l-1.6-6H8.7l-1.6 6H4.2L10.4 3Zm1.6 4.2 1.8 5.6h-3.6l1.8-5.6Z"/></svg>`
-  },
-  {
-    id: 'archaeology',
-    categoryId: 'humanities',
-    names: {
-      uz: "Arxeologiya",
-      ru: "Археология",
-      en: "Archaeology"
-    },
-    aliases: ['arxeologiya', 'qazilmalar', 'qadimgi buyumlar', 'archaeology', 'археология'],
-    defaultColor: '#b45309',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 3.2 12.5 6.8c1 .4 1.3 1.8.4 2.4l-3.7 3.7c-.6.9-2 .6-2.4-.4L3.2 4.2c-.3-.9.4-1.6 1-1Z"/><path d="m11 11 3.5 3.5"/><path d="m13.4 15.6 2.2-2.2 4 4a1.55 1.55 0 0 1-2.2 2.2Z"/></svg>`
-  },
-  {
-    id: 'cultural_studies',
-    categoryId: 'humanities',
-    names: {
-      uz: "Madaniyatshunoslik",
-      ru: "Культурология",
-      en: "Cultural Studies"
-    },
-    aliases: ['madaniyatshunoslik', 'kulturologiya', 'madaniyat', 'cultural studies', 'культурология'],
-    defaultColor: '#db2777',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 3.8C8 5.4 12 5.8 12 5.8s4-.4 6.5-2c1.3.8 2 3 1.8 6-.3 5-2.5 9.5-8.3 11.7C6.2 19.3 4 14.8 3.7 9.8c-.2-3 .5-5.2 1.8-6Z"/><path d="M7.2 11.2c.7-1.8 2.5-1.8 3.2 0" stroke-width="2.4"/><path d="M13.6 11.2c.7-1.8 2.5-1.8 3.2 0" stroke-width="2.4"/><path d="M8.8 15.2c1.2 2.6 5.2 2.6 6.4 0" stroke-width="2.4"/></svg>`
   }
 ];

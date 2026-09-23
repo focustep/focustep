@@ -1,12 +1,55 @@
+import { getLang } from './i18n.js';
+import { getSubjectLocalizedName } from './subjects-db.js';
+
 /**
  * Subjects & Activity Data Store
  */
 
 const DEFAULT_SUBJECTS = [
-  { id: 'math', name: 'Math', color: '#7c3aed', icon: 'calculator' },
-  { id: 'english', name: 'English', color: '#f97316', icon: 'languages' },
-  { id: 'physics', name: 'Physics', color: '#10b981', icon: 'flask-conical' },
-  { id: 'other', name: 'Other', color: '#4ec9b0', icon: 'more-horizontal' }
+  { 
+    id: 'math', 
+    name: 'Matematika (Math)', 
+    names: {
+      uz: "Matematika (Math)",
+      ru: "Математика (Math)",
+      en: "Mathematics (Math)"
+    },
+    color: '#7c3aed', 
+    icon: 'calculator' 
+  },
+  { 
+    id: 'english', 
+    name: 'Ingliz tili (English)', 
+    names: {
+      uz: "Ingliz tili (English)",
+      ru: "Английский (English)",
+      en: "English"
+    },
+    color: '#f97316', 
+    icon: 'languages' 
+  },
+  { 
+    id: 'physics', 
+    name: 'Fizika (Physics)', 
+    names: {
+      uz: "Fizika (Physics)",
+      ru: "Физика (Physics)",
+      en: "Physics"
+    },
+    color: '#10b981', 
+    icon: 'flask-conical' 
+  },
+  { 
+    id: 'other', 
+    name: 'Boshqa (Other)', 
+    names: {
+      uz: "Boshqa (Other)",
+      ru: "Другое (Other)",
+      en: "Other"
+    },
+    color: '#4ec9b0', 
+    icon: 'more-horizontal' 
+  }
 ];
 
 const SUBJECTS_KEY = 'focustep_subjects';
@@ -91,6 +134,10 @@ export function setActiveSubjectId(id) {
   } catch (e) {}
 }
 
+export function getSubjectName(subject, lang = getLang()) {
+  return getSubjectLocalizedName(subject, lang);
+}
+
 export function addSubject(newSubject) {
   const subjects = getSubjects();
   // Ensure unique ID
@@ -98,6 +145,7 @@ export function addSubject(newSubject) {
   const subjectToAdd = {
     id,
     name: newSubject.name.trim() || 'New Subject',
+    names: newSubject.names || undefined,
     color: newSubject.color || '#4ec9b0',
     icon: newSubject.icon || 'book'
   };
@@ -239,7 +287,7 @@ export function logSession(subjectId, durationSec) {
   const newSession = {
     id: String(Date.now() + '_' + Math.floor(Math.random() * 1000)),
     subjectId: subject.id,
-    subjectName: subject.name,
+    subjectName: getSubjectName(subject),
     durationSec: Math.round(durationSec),
     timestamp: Date.now()
   };

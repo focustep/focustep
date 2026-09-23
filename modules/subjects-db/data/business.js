@@ -3,8 +3,8 @@ export const BUSINESS_SUBJECTS = [
     id: 'economics',
     categoryId: 'business',
     names: {
-      uz: "Iqtisodiyot",
-      ru: "Экономика",
+      uz: "Iqtisodiyot (Economics)",
+      ru: "Экономика (Economics)",
       en: "Economics"
     },
     aliases: ['iqtisodiyot', 'makroiqtisodiyot', 'mikroiqtisodiyot', 'iqtisod', 'economics', 'economy', 'экономика'],
@@ -16,8 +16,8 @@ export const BUSINESS_SUBJECTS = [
     categoryId: 'business',
     names: {
       uz: "Biznes boshqaruvi (MBA)",
-      ru: "Бизнес-администрирование (MBA)",
-      en: "Business Administration (MBA)"
+      ru: "Бизнес-управление (MBA)",
+      en: "Business Admin (MBA)"
     },
     aliases: ['biznes boshqaruvi', 'mba', 'biznes', 'business administration', 'бизнес-администрирование', 'управление бизнесом'],
     defaultColor: '#3b82f6',
@@ -27,9 +27,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'marketing',
     categoryId: 'business',
     names: {
-      uz: "Marketing",
-      ru: "Маркетинг",
-      en: "Marketing & Advertising"
+      uz: "Marketing va Reklama",
+      ru: "Маркетинг и Реклама",
+      en: "Marketing & SMM"
     },
     aliases: ['marketing', 'raqamli marketing', 'smm', 'brending', 'reklama', 'marketing', 'smm', 'маркетинг', 'реклама'],
     defaultColor: '#f43f5e',
@@ -39,9 +39,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'finance',
     categoryId: 'business',
     names: {
-      uz: "Moliya",
-      ru: "Финансы и инвестиции",
-      en: "Finance & Banking"
+      uz: "Moliya va Investitsiya",
+      ru: "Финансы и Инвестиции",
+      en: "Finance & Investing"
     },
     aliases: ['moliya', 'investitsiya', 'bank ishi', 'kapital', 'finance', 'banking', 'финансы', 'инвестиции'],
     defaultColor: '#eab308',
@@ -51,9 +51,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'accounting',
     categoryId: 'business',
     names: {
-      uz: "Buxgalteriya hisobi",
-      ru: "Бухгалтерский учет и аудит",
-      en: "Accounting & Auditing"
+      uz: "Buxgalteriya va Audit",
+      ru: "Бухгалтерия и Аудит",
+      en: "Accounting & Audit"
     },
     aliases: ['buxgalteriya hisobi', 'buxgalteriya', 'audit', 'soliq', 'accounting', 'auditing', 'бухгалтерия', 'бухучет', 'аудит'],
     defaultColor: '#0284c7',
@@ -63,9 +63,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'management',
     categoryId: 'business',
     names: {
-      uz: "Menejment",
-      ru: "Менеджмент и управление",
-      en: "Management & Leadership"
+      uz: "Menejment (Management)",
+      ru: "Менеджмент (Management)",
+      en: "Management & HR"
     },
     aliases: ['menejment', 'yetakchilik', 'boshqaruv', 'hr', 'management', 'leadership', 'менеджмент', 'управление'],
     defaultColor: '#6366f1',
@@ -75,9 +75,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'entrepreneurship',
     categoryId: 'business',
     names: {
-      uz: "Tadbirkorlik (Entrepreneurship)",
-      ru: "Предпринимательство (Стартапы)",
-      en: "Entrepreneurship & Startups"
+      uz: "Tadbirkorlik va Startap",
+      ru: "Стартапы и Бизнес",
+      en: "Startups & Business"
     },
     aliases: ['tadbirkorlik', 'startap', 'startup', 'biznes boshlash', 'entrepreneurship', 'предпринимательство', 'стартап'],
     defaultColor: '#f97316',
@@ -87,24 +87,12 @@ export const BUSINESS_SUBJECTS = [
     id: 'international_trade',
     categoryId: 'business',
     names: {
-      uz: "Xalqaro savdo",
-      ru: "Международная торговля (ВЭД)",
-      en: "International Trade & Commerce"
+      uz: "Xalqaro savdo (Trade)",
+      ru: "Международная торговля",
+      en: "International Trade"
     },
     aliases: ['xalqaro savdo', 'eksport-import', 'eksport', 'import', 'bojxona', 'logistika', 'international trade', 'международная торговля', 'вэд'],
     defaultColor: '#0ea5e9',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/><path d="m15 9 3 3-3 3"/><path d="m9 15-3-3 3-3"/></svg>`
-  },
-  {
-    id: 'project_management',
-    categoryId: 'business',
-    names: {
-      uz: "Loyihalarni boshqarish",
-      ru: "Управление проектами (PM)",
-      en: "Project Management"
-    },
-    aliases: ['loyihalarni boshqarish', 'project management', 'agile', 'scrum', 'pmp', 'kanban', 'управление проектами'],
-    defaultColor: '#8b5cf6',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 3.5A9 9 0 1 0 20.8 11.8"/><path d="m7.5 11.5 4 4.5 8.5-11"/></svg>`
   }
 ];

@@ -18,13 +18,13 @@ export const SUBJECT_CATEGORIES = [
     icon: 'science'
   },
   {
-    id: 'engineering',
+    id: 'personal_development',
     names: {
-      uz: "3. Muhandislik yo'nalishlari",
-      ru: "3. Инженерные направления",
-      en: "3. Engineering Fields"
+      uz: "3. Personal development",
+      ru: "3. Личностное развитие (Personal Development)",
+      en: "3. Personal Development"
     },
-    icon: 'wrench'
+    icon: 'book'
   },
   {
     id: 'healthcare',
@@ -81,29 +81,11 @@ export const SUBJECT_CATEGORIES = [
     icon: 'palette'
   },
   {
-    id: 'sports',
-    names: {
-      uz: "10. Sport va jismoniy tarbiya",
-      ru: "10. Спорт и физическая культура",
-      en: "10. Sports & Physical Education"
-    },
-    icon: 'activity'
-  },
-  {
-    id: 'agriculture',
-    names: {
-      uz: "11. Qishloq xo'jaligi va atrof-muhit",
-      ru: "11. Сельское хозяйство и окружающая среда",
-      en: "11. Agriculture & Environment"
-    },
-    icon: 'sprout'
-  },
-  {
     id: 'emerging',
     names: {
-      uz: "12. Yangi va gibrid yo'nalishlar (2026-yilda tez o'sayotgan)",
-      ru: "12. Новые и гибридные направления (быстрорастущие в 2026)",
-      en: "12. Emerging & Hybrid Fields (Fast-growing in 2026)"
+      uz: "10. Yangi va gibrid yo'nalishlar (2026-yilda tez o'sayotgan)",
+      ru: "10. Новые и гибридные направления (быстрорастущие в 2026)",
+      en: "10. Emerging & Hybrid Fields (Fast-growing in 2026)"
     },
     icon: 'sparkles'
   }
