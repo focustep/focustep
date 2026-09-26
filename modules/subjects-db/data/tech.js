@@ -171,11 +171,11 @@ export const TECH_SUBJECTS = [
     id: 'vr_ar',
     categoryId: 'tech',
     names: {
-      uz: "Virtual va kengaytirilgan reallik (VR/AR)",
-      ru: "Виртуальная и дополненная реальность (VR/AR)",
-      en: "Virtual & Augmented Reality (VR/AR)"
+      uz: "VR/AR",
+      ru: "VR/AR",
+      en: "VR/AR"
     },
-    aliases: ['virtual reallik', 'vr/ar', 'vr', 'ar', 'virtual va kengaytirilgan reallik', 'виртуальная реальность', 'дополненная реальность'],
+    aliases: ['vr/ar', 'vr', 'ar', 'virtual reallik', 'virtual va kengaytirilgan reallik', 'виртуальная реальность', 'дополненная реальность', 'virtual reality', 'augmented reality'],
     defaultColor: '#ec4899',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path fill="currentColor" fill-rule="evenodd" d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-4.5l-2.5-2.5-2.5 2.5H5a2 2 0 0 1-2-2V9zm5 5.75a2.75 2.75 0 1 0 0-5.5 2.75 2.75 0 0 0 0 5.5zm8 0a2.75 2.75 0 1 0 0-5.5 2.75 2.75 0 0 0 0 5.5z"/></svg>`
   }

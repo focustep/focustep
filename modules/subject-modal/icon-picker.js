@@ -1,9 +1,167 @@
-import { PRESET_ICONS } from './constants.js';
 import { modalState } from './state.js';
 import { updateLivePreview } from './preview.js';
 import { closeColorPickerPopover } from './color-picker.js';
 import { SUBJECT_CATEGORIES, SUBJECTS_DATABASE, getSubjectSvg } from '../subjects-db.js';
 import { getLang, tr } from '../i18n.js';
+
+const STORAGE_KEY = 'focustep_recent_preset_icons';
+
+// Helper to look up full subject icon data by ID
+export function getSubjectItemById(iconId) {
+  if (!iconId) return null;
+  const found = SUBJECTS_DATABASE.find(s => s.id === iconId);
+  if (found) {
+    return {
+      id: found.id,
+      names: found.names,
+      svg: found.svg,
+      categoryId: found.categoryId || found.category
+    };
+  }
+  const svg = getSubjectSvg(iconId);
+  if (svg) {
+    return {
+      id: iconId,
+      names: { uz: iconId, ru: iconId, en: iconId },
+      svg: svg,
+      categoryId: 'custom'
+    };
+  }
+  return null;
+}
+
+// Generate randomized icons from diverse categories across SUBJECTS_DATABASE
+export function generateRandomSessionIcons(count = 7) {
+  const categories = [...SUBJECT_CATEGORIES].sort(() => Math.random() - 0.5);
+  const picked = [];
+  const usedSubjectIds = new Set();
+  const usedCategoryIds = new Set();
+
+  for (const cat of categories) {
+    if (picked.length >= count) break;
+    const catSubjects = SUBJECTS_DATABASE.filter(s => (s.categoryId === cat.id || s.category === cat.id) && s.svg);
+    if (catSubjects.length > 0) {
+      const available = catSubjects.filter(s => !usedSubjectIds.has(s.id));
+      const pool = available.length > 0 ? available : catSubjects;
+      const chosen = pool[Math.floor(Math.random() * pool.length)];
+      if (chosen && !usedSubjectIds.has(chosen.id)) {
+        usedSubjectIds.add(chosen.id);
+        usedCategoryIds.add(cat.id);
+        picked.push({
+          id: chosen.id,
+          names: chosen.names,
+          svg: chosen.svg,
+          categoryId: cat.id
+        });
+      }
+    }
+  }
+
+  // Fallback if needed to reach count
+  if (picked.length < count) {
+    const remaining = SUBJECTS_DATABASE.filter(s => s.svg && !usedSubjectIds.has(s.id)).sort(() => Math.random() - 0.5);
+    for (const item of remaining) {
+      if (picked.length >= count) break;
+      usedSubjectIds.add(item.id);
+      picked.push({
+        id: item.id,
+        names: item.names,
+        svg: item.svg,
+        categoryId: item.categoryId || item.category
+      });
+    }
+  }
+
+  return picked;
+}
+
+function savePresetIconsToStorage(list) {
+  try {
+    const ids = list.map(item => item.id);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+  } catch (e) {}
+}
+
+// Initialize recent preset icons from storage or generate fresh
+export function initRecentPresetIcons() {
+  let savedIds = [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) savedIds = JSON.parse(raw);
+  } catch (e) {}
+
+  const result = [];
+  const usedIds = new Set();
+
+  if (Array.isArray(savedIds) && savedIds.length > 0) {
+    for (const id of savedIds) {
+      if (result.length >= 7) break;
+      if (id && !usedIds.has(id)) {
+        const item = getSubjectItemById(id);
+        if (item) {
+          result.push(item);
+          usedIds.add(id);
+        }
+      }
+    }
+  }
+
+  if (result.length < 7) {
+    const randoms = generateRandomSessionIcons(7 - result.length);
+    for (const r of randoms) {
+      if (result.length >= 7) break;
+      if (!usedIds.has(r.id)) {
+        result.push(r);
+        usedIds.add(r.id);
+      }
+    }
+  }
+
+  if (result.length < 7) {
+    for (const s of SUBJECTS_DATABASE) {
+      if (result.length >= 7) break;
+      if (s.svg && !usedIds.has(s.id)) {
+        result.push({
+          id: s.id,
+          names: s.names,
+          svg: s.svg,
+          categoryId: s.categoryId || s.category
+        });
+        usedIds.add(s.id);
+      }
+    }
+  }
+
+  savePresetIconsToStorage(result);
+  return result;
+}
+
+// Persistent preset icon queue (max 7 preset icons)
+export let sessionPresetIcons = initRecentPresetIcons();
+
+export function getSessionPresetIcons() {
+  return sessionPresetIcons;
+}
+
+// Shifts newly used icon to slot 1, pushes existing right, deletes the last one
+export function recordUsedIcon(iconId) {
+  if (!iconId) return;
+  const item = getSubjectItemById(iconId);
+  if (!item) return;
+
+  const existingIndex = sessionPresetIcons.findIndex(p => p.id === iconId);
+  if (existingIndex !== -1) {
+    sessionPresetIcons.splice(existingIndex, 1);
+  }
+
+  sessionPresetIcons.unshift(item);
+
+  if (sessionPresetIcons.length > 7) {
+    sessionPresetIcons = sessionPresetIcons.slice(0, 7);
+  }
+
+  savePresetIconsToStorage(sessionPresetIcons);
+}
 
 export function openIconPickerPopover() {
   closeColorPickerPopover();
@@ -48,12 +206,18 @@ function initScrollAreaDelegation(scrollArea) {
     const localizedItemName = btn.dataset.itemName;
     if (!itemId) return;
 
-    modalState.selectedIcon = itemId;
-    modalState.isCustomIconSelected = true;
+    if (modalState.selectedIcon === itemId) {
+      modalState.selectedIcon = '';
+      modalState.isCustomIconSelected = false;
+    } else {
+      modalState.selectedIcon = itemId;
+      modalState.isCustomIconSelected = true;
+      recordUsedIcon(itemId);
 
-    const nameInput = document.getElementById('subject-modal-name-input');
-    if (nameInput && !nameInput.value.trim() && localizedItemName) {
-      nameInput.value = localizedItemName;
+      const nameInput = document.getElementById('subject-modal-name-input');
+      if (nameInput && localizedItemName) {
+        nameInput.value = localizedItemName;
+      }
     }
 
     renderIconSelector();
@@ -139,10 +303,10 @@ export function renderIconSelector() {
 
   iconContainer.innerHTML = '';
 
-  // 1. Custom Icon Button (First position in Icon Grid)
-  const isPresetIcon = PRESET_ICONS.some(p => p.id === modalState.selectedIcon);
+  const isPresetIcon = sessionPresetIcons.some(p => p.id === modalState.selectedIcon);
   const isCustomActive = modalState.isCustomIconSelected || (!isPresetIcon && modalState.selectedIcon !== '');
 
+  // 1. Static Custom Icon Button (Always fixed in first position)
   const customBtnLabel = tr().chooseCustomIcon || 'Choose custom icon';
   const customBtn = document.createElement('button');
   customBtn.type = 'button';
@@ -150,7 +314,7 @@ export function renderIconSelector() {
   customBtn.title = customBtnLabel;
   customBtn.setAttribute('aria-label', customBtnLabel);
 
-  // If a custom subject icon is selected, show its SVG in the custom button; otherwise show the custom picker sparkle/add icon
+  // If a custom subject icon is selected, show its SVG in the custom button; otherwise show the custom picker plus/circle icon
   const currentCustomSvg = (!isPresetIcon && getSubjectSvg(modalState.selectedIcon)) || `
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"></circle>
@@ -175,18 +339,35 @@ export function renderIconSelector() {
 
   iconContainer.appendChild(customBtn);
 
-  // 2. Preset Icons (Slots 2 to 8: Book, Math, Code, Science, Language, Art, Music)
-  PRESET_ICONS.forEach(item => {
+  // 2. Randomized Preset Icons (Slots 2 to 8: 7 randomized icons from different categories)
+  const lang = getLang();
+  sessionPresetIcons.forEach(item => {
     const btn = document.createElement('button');
     btn.type = 'button';
     const isSelected = (!isCustomActive) && (item.id === modalState.selectedIcon);
     btn.className = `subject-icon-btn ${isSelected ? 'selected' : ''}`;
-    btn.title = item.label;
+    
+    const label = item.names?.[lang] || item.names?.uz || item.names?.en || item.id;
+    btn.title = label;
+    btn.setAttribute('aria-label', label);
     btn.innerHTML = item.svg;
 
     btn.addEventListener('click', () => {
-      modalState.selectedIcon = item.id;
-      modalState.isCustomIconSelected = false;
+      if (modalState.selectedIcon === item.id && !modalState.isCustomIconSelected) {
+        modalState.selectedIcon = '';
+        modalState.isCustomIconSelected = false;
+      } else {
+        modalState.selectedIcon = item.id;
+        modalState.isCustomIconSelected = false;
+        recordUsedIcon(item.id);
+
+        const nameInput = document.getElementById('subject-modal-name-input');
+        const itemName = item.names?.[lang] || item.names?.uz || item.names?.ru || item.names?.en || item.id;
+        if (nameInput && itemName) {
+          nameInput.value = itemName;
+        }
+      }
+
       closeIconPickerPopover();
       renderIconSelector();
       updateLivePreview();

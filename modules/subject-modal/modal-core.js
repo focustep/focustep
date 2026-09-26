@@ -1,6 +1,6 @@
 import { modalState, resetModalState } from './state.js';
-import { renderPalette, openColorPickerPopover, closeColorPickerPopover, drawCanvasGradient, updateCanvasCursor, handleCanvasPick, setCustomColor } from './color-picker.js';
-import { renderIconSelector, openIconPickerPopover, closeIconPickerPopover, renderIconPickerContent } from './icon-picker.js';
+import { renderPalette, openColorPickerPopover, closeColorPickerPopover, drawCanvasGradient, updateCanvasCursor, handleCanvasPick, setCustomColor, recordUsedColor, resetPresetColorsToDefault } from './color-picker.js';
+import { renderIconSelector, openIconPickerPopover, closeIconPickerPopover, renderIconPickerContent, recordUsedIcon } from './icon-picker.js';
 import { updateLivePreview } from './preview.js';
 import { closeAutosuggest, handleAutosuggestSearch, selectAutosuggestItem, highlightAutosuggestItem } from './autosuggest.js';
 import { hsvToHex, hexToHsv } from './color-utils.js';
@@ -9,7 +9,7 @@ import { renderDailyGoalCard } from '../daily-goal.js';
 import { renderStats } from '../stats.js';
 import { renderTimerSubjectBadge, renderTimerSubjectDropdown } from '../timer-subject-badge.js';
 import { getSubjectByMatch } from '../subjects-db.js';
-import { onLanguageChange } from '../i18n.js';
+import { onLanguageChange, tr } from '../i18n.js';
 
 export function openSubjectModal() {
   const modal = document.getElementById('subject-custom-modal');
@@ -31,6 +31,9 @@ export function openSubjectModal() {
   updateLivePreview();
 
   modal.classList.add('open');
+  document.body.classList.add('subject-modal-open');
+  document.documentElement.classList.add('subject-modal-open');
+
   if (nameInput) {
     setTimeout(() => nameInput.focus(), 50);
   }
@@ -41,6 +44,8 @@ export function closeSubjectModal() {
   if (modal) {
     modal.classList.remove('open');
   }
+  document.body.classList.remove('subject-modal-open');
+  document.documentElement.classList.remove('subject-modal-open');
   closeColorPickerPopover();
   closeIconPickerPopover();
   closeAutosuggest();
@@ -85,20 +90,41 @@ export function initSubjectModal() {
     iconPickerPopover.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
   }
 
-  // Handle Enter and Escape keys when popovers are open
+  // Handle Enter and Escape keys
   document.addEventListener('keydown', (e) => {
-    if (pickerPopover && pickerPopover.classList.contains('open')) {
-      if (e.key === 'Enter' || e.key === 'Escape') {
+    if (e.key === 'Escape') {
+      if (pickerPopover && pickerPopover.classList.contains('open')) {
         e.preventDefault();
         e.stopPropagation();
         closeColorPickerPopover();
         renderPalette();
+        return;
       }
-    } else if (iconPickerPopover && iconPickerPopover.classList.contains('open')) {
-      if (e.key === 'Escape') {
+      if (iconPickerPopover && iconPickerPopover.classList.contains('open')) {
         e.preventDefault();
         e.stopPropagation();
         closeIconPickerPopover();
+        return;
+      }
+      const autosuggestBox = document.getElementById('subject-name-autosuggest');
+      if (autosuggestBox && autosuggestBox.classList.contains('open')) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeAutosuggest();
+        return;
+      }
+      if (modal && modal.classList.contains('open')) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeSubjectModal();
+        return;
+      }
+    } else if (e.key === 'Enter') {
+      if (pickerPopover && pickerPopover.classList.contains('open')) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeColorPickerPopover();
+        renderPalette();
       }
     }
   });
@@ -144,6 +170,7 @@ export function initSubjectModal() {
   if (pickerApplyBtn) {
     pickerApplyBtn.addEventListener('click', (e) => {
       e.stopPropagation();
+      recordUsedColor(modalState.customColorValue);
       closeColorPickerPopover();
       renderPalette();
     });
@@ -247,6 +274,7 @@ export function initSubjectModal() {
       if (e.key === 'Enter') {
         e.preventDefault();
         e.stopPropagation();
+        recordUsedColor(modalState.customColorValue);
         closeColorPickerPopover();
         renderPalette();
       }
@@ -332,6 +360,14 @@ export function initSubjectModal() {
         defaultGoal: 60 // 1 hour default
       });
 
+      if (modalState.selectedColor) {
+        recordUsedColor(modalState.selectedColor);
+      }
+
+      if (modalState.selectedIcon) {
+        recordUsedIcon(modalState.selectedIcon);
+      }
+
       setActiveSubjectId(created.id);
       closeSubjectModal();
 
@@ -343,7 +379,57 @@ export function initSubjectModal() {
     });
   }
 
+  // Reload button to reset recent colors back to default static palette
+  const resetColorBtn = document.getElementById('subject-color-reset-btn');
+  if (resetColorBtn) {
+    resetColorBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      resetColorBtn.classList.remove('spinning');
+      void resetColorBtn.offsetWidth;
+      resetColorBtn.classList.add('spinning');
+      setTimeout(() => resetColorBtn.classList.remove('spinning'), 600);
+      resetPresetColorsToDefault();
+    });
+  }
+
+  // Trash / Clear button to erase text in subject name input
+  const nameClearBtn = document.getElementById('subject-name-clear-btn');
+  if (nameClearBtn && nameInput) {
+    nameClearBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      nameInput.value = '';
+      closeAutosuggest();
+      updateLivePreview();
+      nameInput.focus();
+    });
+  }
+
+  const updateModalI18nLabels = () => {
+    const nameLabel = document.getElementById('subject-modal-name-label');
+    if (nameLabel && tr().subjectModalNameLabel) {
+      nameLabel.textContent = tr().subjectModalNameLabel;
+    }
+    const colorLabel = document.getElementById('subject-modal-color-label');
+    if (colorLabel && tr().subjectModalColorLabel) {
+      colorLabel.textContent = tr().subjectModalColorLabel;
+    }
+    const colorResetBtn = document.getElementById('subject-color-reset-btn');
+    if (colorResetBtn && tr().subjectModalResetColors) {
+      colorResetBtn.title = tr().subjectModalResetColors;
+      colorResetBtn.setAttribute('aria-label', tr().subjectModalResetColors);
+    }
+    const nameClearBtnEl = document.getElementById('subject-name-clear-btn');
+    if (nameClearBtnEl && tr().subjectModalClearName) {
+      nameClearBtnEl.title = tr().subjectModalClearName;
+      nameClearBtnEl.setAttribute('aria-label', tr().subjectModalClearName);
+    }
+  };
+
+  updateModalI18nLabels();
+
   onLanguageChange(() => {
+    updateModalI18nLabels();
     updateLivePreview();
     renderIconSelector();
   });

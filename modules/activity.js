@@ -1,4 +1,8 @@
-import { getRecentActivitySessions, clearAllSessions, deleteSession, undoLastSessionDelete } from './subjects.js';
+import { getRecentActivitySessions, clearAllSessions, deleteSession, undoLastSessionDelete, undoLastSubjectDelete, getSubjectName } from './subjects.js';
+import { renderTimerSubjectBadge, renderTimerSubjectDropdown, updateDropdownPosition } from './timer-subject-badge.js';
+import { renderDailyGoalCard } from './daily-goal.js';
+import { renderStats } from './stats.js';
+import { tr } from './i18n.js';
 
 function formatSessionDuration(sec) {
   sec = Math.max(0, Math.round(sec));
@@ -42,7 +46,7 @@ function formatSessionTimestamp(timestamp) {
   }
 }
 
-function showToast(msg) {
+export function showToast(msg) {
   if (typeof document === 'undefined') return;
   let toast = document.getElementById('activity-toast-notification');
   if (!toast) {
@@ -146,7 +150,7 @@ export function renderActivityFeed() {
         e.stopPropagation();
         deleteSession(session.id);
         renderActivityFeed();
-        showToast('Activity deleted (Ctrl+Z to undo)');
+        showToast(tr().activityDeleted || 'Activity deleted (Ctrl+Z)');
       });
     }
 
@@ -172,12 +176,29 @@ function attachUndoListener() {
           return; // Allow standard input undo
         }
       }
+      // Check for subject restoration first
+      const restoredSubj = undoLastSubjectDelete();
+      if (restoredSubj) {
+        e.preventDefault();
+        e.stopPropagation();
+        renderTimerSubjectBadge();
+        renderDailyGoalCard();
+        renderStats();
+        renderTimerSubjectDropdown();
+        updateDropdownPosition();
+        const subjName = getSubjectName(restoredSubj);
+        const msg = typeof tr().subjectRestored === 'function' ? tr().subjectRestored(subjName) : `${subjName} restored`;
+        showToast(msg);
+        return;
+      }
+
       const restored = undoLastSessionDelete();
       if (restored) {
         e.preventDefault();
         e.stopPropagation();
         renderActivityFeed();
-        showToast(restored === 'all' ? 'All activities restored' : 'Activity restored');
+        const msg = restored === 'all' ? (tr().allActivitiesRestored || 'All activities restored') : (tr().activityRestored || 'Activity restored');
+        showToast(msg);
       }
     }
   };
@@ -204,7 +225,7 @@ export function initActivityFeed() {
     clearBtn.addEventListener('click', () => {
       clearAllSessions();
       renderActivityFeed();
-      showToast('All activities cleared (Ctrl+Z to undo)');
+      showToast(tr().allActivitiesCleared || 'All activities cleared (Ctrl+Z)');
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('focustep:statsUpdated'));
       }

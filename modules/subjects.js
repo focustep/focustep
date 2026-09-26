@@ -159,15 +159,74 @@ export function addSubject(newSubject) {
   return subjectToAdd;
 }
 
+const SUBJECT_UNDO_STACK_KEY = 'focustep_subject_undo_stack';
+
+export function getSubjectUndoStack() {
+  try {
+    const raw = localStorage.getItem(SUBJECT_UNDO_STACK_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return [];
+}
+
+export function saveSubjectUndoStack(stack) {
+  try {
+    localStorage.setItem(SUBJECT_UNDO_STACK_KEY, JSON.stringify(stack));
+  } catch(e) {}
+}
+
 export function deleteSubject(subjectId) {
   let subjects = getSubjects();
-  if (subjects.length <= 1) return false; // Keep at least one
+  if (subjects.length <= 1) return null; // Keep at least one
+  const subjectToDelete = subjects.find(s => s.id === subjectId);
+  const index = subjects.findIndex(s => s.id === subjectId);
+  if (subjectToDelete) {
+    const stack = getSubjectUndoStack();
+    const prevActiveId = getActiveSubjectId();
+    stack.push({
+      subject: subjectToDelete,
+      index: index >= 0 ? index : subjects.length - 1,
+      previousActiveId: prevActiveId,
+      wasActive: prevActiveId === subjectId
+    });
+    saveSubjectUndoStack(stack);
+  }
   subjects = subjects.filter(s => s.id !== subjectId);
   saveSubjects(subjects);
   if (getActiveSubjectId() === subjectId) {
     setActiveSubjectId(subjects[0].id);
   }
-  return true;
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('focustep:subjectsUpdated', { detail: { deletedId: subjectId } }));
+  }
+  return subjectToDelete || null;
+}
+
+export function undoLastSubjectDelete() {
+  const stack = getSubjectUndoStack();
+  if (stack.length === 0) return null;
+  const lastAction = stack.pop();
+  saveSubjectUndoStack(stack);
+
+  if (lastAction && lastAction.subject) {
+    let subjects = getSubjects();
+    if (!subjects.some(s => s.id === lastAction.subject.id)) {
+      if (typeof lastAction.index === 'number' && lastAction.index >= 0 && lastAction.index <= subjects.length) {
+        subjects.splice(lastAction.index, 0, lastAction.subject);
+      } else {
+        subjects.push(lastAction.subject);
+      }
+      saveSubjects(subjects);
+      if (lastAction.wasActive) {
+        setActiveSubjectId(lastAction.subject.id);
+      }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('focustep:subjectsUpdated', { detail: { restored: lastAction.subject } }));
+      }
+      return lastAction.subject;
+    }
+  }
+  return null;
 }
 
 export function cleanOldSessions(sessions) {

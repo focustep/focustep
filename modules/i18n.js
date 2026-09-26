@@ -74,14 +74,22 @@ export const I18N = {
     subjectModalTitle: "Yangi fan qo'shish",
     subjectModalNameLabel: "FAN NOMI",
     subjectModalPlaceholder: "masalan: AI, Python, Kiberxavfsizlik",
+    subjectModalClearName: "Tozalash",
     subjectModalColorLabel: "RANG MAVZUSI",
+    subjectModalResetColors: "Ranglarni tiklash",
     subjectModalIconLabel: "IKONKA",
     subjectModalCancel: "Bekor qilish",
     subjectModalSave: "Fan yaratish",
     subjectModalPreviewDefault: "Yangi fan",
     colorPickerTitle: "Ranglar palitrasi",
     colorPickerApply: "Qo'llash",
-    iconPickerTitle: "Ikonkalar to'plami"
+    iconPickerTitle: "Ikonkalar to'plami",
+    subjectRestored: function(name) { return name + " qaytarildi"; },
+    subjectDeleted: function(name) { return name + " o'chirildi (Ctrl+Z)"; },
+    activityRestored: "Faoliyat qaytarildi",
+    allActivitiesRestored: "Barcha faoliyatlar qaytarildi",
+    activityDeleted: "Faoliyat o'chirildi (Ctrl+Z)",
+    allActivitiesCleared: "Barcha faoliyatlar tozalandi (Ctrl+Z)"
   },
   ru: {
     localeCode: 'ru-RU',
@@ -158,14 +166,22 @@ export const I18N = {
     subjectModalTitle: "Добавить предмет",
     subjectModalNameLabel: "НАЗВАНИЕ ПРЕДМЕТА",
     subjectModalPlaceholder: "например: ИИ, Python, Кибербезопасность",
+    subjectModalClearName: "Очистить",
     subjectModalColorLabel: "ЦВЕТОВАЯ ТЕМА",
+    subjectModalResetColors: "Сбросить цвета",
     subjectModalIconLabel: "ИКОНКА",
     subjectModalCancel: "Отмена",
     subjectModalSave: "Создать предмет",
     subjectModalPreviewDefault: "Новый предмет",
     colorPickerTitle: "Палитра цветов",
     colorPickerApply: "Применить",
-    iconPickerTitle: "Выбор иконки"
+    iconPickerTitle: "Выбор иконки",
+    subjectRestored: function(name) { return name + " восстановлен"; },
+    subjectDeleted: function(name) { return name + " удален (Ctrl+Z)"; },
+    activityRestored: "Активность восстановлена",
+    allActivitiesRestored: "Все активности восстановлены",
+    activityDeleted: "Активность удалена (Ctrl+Z)",
+    allActivitiesCleared: "Все активности очищены (Ctrl+Z)"
   },
   en: {
     localeCode: 'en-US',
@@ -242,14 +258,22 @@ export const I18N = {
     subjectModalTitle: "Add New Subject",
     subjectModalNameLabel: "SUBJECT NAME",
     subjectModalPlaceholder: "e.g. AI, Python, Cybersecurity",
+    subjectModalClearName: "Clear",
     subjectModalColorLabel: "COLOR THEME",
+    subjectModalResetColors: "Reset colors",
     subjectModalIconLabel: "ICON",
     subjectModalCancel: "Cancel",
     subjectModalSave: "Create Subject",
     subjectModalPreviewDefault: "New Subject",
     colorPickerTitle: "Color Palette",
     colorPickerApply: "Apply",
-    iconPickerTitle: "Choose Icon"
+    iconPickerTitle: "Choose Icon",
+    subjectRestored: function(name) { return name + " restored"; },
+    subjectDeleted: function(name) { return name + " deleted (Ctrl+Z)"; },
+    activityRestored: "Activity restored",
+    allActivitiesRestored: "All activities restored",
+    activityDeleted: "Activity deleted (Ctrl+Z)",
+    allActivitiesCleared: "All activities cleared (Ctrl+Z)"
   }
 };
 

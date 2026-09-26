@@ -1,6 +1,6 @@
 import { modalState } from './state.js';
 import { updateLivePreview } from './preview.js';
-import { renderIconSelector } from './icon-picker.js';
+import { renderIconSelector, recordUsedIcon } from './icon-picker.js';
 import { findMatchingSubjects, getSubjectLocalizedName } from '../subjects-db.js';
 import { getLang } from '../i18n.js';
 
@@ -80,6 +80,7 @@ export function selectAutosuggestItem(item) {
 
   modalState.selectedIcon = item.id;
   modalState.isCustomIconSelected = true;
+  recordUsedIcon(item.id);
 
   renderIconSelector();
   updateLivePreview();

@@ -1,4 +1,10 @@
 /* Custom Subject Modal Styles */
+body.subject-modal-open,
+html.subject-modal-open {
+  overflow: hidden !important;
+  overscroll-behavior: contain !important;
+}
+
 .subject-custom-modal-container {
   position: fixed;
   top: 0;
@@ -158,11 +164,57 @@
   gap: 8px;
 }
 
+.subject-modal-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 22px;
+}
+
 .subject-modal-label {
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
   letter-spacing: 0.06em;
+}
+
+.subject-modal-reload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  line-height: 1;
+}
+
+.subject-modal-reload-btn:hover {
+  color: #4ec9b0;
+  background: rgba(78, 201, 176, 0.1);
+}
+
+[data-theme="light"] .subject-modal-reload-btn:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.subject-modal-reload-btn:active {
+  transform: scale(0.9);
+}
+
+.subject-modal-reload-btn.spinning svg {
+  animation: reloadBtnSpin 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes reloadBtnSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
 }
 
 .subject-modal-input-wrap {
@@ -172,7 +224,7 @@
 
 .subject-modal-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 42px 12px 16px;
   background: rgba(255, 255, 255, 0.04);
   border: 1.5px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
@@ -183,6 +235,43 @@
   font-family: inherit;
   transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   box-shadow: none;
+}
+
+.subject-input-clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+  z-index: 5;
+  opacity: 0.65;
+}
+
+.subject-input-clear-btn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  opacity: 1;
+  transform: translateY(-50%) scale(1.06);
+}
+
+.subject-input-clear-btn:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+[data-theme="light"] .subject-input-clear-btn:hover {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
 }
 
 /* Auto-suggest Dropdown */

@@ -1,10 +1,12 @@
-import { getSubjects, getActiveSubjectId, setActiveSubjectId, getSubjectName } from './subjects.js';
+import { getSubjects, getActiveSubjectId, setActiveSubjectId, getSubjectName, deleteSubject } from './subjects.js';
 import { renderDailyGoalCard } from './daily-goal.js';
 import { renderStats } from './stats.js';
 import { openSubjectModal } from './subject-modal.js';
 import { getSubjectSvg } from './subjects-db.js';
+import { showToast } from './activity.js';
+import { tr } from './i18n.js';
 
-export function renderTimerSubjectBadge() {
+export function renderTimerSubjectBadge(syncDropdown = false) {
   const badgeEl = document.getElementById('timer-subject-badge');
   const dotEl = document.getElementById('timer-subject-dot');
   const nameEl = document.getElementById('timer-subject-name');
@@ -59,7 +61,10 @@ export function renderTimerSubjectBadge() {
     editBtn.style.borderColor = `${color}44`;
   }
 
-  renderTimerSubjectDropdown();
+  if (syncDropdown) {
+    renderTimerSubjectDropdown();
+  }
+  updateDropdownPosition();
 }
 
 export function renderTimerSubjectDropdown() {
@@ -68,64 +73,142 @@ export function renderTimerSubjectDropdown() {
 
   const subjects = getSubjects();
   const activeId = getActiveSubjectId();
-  listEl.innerHTML = '';
+  const canDeleteAny = subjects.length > 1;
+
+  // Keyed reconciliation: preserve existing DOM elements without modifying innerHTML on existing elements
+  const existingElements = new Map();
+  Array.from(listEl.children).forEach(el => {
+    if (el.dataset && el.dataset.subjectId) {
+      existingElements.set(el.dataset.subjectId, el);
+    }
+  });
+
+  const currentSubjectIds = new Set(subjects.map(s => s.id));
+
+  // Remove elements that no longer exist
+  existingElements.forEach((el, id) => {
+    if (!currentSubjectIds.has(id)) {
+      el.remove();
+      existingElements.delete(id);
+    }
+  });
 
   subjects.forEach(subject => {
-    const item = document.createElement('button');
-    item.type = 'button';
+    let item = existingElements.get(subject.id);
     const isSelected = subject.id === activeId;
     const isOther = subject.id === 'other' || subject.name.toLowerCase() === 'other';
     const color = subject.color || (isOther ? '#4ec9b0' : '#7c3aed');
     const svg = getSubjectSvg(subject.icon || subject.id);
-    
-    item.className = `timer-subject-dropdown-item ${isSelected ? 'active' : ''} ${isOther ? 'is-other' : ''}`;
-    if (isSelected) {
-      item.style.borderColor = `${color}55`;
-    }
-    
-    const iconHtml = svg ? `
-      <div class="timer-subject-item-icon-wrap" style="color: ${color}; background-color: ${color}15; border-color: ${color}33;">
-        ${svg}
-      </div>
-    ` : `
-      <div class="timer-subject-item-icon-wrap" style="color: ${color}; background-color: ${color}15; border-color: ${color}33;">
-        <span style="width: 8px; height: 8px; border-radius: 50%; background-color: ${color}; box-shadow: 0 0 6px ${color}88;"></span>
-      </div>
-    `;
+    const subjName = getSubjectName(subject);
 
-    item.innerHTML = `
-      <div class="timer-subject-item-left">
-        ${iconHtml}
-        <span class="timer-subject-item-text" style="color: #ffffff !important;">${getSubjectName(subject)}</span>
-      </div>
-      ${isSelected ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
-    `;
+    if (!item) {
+      item = document.createElement('button');
+      item.type = 'button';
+      item.dataset.subjectId = subject.id;
+      item.className = `timer-subject-dropdown-item ${isSelected ? 'active' : ''} ${isOther ? 'is-other' : ''}`;
+      item.style.borderColor = isSelected ? `${color}55` : 'transparent';
 
-    const itemSvg = item.querySelector('.timer-subject-item-icon-wrap svg');
-    if (itemSvg) {
-      const isFillOnly = itemSvg.getAttribute('fill') === 'currentColor' && (!itemSvg.getAttribute('stroke') || itemSvg.getAttribute('stroke') === 'none');
-      if (isFillOnly) {
-        itemSvg.style.fill = color;
-        itemSvg.style.color = color;
-        itemSvg.style.stroke = 'none';
-      } else {
-        itemSvg.style.stroke = color;
-        itemSvg.style.color = color;
+      const iconHtml = svg ? `
+        <div class="timer-subject-item-icon-wrap" style="color: ${color}; background-color: ${color}15; border-color: ${color}33;">
+          ${svg}
+        </div>
+      ` : `
+        <div class="timer-subject-item-icon-wrap" style="color: ${color}; background-color: ${color}15; border-color: ${color}33;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background-color: ${color}; box-shadow: 0 0 6px ${color}88;"></span>
+        </div>
+      `;
+
+      item.innerHTML = `
+        <div class="timer-subject-item-left">
+          ${iconHtml}
+          <span class="timer-subject-item-text" style="color: #ffffff !important;">${subjName}</span>
+        </div>
+        <div class="timer-subject-item-right">
+          <svg class="timer-subject-check-icon" style="display: ${isSelected ? 'block' : 'none'};" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span role="button" tabindex="0" class="timer-subject-item-delete-btn" style="display: ${canDeleteAny ? 'flex' : 'none'};" aria-label="Delete ${subjName}" title="O'chirish">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </span>
+        </div>
+      `;
+
+      const itemSvg = item.querySelector('.timer-subject-item-icon-wrap svg');
+      if (itemSvg) {
+        const isFillOnly = itemSvg.getAttribute('fill') === 'currentColor' && (!itemSvg.getAttribute('stroke') || itemSvg.getAttribute('stroke') === 'none');
+        if (isFillOnly) {
+          itemSvg.style.fill = color;
+          itemSvg.style.color = color;
+          itemSvg.style.stroke = 'none';
+        } else {
+          itemSvg.style.stroke = color;
+          itemSvg.style.color = color;
+        }
+        itemSvg.style.width = '17px';
+        itemSvg.style.height = '17px';
       }
-      itemSvg.style.width = '17px';
-      itemSvg.style.height = '17px';
+
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('.timer-subject-item-delete-btn')) return;
+        e.stopPropagation();
+        setActiveSubjectId(subject.id);
+        renderTimerSubjectBadge();
+        renderDailyGoalCard();
+        renderStats();
+        closeTimerSubjectDropdown();
+      });
+
+      const delBtn = item.querySelector('.timer-subject-item-delete-btn');
+      if (delBtn) {
+        const handleDelete = (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          if (item.classList.contains('is-deleting')) return;
+          
+          item.classList.add('is-deleting');
+          const msg = typeof tr().subjectDeleted === 'function' ? tr().subjectDeleted(subjName) : `${subjName} deleted (Ctrl+Z)`;
+          showToast(msg);
+
+          setTimeout(() => {
+            const deleted = deleteSubject(subject.id);
+            if (deleted) {
+              item.remove();
+              const remainingSubjects = getSubjects();
+              if (remainingSubjects.length <= 1) {
+                listEl.querySelectorAll('.timer-subject-item-delete-btn').forEach(btn => btn.style.display = 'none');
+              }
+              renderTimerSubjectBadge(false);
+              renderDailyGoalCard();
+              renderStats();
+              updateDropdownPosition();
+            }
+          }, 200);
+        };
+
+        delBtn.addEventListener('click', handleDelete);
+        delBtn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleDelete(e);
+          }
+        });
+      }
+
+      listEl.appendChild(item);
+    } else {
+      // Element already exists in DOM: Update properties without replacing innerHTML to prevent hover flicker
+      item.className = `timer-subject-dropdown-item ${isSelected ? 'active' : ''} ${isOther ? 'is-other' : ''}`;
+      item.style.borderColor = isSelected ? `${color}55` : 'transparent';
+      const checkEl = item.querySelector('.timer-subject-check-icon');
+      if (checkEl) {
+        checkEl.style.display = isSelected ? 'block' : 'none';
+        checkEl.setAttribute('stroke', color);
+      }
+      const delEl = item.querySelector('.timer-subject-item-delete-btn');
+      if (delEl) {
+        delEl.style.display = canDeleteAny ? 'flex' : 'none';
+      }
     }
-
-    item.addEventListener('click', (e) => {
-      e.stopPropagation();
-      setActiveSubjectId(subject.id);
-      renderTimerSubjectBadge();
-      renderDailyGoalCard();
-      renderStats();
-      closeTimerSubjectDropdown();
-    });
-
-    listEl.appendChild(item);
   });
 
   // Ensure scroll is isolated to dropdown list
@@ -134,6 +217,36 @@ export function renderTimerSubjectDropdown() {
     listEl.addEventListener('wheel', (e) => {
       e.stopPropagation();
     }, { passive: false });
+  }
+}
+
+export function updateDropdownPosition(force = false) {
+  const wrapper = document.getElementById('timer-subject-badge-wrapper');
+  const badgeEl = document.getElementById('timer-subject-badge');
+  const nameEl = document.getElementById('timer-subject-name');
+  const dropdown = document.getElementById('timer-subject-dropdown');
+  if (!wrapper || !badgeEl || !dropdown) return;
+
+  // Agar dropdown ochiq bo'lsa va majburiy (force) yangilanish bo'lmasa, ochilib turgan paytda joylashuv qimirlamaydi
+  if (wrapper.classList.contains('open') && !force) {
+    return;
+  }
+
+  const badgeWidth = badgeEl.offsetWidth;
+  const dropdownWidth = dropdown.offsetWidth || 220;
+  const diff = Math.abs(badgeWidth - dropdownWidth);
+  const textLength = nameEl ? (nameEl.textContent || '').trim().length : 0;
+
+  // Agar matn uzunligi 17 tadan ortiq bo'lsa yoki badge va dropdown kengligi bir-biriga yaqin (±4px) bo'lsa:
+  // Dropdown faqat switch subject badge'iga tekislanadi.
+  // Aks holda switch subject va quick edit (qalamcha) tugmasining umumiy markazida turadi.
+  if (textLength > 17 || diff <= 4) {
+    const badgeCenter = badgeEl.offsetLeft + (badgeWidth / 2);
+    dropdown.style.left = `${badgeCenter}px`;
+    dropdown.classList.add('aligned-to-badge');
+  } else {
+    dropdown.style.left = '50%';
+    dropdown.classList.remove('aligned-to-badge');
   }
 }
 
@@ -150,6 +263,7 @@ export function toggleTimerSubjectDropdown() {
   const isOpening = !wrapper.classList.contains('open');
   if (isOpening) {
     renderTimerSubjectDropdown();
+    updateDropdownPosition(true);
     wrapper.classList.add('open');
   } else {
     wrapper.classList.remove('open');
@@ -196,6 +310,10 @@ export function initTimerSubjectBadge() {
     if (!wrapper.contains(e.target)) {
       closeTimerSubjectDropdown();
     }
+  });
+
+  window.addEventListener('resize', () => {
+    updateDropdownPosition();
   });
 
   renderTimerSubjectBadge();

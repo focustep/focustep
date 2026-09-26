@@ -1,8 +1,89 @@
-import { PRESET_COLORS } from './constants.js';
+import { PRESET_COLORS as DEFAULT_PRESET_COLORS } from './constants.js';
 import { modalState } from './state.js';
 import { hsvToHex, hexToHsv } from './color-utils.js';
 import { updateLivePreview } from './preview.js';
 import { closeIconPickerPopover } from './icon-picker.js';
+
+const COLOR_STORAGE_KEY = 'focustep_recent_preset_colors';
+
+function savePresetColorsToStorage(list) {
+  try {
+    localStorage.setItem(COLOR_STORAGE_KEY, JSON.stringify(list));
+  } catch (e) {}
+}
+
+export function initRecentPresetColors() {
+  let savedColors = [];
+  try {
+    const raw = localStorage.getItem(COLOR_STORAGE_KEY);
+    if (raw) savedColors = JSON.parse(raw);
+  } catch (e) {}
+
+  const result = [];
+  const used = new Set();
+
+  if (Array.isArray(savedColors) && savedColors.length > 0) {
+    for (const c of savedColors) {
+      if (result.length >= 9) break;
+      if (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c)) {
+        const norm = c.toLowerCase();
+        if (!used.has(norm)) {
+          result.push(norm);
+          used.add(norm);
+        }
+      }
+    }
+  }
+
+  // Fill up to 9 colors with default preset colors without randomizing
+  for (const c of DEFAULT_PRESET_COLORS) {
+    if (result.length >= 9) break;
+    const norm = c.toLowerCase();
+    if (!used.has(norm)) {
+      result.push(norm);
+      used.add(norm);
+    }
+  }
+
+  savePresetColorsToStorage(result);
+  return result;
+}
+
+export let sessionPresetColors = initRecentPresetColors();
+
+export function getSessionPresetColors() {
+  return sessionPresetColors;
+}
+
+// Shifts newly used color to slot 1, pushes existing right, deletes the last one
+export function recordUsedColor(hex) {
+  if (!hex || typeof hex !== 'string') return;
+  const norm = hex.trim().toLowerCase();
+  if (!/^#[0-9a-fA-F]{6}$/.test(norm)) return;
+
+  const existingIndex = sessionPresetColors.findIndex(c => c.toLowerCase() === norm);
+  if (existingIndex !== -1) {
+    sessionPresetColors.splice(existingIndex, 1);
+  }
+
+  sessionPresetColors.unshift(norm);
+
+  if (sessionPresetColors.length > 9) {
+    sessionPresetColors = sessionPresetColors.slice(0, 9);
+  }
+
+  savePresetColorsToStorage(sessionPresetColors);
+}
+
+// Resets recent colors back to the original 9 static preset colors
+export function resetPresetColorsToDefault() {
+  sessionPresetColors = [...DEFAULT_PRESET_COLORS.map(c => c.toLowerCase())];
+  savePresetColorsToStorage(sessionPresetColors);
+  modalState.selectedColor = sessionPresetColors[0];
+  modalState.isCustomSelected = false;
+  renderPalette();
+  updateLivePreview();
+}
 
 export function triggerDonutSpin(reverse = false) {
   const donut = document.querySelector('.subject-custom-color-swatch .rainbow-donut-circle');
@@ -163,10 +244,12 @@ export function renderPalette() {
 
   paletteContainer.innerHTML = '';
 
+  const isPresetColor = sessionPresetColors.some(c => c.toLowerCase() === (modalState.selectedColor || '').toLowerCase());
+  const isCustomActive = modalState.isCustomSelected || (!isPresetColor && modalState.selectedColor !== '');
+
   // 1. Custom Rainbow Donut Swatch (First position in Row 1)
   const customBtn = document.createElement('button');
   customBtn.type = 'button';
-  const isCustomActive = modalState.isCustomSelected || (!PRESET_COLORS.includes(modalState.selectedColor));
   customBtn.className = `subject-custom-color-swatch ${isCustomActive ? 'selected' : ''}`;
   customBtn.setAttribute('aria-label', 'Custom Color');
   customBtn.title = 'Choose custom color';
@@ -193,11 +276,11 @@ export function renderPalette() {
 
   paletteContainer.appendChild(customBtn);
 
-  // 2. Preset Colors (Slots 2 to 10)
-  PRESET_COLORS.forEach(color => {
+  // 2. Preset Colors (Slots 2 to 10: 9 persistent colors, shifting on usage)
+  sessionPresetColors.forEach(color => {
     const sw = document.createElement('button');
     sw.type = 'button';
-    const isSelected = (!isCustomActive) && (color === modalState.selectedColor);
+    const isSelected = (!isCustomActive) && (color.toLowerCase() === (modalState.selectedColor || '').toLowerCase());
     sw.className = `subject-color-swatch ${isSelected ? 'selected' : ''}`;
     sw.style.backgroundColor = color;
     sw.setAttribute('aria-label', color);
@@ -209,6 +292,7 @@ export function renderPalette() {
     sw.addEventListener('click', () => {
       modalState.isCustomSelected = false;
       modalState.selectedColor = color;
+      recordUsedColor(color);
       closeColorPickerPopover();
       renderPalette();
       updateLivePreview();

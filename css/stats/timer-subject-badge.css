@@ -181,11 +181,11 @@
   gap: 3px;
   max-height: 220px;
   overflow-y: auto;
-  overflow-x: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: #28333c transparent;
-  padding-right: 2px;
+  padding: 3px 3px 2px 3px;
 }
 
 /* Custom Webkit Scrollbar (Matching Custom Mode card surface & clean subtle slider) */
@@ -234,8 +234,13 @@
   font-size: 13.5px;
   font-weight: 500;
   width: 100%;
+  height: 42px;
+  box-sizing: border-box;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  flex-shrink: 0;
+  user-select: none;
+  transition: background 0.12s ease, border-color 0.12s ease;
 }
 
 .timer-subject-dropdown-item:hover {
@@ -262,6 +267,9 @@
   align-items: center;
   gap: 10px;
   min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .timer-subject-item-icon-wrap {
@@ -284,8 +292,97 @@
 .timer-subject-item-text {
   color: #ffffff !important;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 13.5px;
   font-weight: 500;
+}
+
+.timer-subject-item-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+}
+
+.timer-subject-check-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+/* X Delete button on hover */
+.timer-subject-item-delete-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  border: none;
+  transition: opacity 0.12s ease, color 0.12s ease, background 0.12s ease, transform 0.12s ease;
+}
+
+.timer-subject-dropdown-item:hover .timer-subject-item-delete-btn,
+.timer-subject-dropdown-item:focus-within .timer-subject-item-delete-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.timer-subject-dropdown-item:hover .timer-subject-check-icon,
+.timer-subject-dropdown-item:focus-within .timer-subject-check-icon {
+  opacity: 0;
+}
+
+.timer-subject-item-delete-btn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.16);
+  transform: scale(1.1);
+}
+
+[data-theme="light"] .timer-subject-item-delete-btn {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .timer-subject-item-delete-btn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/* Fast and smooth GPU-accelerated delete animation */
+.timer-subject-dropdown-item.is-deleting {
+  pointer-events: none !important;
+  opacity: 0 !important;
+  transform: translate3d(0, -2px, 0) scale(0.85) !important;
+  max-height: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: -3px !important;
+  margin-bottom: 0 !important;
+  border-width: 0 !important;
+  border-color: transparent !important;
+  overflow: hidden !important;
+  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.2, 0, 0, 1), height 0.2s cubic-bezier(0.2, 0, 0, 1), padding 0.2s cubic-bezier(0.2, 0, 0, 1), margin 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
 }
 
 .timer-subject-dropdown-divider {
