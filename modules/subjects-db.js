@@ -44,7 +44,11 @@ export function getSubjectByMatch(name) {
 
 // Get SVG by icon ID or subject ID
 export function getSubjectSvg(iconOrSubjectId) {
-  return getSubjectSvgHelper(iconOrSubjectId, SUBJECTS_DATABASE);
+  if (!iconOrSubjectId) return null;
+  if (standardIcons && standardIcons[iconOrSubjectId]) {
+    return standardIcons[iconOrSubjectId];
+  }
+  return getSubjectSvgHelper(iconOrSubjectId, SUBJECTS_DATABASE, standardIcons);
 }
 
 // Localize subject name according to language (uz, ru, en)

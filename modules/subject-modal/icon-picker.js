@@ -3,22 +3,28 @@ import { modalState } from './state.js';
 import { updateLivePreview } from './preview.js';
 import { closeColorPickerPopover } from './color-picker.js';
 import { SUBJECT_CATEGORIES, SUBJECTS_DATABASE, getSubjectSvg } from '../subjects-db.js';
-import { getLang } from '../i18n.js';
+import { getLang, tr } from '../i18n.js';
 
 export function openIconPickerPopover() {
   closeColorPickerPopover();
   const popover = document.getElementById('subject-icon-picker-popover');
   if (!popover) return;
 
-  renderIconPickerContent('');
-  popover.classList.add('open');
-  popover.setAttribute('aria-hidden', 'false');
+  const titleEl = popover.querySelector('.icon-picker-title');
+  if (titleEl && tr().chooseCustomIcon) {
+    titleEl.textContent = tr().chooseCustomIcon;
+  }
 
   const searchInput = document.getElementById('icon-picker-search-input');
   if (searchInput) {
+    searchInput.placeholder = tr().searchIconPlaceholder || 'Qidirish...';
     searchInput.value = '';
     setTimeout(() => searchInput.focus(), 60);
   }
+
+  renderIconPickerContent('');
+  popover.classList.add('open');
+  popover.setAttribute('aria-hidden', 'false');
 }
 
 export function closeIconPickerPopover() {
@@ -29,14 +35,43 @@ export function closeIconPickerPopover() {
   }
 }
 
+let isScrollAreaListenerAttached = false;
+
+function initScrollAreaDelegation(scrollArea) {
+  if (isScrollAreaListenerAttached || !scrollArea) return;
+  isScrollAreaListenerAttached = true;
+  scrollArea.addEventListener('click', (e) => {
+    const btn = e.target.closest('.icon-picker-item');
+    if (!btn) return;
+    e.stopPropagation();
+    const itemId = btn.dataset.itemId;
+    const localizedItemName = btn.dataset.itemName;
+    if (!itemId) return;
+
+    modalState.selectedIcon = itemId;
+    modalState.isCustomIconSelected = true;
+
+    const nameInput = document.getElementById('subject-modal-name-input');
+    if (nameInput && !nameInput.value.trim() && localizedItemName) {
+      nameInput.value = localizedItemName;
+    }
+
+    renderIconSelector();
+    updateLivePreview();
+    closeIconPickerPopover();
+  });
+}
+
 export function renderIconPickerContent(query = '') {
   const scrollArea = document.getElementById('icon-picker-scroll-area');
   if (!scrollArea) return;
 
+  initScrollAreaDelegation(scrollArea);
+
   scrollArea.innerHTML = '';
   const q = query.trim().toLowerCase();
-
   const lang = getLang();
+  const fragment = document.createDocumentFragment();
 
   SUBJECT_CATEGORIES.forEach(cat => {
     let items = SUBJECTS_DATABASE.filter(item => item.categoryId === cat.id);
@@ -57,7 +92,7 @@ export function renderIconPickerContent(query = '') {
 
     const titleEl = document.createElement('span');
     titleEl.className = 'icon-picker-category-title';
-    titleEl.textContent = `${cat.names?.[lang] || cat.names?.uz || cat.id} (${items.length})`;
+    titleEl.textContent = cat.names?.[lang] || cat.names?.uz || cat.id;
     groupEl.appendChild(titleEl);
 
     const gridEl = document.createElement('div');
@@ -68,46 +103,34 @@ export function renderIconPickerContent(query = '') {
       btn.type = 'button';
       const isSelected = modalState.selectedIcon === item.id;
       btn.className = `icon-picker-item ${isSelected ? 'selected' : ''}`;
-      btn.title = `${item.names?.uz || ''} / ${item.names?.ru || ''} / ${item.names?.en || ''}`;
-
       const localizedItemName = item.names?.[lang] || item.names?.uz || item.id;
+      btn.title = localizedItemName;
+      btn.dataset.itemId = item.id;
+      btn.dataset.itemName = localizedItemName;
 
       btn.innerHTML = `
         ${item.svg}
         <span class="icon-picker-item-label">${localizedItemName}</span>
       `;
 
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        modalState.selectedIcon = item.id;
-        modalState.isCustomIconSelected = true;
-
-        const nameInput = document.getElementById('subject-modal-name-input');
-        if (nameInput && !nameInput.value.trim()) {
-          nameInput.value = localizedItemName;
-        }
-
-        renderIconSelector();
-        updateLivePreview();
-        closeIconPickerPopover();
-      });
-
       gridEl.appendChild(btn);
     });
 
     groupEl.appendChild(gridEl);
-    scrollArea.appendChild(groupEl);
+    fragment.appendChild(groupEl);
   });
 
-  if (scrollArea.children.length === 0) {
+  if (fragment.children.length === 0) {
     const emptyEl = document.createElement('div');
     emptyEl.style.padding = '20px 10px';
     emptyEl.style.textAlign = 'center';
     emptyEl.style.fontSize = '12px';
     emptyEl.style.color = 'var(--text-muted)';
-    emptyEl.textContent = 'Hech narsa topilmadi / Ничего не найдено';
-    scrollArea.appendChild(emptyEl);
+    emptyEl.textContent = tr().nothingFound || 'Hech narsa topilmadi';
+    fragment.appendChild(emptyEl);
   }
+
+  scrollArea.appendChild(fragment);
 }
 
 export function renderIconSelector() {
@@ -120,11 +143,12 @@ export function renderIconSelector() {
   const isPresetIcon = PRESET_ICONS.some(p => p.id === modalState.selectedIcon);
   const isCustomActive = modalState.isCustomIconSelected || (!isPresetIcon && modalState.selectedIcon !== '');
 
+  const customBtnLabel = tr().chooseCustomIcon || 'Choose custom icon';
   const customBtn = document.createElement('button');
   customBtn.type = 'button';
   customBtn.className = `subject-custom-icon-btn ${isCustomActive ? 'selected' : ''}`;
-  customBtn.title = 'Choose custom icon';
-  customBtn.setAttribute('aria-label', 'Choose custom icon');
+  customBtn.title = customBtnLabel;
+  customBtn.setAttribute('aria-label', customBtnLabel);
 
   // If a custom subject icon is selected, show its SVG in the custom button; otherwise show the custom picker sparkle/add icon
   const currentCustomSvg = (!isPresetIcon && getSubjectSvg(modalState.selectedIcon)) || `

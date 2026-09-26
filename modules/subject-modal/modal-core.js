@@ -9,6 +9,7 @@ import { renderDailyGoalCard } from '../daily-goal.js';
 import { renderStats } from '../stats.js';
 import { renderTimerSubjectBadge, renderTimerSubjectDropdown } from '../timer-subject-badge.js';
 import { getSubjectByMatch } from '../subjects-db.js';
+import { onLanguageChange } from '../i18n.js';
 
 export function openSubjectModal() {
   const modal = document.getElementById('subject-custom-modal');
@@ -104,6 +105,10 @@ export function initSubjectModal() {
 
   // Global click handler to close popovers and autosuggest on outside click
   document.addEventListener('click', (e) => {
+    if (modalState.justFinishedDrag) {
+      return;
+    }
+
     if (pickerPopover && pickerPopover.classList.contains('open')) {
       const isInside = pickerPopover.contains(e.target) || (e.target.closest && e.target.closest('.subject-custom-color-swatch'));
       if (!isInside) {
@@ -157,6 +162,22 @@ export function initSubjectModal() {
     });
   }
 
+  // Global drag end handler for smooth canvas/slider release anywhere
+  const endColorPickerDrag = () => {
+    if (modalState.isDraggingCanvas || modalState.isDraggingSlider) {
+      modalState.isDraggingCanvas = false;
+      modalState.isDraggingSlider = false;
+      modalState.justFinishedDrag = true;
+      setTimeout(() => {
+        modalState.justFinishedDrag = false;
+      }, 150);
+    }
+  };
+
+  window.addEventListener('mouseup', endColorPickerDrag);
+  window.addEventListener('touchend', endColorPickerDrag);
+  window.addEventListener('touchcancel', endColorPickerDrag);
+
   // 2D Canvas Drag / Click interactions
   if (pickerCanvasWrap) {
     pickerCanvasWrap.addEventListener('mousedown', (e) => {
@@ -171,12 +192,6 @@ export function initSubjectModal() {
       }
     });
 
-    window.addEventListener('mouseup', () => {
-      if (modalState.isDraggingCanvas) {
-        modalState.isDraggingCanvas = false;
-      }
-    });
-
     pickerCanvasWrap.addEventListener('touchstart', (e) => {
       e.stopPropagation();
       modalState.isDraggingCanvas = true;
@@ -188,16 +203,20 @@ export function initSubjectModal() {
         handleCanvasPick(e);
       }
     }, { passive: true });
-
-    window.addEventListener('touchend', () => {
-      if (modalState.isDraggingCanvas) {
-        modalState.isDraggingCanvas = false;
-      }
-    });
   }
 
   // Hue Slider input
   if (pickerHueSlider) {
+    pickerHueSlider.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      modalState.isDraggingSlider = true;
+    });
+
+    pickerHueSlider.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+      modalState.isDraggingSlider = true;
+    }, { passive: true });
+
     pickerHueSlider.addEventListener('input', (e) => {
       modalState.pickerHue = parseFloat(e.target.value);
       drawCanvasGradient();
@@ -323,4 +342,9 @@ export function initSubjectModal() {
       renderStats();
     });
   }
+
+  onLanguageChange(() => {
+    updateLivePreview();
+    renderIconSelector();
+  });
 }

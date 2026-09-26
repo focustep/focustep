@@ -11,6 +11,8 @@ export const modalState = {
   pickerSat: 0.58,
   pickerVal: 0.94,
   isDraggingCanvas: false,
+  isDraggingSlider: false,
+  justFinishedDrag: false,
 
   autosuggestActiveIndex: -1,
   currentAutosuggestList: []

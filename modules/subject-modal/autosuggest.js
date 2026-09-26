@@ -1,7 +1,7 @@
 import { modalState } from './state.js';
 import { updateLivePreview } from './preview.js';
 import { renderIconSelector } from './icon-picker.js';
-import { findMatchingSubjects } from '../subjects-db.js';
+import { findMatchingSubjects, getSubjectLocalizedName } from '../subjects-db.js';
 import { getLang } from '../i18n.js';
 
 export function closeAutosuggest() {
@@ -42,9 +42,9 @@ export function handleAutosuggestSearch(query) {
     itemBtn.className = 'subject-autosuggest-item';
     itemBtn.dataset.index = index;
 
-    const primaryName = item.names?.[lang] || item.names?.uz || item.id;
+    const primaryName = getSubjectLocalizedName(item, lang);
     const otherLangs = ['uz', 'ru', 'en'].filter(l => l !== lang);
-    const subText = otherLangs.map(l => item.names?.[l]).filter(Boolean).join(' · ');
+    const subText = otherLangs.map(l => getSubjectLocalizedName(item, l)).filter(Boolean).join(' · ');
 
     itemBtn.innerHTML = `
       <div class="subject-autosuggest-left">
@@ -75,7 +75,7 @@ export function selectAutosuggestItem(item) {
   const nameInput = document.getElementById('subject-modal-name-input');
   const lang = getLang();
   if (nameInput) {
-    nameInput.value = item.names?.[lang] || item.names?.uz || item.id;
+    nameInput.value = getSubjectLocalizedName(item, lang);
   }
 
   modalState.selectedIcon = item.id;

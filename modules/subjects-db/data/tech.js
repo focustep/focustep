@@ -3,23 +3,23 @@ export const TECH_SUBJECTS = [
     id: 'ai',
     categoryId: 'tech',
     names: {
-      uz: "Sun'iy intellekt (AI)",
-      ru: "Искусственный интеллект (AI)",
+      uz: "Sun’iy intellekt (AI)",
+      ru: "Искусственный интеллект (ИИ)",
       en: "Artificial Intelligence (AI)"
     },
-    aliases: ['ai', 'gemini', 'suniy intellekt', 'sun\'iy intellekt', 'ии', 'искусственный интеллект', 'artificial intelligence', 'sparkles'],
+    aliases: ['ai', 'gemini', 'suniy intellekt', 'sun\'iy intellekt', 'sun’iy intellekt', 'ии', 'искусственный интеллект', 'artificial intelligence', 'sparkles'],
     defaultColor: '#3b82f6',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8.5 5 1.5 5a2 2 0 0 0 1.5 1.5l5 1.5-5 1.5a2 2 0 0 0-1.5 1.5l-1.5 5-1.5-5a2 2 0 0 0-1.5-1.5l-5-1.5 5-1.5a2 2 0 0 0 1.5-1.5z"/><path d="m19 2 .8 2.2a1 1 0 0 0 .6.6L22.6 5.4l-2.2.8a1 1 0 0 0-.6.6L19 9l-.8-2.2a1 1 0 0 0-.6-.6L15.4 5.4l2.2-.8a1 1 0 0 0 .6-.6L19 2z"/><path d="m19.5 15 .6 1.8a1 1 0 0 0 .5.5l1.8.6-1.8.6a1 1 0 0 0-.5.5l-.6 1.8-.6-1.8a1 1 0 0 0-.5-.5l-1.8-.6 1.8-.6a1 1 0 0 0 .5-.5L19.5 15z"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/></svg>`
   },
   {
     id: 'ml',
     categoryId: 'tech',
     names: {
-      uz: "Mashinali o'rganish (ML)",
-      ru: "Машинное обучение (ML)",
-      en: "Machine Learning (ML)"
+      uz: "Mashinali o‘rganish",
+      ru: "Машинное обучение",
+      en: "Machine Learning"
     },
-    aliases: ['ml', 'mashinali organish', 'mashinali o\'rganish', 'machine learning', 'машинное обучение'],
+    aliases: ['ml', 'mashinali organish', 'mashinali o\'rganish', 'mashinali o‘rganish', 'machine learning', 'машинное обучение'],
     defaultColor: '#6366f1',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="12" r="3"/><line x1="8.6" y1="7.4" x2="15.4" y2="10.6"/><line x1="8.6" y1="16.6" x2="15.4" y2="13.4"/><line x1="6" y1="9" x2="6" y2="15"/></svg>`
   },
@@ -27,9 +27,9 @@ export const TECH_SUBJECTS = [
     id: 'cs',
     categoryId: 'tech',
     names: {
-      uz: "Kompyuter fanlari (CS)",
-      ru: "Компьютерные науки (CS)",
-      en: "Computer Science (CS)"
+      uz: "Kompyuter fanlari",
+      ru: "Компьютерные науки",
+      en: "Computer Science"
     },
     aliases: ['cs', 'computer science', 'kompyuter fanlari', 'информатика', 'компьютерные науки'],
     defaultColor: '#0ea5e9',
@@ -39,9 +39,9 @@ export const TECH_SUBJECTS = [
     id: 'programming',
     categoryId: 'tech',
     names: {
-      uz: "Dasturlash (Coding)",
-      ru: "Программирование (Coding)",
-      en: "Programming & Coding"
+      uz: "Dasturlash",
+      ru: "Программирование",
+      en: "Programming"
     },
     aliases: ['dasturlash', 'coding', 'programming', 'python', 'javascript', 'c++', 'java', 'программирование', 'кодинг'],
     defaultColor: '#10b981',
@@ -51,11 +51,11 @@ export const TECH_SUBJECTS = [
     id: 'data_science',
     categoryId: 'tech',
     names: {
-      uz: "Ma'lumotlar tahlili (Data Science)",
-      ru: "Анализ данных (Data Science)",
+      uz: "Ma’lumotlar fanlari",
+      ru: "Наука о данных",
       en: "Data Science"
     },
-    aliases: ['data science', 'malumotlar fanlari', 'ma\'lumotlar fanlari', 'наука о данных', 'analiz dannix', 'data analytics', 'big data'],
+    aliases: ['data science', 'malumotlar fanlari', 'ma\'lumotlar fanlari', 'ma’lumotlar fanlari', 'наука о данных', 'analiz dannix', 'data analytics', 'big data'],
     defaultColor: '#06b6d4',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="14" width="10.5" height="6.5" rx="2"/><circle cx="9.8" cy="17.25" r="0.5" fill="currentColor"/><circle cx="14.5" cy="7" r="4.2"/><path d="m17.5 10 4 4"/></svg>`
   },
@@ -63,8 +63,8 @@ export const TECH_SUBJECTS = [
     id: 'cybersecurity',
     categoryId: 'tech',
     names: {
-      uz: "Kiberxavfsizlik (Security)",
-      ru: "Кибербезопасность (Security)",
+      uz: "Kiberxavfsizlik",
+      ru: "Кибербезопасность",
       en: "Cybersecurity"
     },
     aliases: ['kiberxavfsizlik', 'cybersecurity', 'кибербезопасность', 'xavfsizlik', 'security', 'infosec'],
@@ -75,21 +75,21 @@ export const TECH_SUBJECTS = [
     id: 'cloud_computing',
     categoryId: 'tech',
     names: {
-      uz: "Bulutli texnologiyalar (Cloud)",
-      ru: "Облачные сервисы (Cloud)",
+      uz: "Bulutli texnologiyalar",
+      ru: "Облачные технологии",
       en: "Cloud Computing"
     },
     aliases: ['cloud computing', 'bulutli texnologiyalar', 'cloud', 'облачные технологии', 'aws', 'azure', 'gcp'],
     defaultColor: '#0284c7',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="2.3" d="M19 18H6a5 5 0 0 1-.8-9.94A7 7 0 0 1 18.3 8.36 4.5 4.5 0 0 1 19 18Z"/><polyline stroke-width="2" points="9.5 12.5 12 10 14.5 12.5"/><line stroke-width="2" x1="12" y1="10" x2="12" y2="15"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke-width="2.3" d="M19 18H6a5 5 0 0 1-.8-9.94A7 7 0 0 1 18.3 8.36 4.5 4.5 0 0 1 19 18Z"/><polyline stroke-width="2" points="9.5 12.5 12 10 14.5 12.5"/><line stroke-width="2" x1="12" y1="10" x2="12" y2="15"/></svg>`
   },
   {
     id: 'mobile_dev',
     categoryId: 'tech',
     names: {
-      uz: "Mobil dasturlash (Mobile Dev)",
-      ru: "Мобильная разработка (Mobile)",
-      en: "Mobile App Dev"
+      uz: "Mobil ilovalar yaratish",
+      ru: "Разработка мобильных приложений",
+      en: "Mobile App Development"
     },
     aliases: ['mobil ilovalar yaratish', 'mobil dasturlash', 'mobile app development', 'мобильная разработка', 'flutter', 'react native', 'ios', 'android'],
     defaultColor: '#8b5cf6',
@@ -99,8 +99,8 @@ export const TECH_SUBJECTS = [
     id: 'web_dev',
     categoryId: 'tech',
     names: {
-      uz: "Veb-dasturlash (Web Dev)",
-      ru: "Веб-разработка (Web Dev)",
+      uz: "Veb-dasturlash",
+      ru: "Веб-разработка",
       en: "Web Development"
     },
     aliases: ['veb-dasturlash', 'veb dasturlash', 'web development', 'веб-разработка', 'frontend', 'backend', 'fullstack'],
@@ -111,9 +111,9 @@ export const TECH_SUBJECTS = [
     id: 'blockchain',
     categoryId: 'tech',
     names: {
-      uz: "Blokcheyn va Kripto",
-      ru: "Блокчейн и Криптовалюта",
-      en: "Blockchain & Crypto"
+      uz: "Blokcheyn va kriptovalyutalar",
+      ru: "Блокчейн и криптовалюты",
+      en: "Blockchain & Cryptocurrencies"
     },
     aliases: ['blokcheyn', 'kriptovalyuta', 'blokcheyn va kriptovalyutalar', 'blockchain', 'crypto', 'блокчейн', 'криптовалюта'],
     defaultColor: '#f59e0b',
@@ -123,8 +123,8 @@ export const TECH_SUBJECTS = [
     id: 'robotics',
     categoryId: 'tech',
     names: {
-      uz: "Robototexnika (Robotics)",
-      ru: "Робототехника (Robotics)",
+      uz: "Robototexnika",
+      ru: "Робототехника",
       en: "Robotics"
     },
     aliases: ['robototexnika', 'robotics', 'робототехника', 'robot', 'automation'],
@@ -135,8 +135,8 @@ export const TECH_SUBJECTS = [
     id: 'ux_ui',
     categoryId: 'tech',
     names: {
-      uz: "UX/UI Dizayn",
-      ru: "UX/UI Дизайн",
+      uz: "UX/UI dizayn",
+      ru: "UX/UI-дизайн",
       en: "UX/UI Design"
     },
     aliases: ['ux/ui dizayn', 'ux/ui', 'ui/ux', 'ux ui', 'дизайн', 'ux/ui дизайн', 'figma', 'design'],
@@ -147,11 +147,11 @@ export const TECH_SUBJECTS = [
     id: 'big_data',
     categoryId: 'tech',
     names: {
-      uz: "Katta ma'lumotlar (Big Data)",
-      ru: "Большие данные (Big Data)",
+      uz: "Katta ma’lumotlar",
+      ru: "Большие данные",
       en: "Big Data"
     },
-    aliases: ['katta malumotlar', 'katta ma\'lumotlar', 'big data', 'большие данные'],
+    aliases: ['katta malumotlar', 'katta ma\'lumotlar', 'katta ma’lumotlar', 'big data', 'большие данные'],
     defaultColor: '#4f46e5',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="4" rx="8" ry="2.5"/><path d="M4 4v5c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5V4"/><path d="M4 9v5c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5V9"/><path d="M4 14v5c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5v-5"/></svg>`
   },
@@ -159,11 +159,11 @@ export const TECH_SUBJECTS = [
     id: 'iot',
     categoryId: 'tech',
     names: {
-      uz: "Aqlli qurilmalar (IoT)",
+      uz: "Buyumlar interneti (IoT)",
       ru: "Интернет вещей (IoT)",
       en: "Internet of Things (IoT)"
     },
-    aliases: ['internet buyumlari', 'iot', 'internet of things', 'интернет вещей'],
+    aliases: ['internet buyumlari', 'buyumlar interneti', 'iot', 'internet of things', 'интернет вещей'],
     defaultColor: '#10b981',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.86a10.5 10.5 0 0 1 14 0"/><path d="M8.5 16.42a6 6 0 0 1 7 0"/></svg>`
   },
@@ -171,8 +171,8 @@ export const TECH_SUBJECTS = [
     id: 'vr_ar',
     categoryId: 'tech',
     names: {
-      uz: "VR / AR Texnologiyalar",
-      ru: "VR / AR Технологии",
+      uz: "Virtual va kengaytirilgan reallik (VR/AR)",
+      ru: "Виртуальная и дополненная реальность (VR/AR)",
       en: "Virtual & Augmented Reality (VR/AR)"
     },
     aliases: ['virtual reallik', 'vr/ar', 'vr', 'ar', 'virtual va kengaytirilgan reallik', 'виртуальная реальность', 'дополненная реальность'],

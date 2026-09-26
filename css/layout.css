@@ -4,6 +4,13 @@ html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   max-width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -19,6 +26,13 @@ body {
   overflow-x: hidden;
   max-width: 100vw;
   width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 .wrap {
   max-width: 480px;

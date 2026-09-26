@@ -1,5 +1,6 @@
 import { modalState } from './state.js';
 import { getSubjectSvg } from '../subjects-db.js';
+import { tr } from '../i18n.js';
 
 export function updateLivePreview() {
   const previewBadge = document.getElementById('subject-modal-preview-badge');
@@ -7,7 +8,8 @@ export function updateLivePreview() {
   const previewText = document.getElementById('subject-modal-preview-text');
   const nameInput = document.getElementById('subject-modal-name-input');
 
-  const name = (nameInput && nameInput.value.trim()) || 'New Subject';
+  const defaultName = (tr() && tr().subjectModalPreviewDefault) || 'New Subject';
+  const name = (nameInput && nameInput.value.trim()) || defaultName;
 
   if (previewDot) {
     const svg = getSubjectSvg(modalState.selectedIcon);

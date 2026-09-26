@@ -3,8 +3,8 @@ export const BUSINESS_SUBJECTS = [
     id: 'economics',
     categoryId: 'business',
     names: {
-      uz: "Iqtisodiyot (Economics)",
-      ru: "Экономика (Economics)",
+      uz: "Iqtisodiyot",
+      ru: "Экономика",
       en: "Economics"
     },
     aliases: ['iqtisodiyot', 'makroiqtisodiyot', 'mikroiqtisodiyot', 'iqtisod', 'economics', 'economy', 'экономика'],
@@ -15,9 +15,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'mba',
     categoryId: 'business',
     names: {
-      uz: "Biznes boshqaruvi (MBA)",
-      ru: "Бизнес-управление (MBA)",
-      en: "Business Admin (MBA)"
+      uz: "Biznes boshqaruvi",
+      ru: "Управление бизнесом",
+      en: "Business Administration"
     },
     aliases: ['biznes boshqaruvi', 'mba', 'biznes', 'business administration', 'бизнес-администрирование', 'управление бизнесом'],
     defaultColor: '#3b82f6',
@@ -27,9 +27,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'marketing',
     categoryId: 'business',
     names: {
-      uz: "Marketing va Reklama",
-      ru: "Маркетинг и Реклама",
-      en: "Marketing & SMM"
+      uz: "Marketing",
+      ru: "Маркетинг",
+      en: "Marketing"
     },
     aliases: ['marketing', 'raqamli marketing', 'smm', 'brending', 'reklama', 'marketing', 'smm', 'маркетинг', 'реклама'],
     defaultColor: '#f43f5e',
@@ -39,9 +39,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'finance',
     categoryId: 'business',
     names: {
-      uz: "Moliya va Investitsiya",
-      ru: "Финансы и Инвестиции",
-      en: "Finance & Investing"
+      uz: "Moliya",
+      ru: "Финансы",
+      en: "Finance"
     },
     aliases: ['moliya', 'investitsiya', 'bank ishi', 'kapital', 'finance', 'banking', 'финансы', 'инвестиции'],
     defaultColor: '#eab308',
@@ -51,11 +51,11 @@ export const BUSINESS_SUBJECTS = [
     id: 'accounting',
     categoryId: 'business',
     names: {
-      uz: "Buxgalteriya va Audit",
-      ru: "Бухгалтерия и Аудит",
-      en: "Accounting & Audit"
+      uz: "Buxgalteriya hisobi",
+      ru: "Бухгалтерский учёт",
+      en: "Accounting"
     },
-    aliases: ['buxgalteriya hisobi', 'buxgalteriya', 'audit', 'soliq', 'accounting', 'auditing', 'бухгалтерия', 'бухучет', 'аудит'],
+    aliases: ['buxgalteriya hisobi', 'buxgalteriya', 'audit', 'soliq', 'accounting', 'auditing', 'бухгалтерия', 'бухучет', 'аудит', 'бухгалтерский учет', 'бухгалтерский учёт'],
     defaultColor: '#0284c7',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16.01" y1="14" y2="14"/><line x1="16" x2="16.01" y1="18" y2="18"/><line x1="12" x2="12.01" y1="10" y2="10"/><line x1="12" x2="12.01" y1="14" y2="14"/><line x1="12" x2="12.01" y1="18" y2="18"/><line x1="8" x2="8.01" y1="10" y2="10"/><line x1="8" x2="8.01" y1="14" y2="14"/><line x1="8" x2="8.01" y1="18" y2="18"/></svg>`
   },
@@ -63,9 +63,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'management',
     categoryId: 'business',
     names: {
-      uz: "Menejment (Management)",
-      ru: "Менеджмент (Management)",
-      en: "Management & HR"
+      uz: "Menejment",
+      ru: "Менеджмент",
+      en: "Management"
     },
     aliases: ['menejment', 'yetakchilik', 'boshqaruv', 'hr', 'management', 'leadership', 'менеджмент', 'управление'],
     defaultColor: '#6366f1',
@@ -75,9 +75,9 @@ export const BUSINESS_SUBJECTS = [
     id: 'entrepreneurship',
     categoryId: 'business',
     names: {
-      uz: "Tadbirkorlik va Startap",
-      ru: "Стартапы и Бизнес",
-      en: "Startups & Business"
+      uz: "Tadbirkorlik",
+      ru: "Предпринимательство",
+      en: "Entrepreneurship"
     },
     aliases: ['tadbirkorlik', 'startap', 'startup', 'biznes boshlash', 'entrepreneurship', 'предпринимательство', 'стартап'],
     defaultColor: '#f97316',
@@ -87,7 +87,7 @@ export const BUSINESS_SUBJECTS = [
     id: 'international_trade',
     categoryId: 'business',
     names: {
-      uz: "Xalqaro savdo (Trade)",
+      uz: "Xalqaro savdo",
       ru: "Международная торговля",
       en: "International Trade"
     },

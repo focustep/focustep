@@ -3,9 +3,9 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'mathematics',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Matematika (Math)",
-      ru: "Математика (Math)",
-      en: "Mathematics (Math)"
+      uz: "Matematika",
+      ru: "Математика",
+      en: "Math"
     },
     aliases: ['matematika', 'algebra', 'geometriya', 'oliy matematika', 'math', 'mathematics', 'математика', 'алгебра', 'геометрия'],
     defaultColor: '#7c3aed',
@@ -15,8 +15,8 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'physics',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Fizika (Physics)",
-      ru: "Физика (Physics)",
+      uz: "Fizika",
+      ru: "Физика",
       en: "Physics"
     },
     aliases: ['fizika', 'physics', 'kvant fizikasi', 'mexanika', 'физика'],
@@ -27,8 +27,8 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'chemistry',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Kimyo (Chemistry)",
-      ru: "Химия (Chemistry)",
+      uz: "Kimyo",
+      ru: "Химия",
       en: "Chemistry"
     },
     aliases: ['kimyo', 'chemistry', 'organik kimyo', 'anorganik kimyo', 'химия'],
@@ -39,8 +39,8 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'biology',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Biologiya (Biology)",
-      ru: "Биология (Biology)",
+      uz: "Biologiya",
+      ru: "Биология",
       en: "Biology"
     },
     aliases: ['biologiya', 'biology', 'botanika', 'zoologiya', 'биология'],
@@ -51,8 +51,8 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'astronomy',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Astronomiya (Astronomy)",
-      ru: "Астрономия (Astronomy)",
+      uz: "Astronomiya",
+      ru: "Астрономия",
       en: "Astronomy"
     },
     aliases: ['astronomiya', 'astronomy', 'astrofizika', 'kosmos', 'space', 'астрономия'],
@@ -63,8 +63,8 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'geology',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Geologiya (Geology)",
-      ru: "Геология (Geology)",
+      uz: "Geologiya",
+      ru: "Геология",
       en: "Geology"
     },
     aliases: ['geologiya', 'geology', 'minerologiya', 'geofizika', 'геология'],
@@ -75,8 +75,8 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'ecology',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Ekologiya (Ecology)",
-      ru: "Экология (Ecology)",
+      uz: "Ekologiya",
+      ru: "Экология",
       en: "Ecology"
     },
     aliases: ['ekologiya', 'ecology', 'atrof-muhit', 'tabiat', 'экология'],
@@ -87,8 +87,8 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'genetics',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Genetika (Genetics)",
-      ru: "Генетика (Genetics)",
+      uz: "Genetika",
+      ru: "Генетика",
       en: "Genetics"
     },
     aliases: ['genetika', 'genetics', 'dnk', 'dna', 'genomika', 'генетика'],
@@ -99,8 +99,8 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'neurobiology',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Neyrobiologiya (Neuroscience)",
-      ru: "Нейробиология (Neuroscience)",
+      uz: "Neyrobiologiya",
+      ru: "Нейробиология",
       en: "Neurobiology"
     },
     aliases: ['neyrobiologiya', 'neurobiology', 'neuroscience', 'neyroilm', 'miya', 'нейробиология'],
@@ -111,8 +111,8 @@ export const NATURAL_SCIENCES_SUBJECTS = [
     id: 'statistics',
     categoryId: 'natural_sciences',
     names: {
-      uz: "Statistika (Statistics)",
-      ru: "Статистика (Statistics)",
+      uz: "Statistika",
+      ru: "Статистика",
       en: "Statistics"
     },
     aliases: ['statistika', 'statistics', 'stats', 'ehtimollar nazariyasi', 'статистика'],

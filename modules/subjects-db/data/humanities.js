@@ -3,8 +3,8 @@ export const HUMANITIES_SUBJECTS = [
     id: 'history',
     categoryId: 'humanities',
     names: {
-      uz: "Tarix (History)",
-      ru: "История (History)",
+      uz: "Tarix",
+      ru: "История",
       en: "History"
     },
     aliases: ['tarix', 'jahon tarixi', 'ozbekiston tarixi', 'o\'zbekiston tarixi', 'qadimgi dunyo', 'history', 'история', 'всемирная история'],
@@ -15,8 +15,8 @@ export const HUMANITIES_SUBJECTS = [
     id: 'philosophy',
     categoryId: 'humanities',
     names: {
-      uz: "Falsafa (Philosophy)",
-      ru: "Философия (Philosophy)",
+      uz: "Falsafa",
+      ru: "Философия",
       en: "Philosophy"
     },
     aliases: ['falsafa', 'falsafiy tafakkur', 'mantiq', 'etika', 'philosophy', 'философия', 'логика'],
@@ -27,8 +27,8 @@ export const HUMANITIES_SUBJECTS = [
     id: 'religious_studies',
     categoryId: 'humanities',
     names: {
-      uz: "Dinshunoslik (Theology)",
-      ru: "Религиоведение (Theology)",
+      uz: "Dinshunoslik",
+      ru: "Религиоведение",
       en: "Religious Studies"
     },
     aliases: ['din tarixi va diniyot', 'dinshunoslik', 'islomshunoslik', 'teologiya', 'din', 'religious studies', 'theology', 'религиоведение', 'теология'],
@@ -39,8 +39,8 @@ export const HUMANITIES_SUBJECTS = [
     id: 'literature',
     categoryId: 'humanities',
     names: {
-      uz: "Adabiyot (Literature)",
-      ru: "Литература (Literature)",
+      uz: "Adabiyot",
+      ru: "Литература",
       en: "Literature"
     },
     aliases: ['adabiyot', 'badiiy adabiyot', 'ozbek adabiyoti', 'o\'zbek adabiyoti', 'jahon adabiyoti', 'literature', 'литература'],

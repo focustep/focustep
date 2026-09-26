@@ -85,11 +85,17 @@ export function updateCanvasCursor() {
   if (!canvas || !cursor) return;
 
   const rect = canvas.getBoundingClientRect();
-  const x = modalState.pickerSat * rect.width;
-  const y = (1 - modalState.pickerVal) * rect.height;
+  if (!rect.width || !rect.height) return;
 
-  cursor.style.left = `${x}px`;
-  cursor.style.top = `${y}px`;
+  const rawX = modalState.pickerSat * rect.width;
+  const rawY = (1 - modalState.pickerVal) * rect.height;
+
+  const cursorRadius = 7;
+  const visualX = Math.max(cursorRadius, Math.min(rect.width - cursorRadius, rawX));
+  const visualY = Math.max(cursorRadius, Math.min(rect.height - cursorRadius, rawY));
+
+  cursor.style.left = `${visualX}px`;
+  cursor.style.top = `${visualY}px`;
 }
 
 export function handleCanvasPick(e) {
@@ -97,25 +103,41 @@ export function handleCanvasPick(e) {
   if (!canvas) return;
 
   const rect = canvas.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  if (!rect.width || !rect.height) return;
 
-  let x = clientX - rect.left;
-  let y = clientY - rect.top;
+  let clientX, clientY;
+  if (e.touches && e.touches.length > 0) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else if (e.changedTouches && e.changedTouches.length > 0) {
+    clientX = e.changedTouches[0].clientX;
+    clientY = e.changedTouches[0].clientY;
+  } else if (typeof e.clientX === 'number') {
+    clientX = e.clientX;
+    clientY = e.clientY;
+  } else {
+    return;
+  }
 
-  x = Math.max(0, Math.min(rect.width, x));
-  y = Math.max(0, Math.min(rect.height, y));
+  const rawX = clientX - rect.left;
+  const rawY = clientY - rect.top;
 
-  modalState.pickerSat = x / rect.width;
-  modalState.pickerVal = 1 - (y / rect.height);
+  const clampedX = Math.max(0, Math.min(rect.width, rawX));
+  const clampedY = Math.max(0, Math.min(rect.height, rawY));
+
+  modalState.pickerSat = clampedX / rect.width;
+  modalState.pickerVal = 1 - (clampedY / rect.height);
 
   const hex = hsvToHex(modalState.pickerHue, modalState.pickerSat, modalState.pickerVal);
   setCustomColor(hex);
 
   const cursor = document.getElementById('color-picker-cursor');
   if (cursor) {
-    cursor.style.left = `${x}px`;
-    cursor.style.top = `${y}px`;
+    const cursorRadius = 7;
+    const visualX = Math.max(cursorRadius, Math.min(rect.width - cursorRadius, clampedX));
+    const visualY = Math.max(cursorRadius, Math.min(rect.height - cursorRadius, clampedY));
+    cursor.style.left = `${visualX}px`;
+    cursor.style.top = `${visualY}px`;
   }
 }
 

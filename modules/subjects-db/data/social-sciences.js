@@ -3,8 +3,8 @@ export const SOCIAL_SCIENCES_SUBJECTS = [
     id: 'sociology',
     categoryId: 'social_sciences',
     names: {
-      uz: "Sotsiologiya (Sociology)",
-      ru: "Социология (Sociology)",
+      uz: "Sotsiologiya",
+      ru: "Социология",
       en: "Sociology"
     },
     aliases: ['sotsiologiya', 'jamiyatshunoslik', 'ijtimoiy tahlil', 'sociology', 'социология'],
@@ -15,8 +15,8 @@ export const SOCIAL_SCIENCES_SUBJECTS = [
     id: 'anthropology',
     categoryId: 'social_sciences',
     names: {
-      uz: "Antropologiya (Anthropology)",
-      ru: "Антропология (Anthropology)",
+      uz: "Antropologiya",
+      ru: "Антропология",
       en: "Anthropology"
     },
     aliases: ['antropologiya', 'insoniyat tarixi', 'madaniy antropologiya', 'anthropology', 'антропология'],
@@ -27,9 +27,9 @@ export const SOCIAL_SCIENCES_SUBJECTS = [
     id: 'law',
     categoryId: 'social_sciences',
     names: {
-      uz: "Huquq va Qonun (Law)",
-      ru: "Юриспруденция (Law)",
-      en: "Law & Justice"
+      uz: "Huquqshunoslik",
+      ru: "Право",
+      en: "Law"
     },
     aliases: ['huquqshunoslik', 'yurisprudensiya', 'qonunchilik', 'advokatura', 'sud', 'law', 'юриспруденция', 'правоведение', 'право'],
     defaultColor: '#7c3aed',
@@ -39,9 +39,9 @@ export const SOCIAL_SCIENCES_SUBJECTS = [
     id: 'journalism',
     categoryId: 'social_sciences',
     names: {
-      uz: "Jurnalistika va Media",
-      ru: "Журналистика и Медиа",
-      en: "Journalism & Media"
+      uz: "Jurnalistika",
+      ru: "Журналистика",
+      en: "Journalism"
     },
     aliases: ['jurnalistika', 'media', 'oav', 'matbuot', 'journalism', 'mass media', 'журналистика', 'сми'],
     defaultColor: '#f43f5e',
@@ -51,11 +51,11 @@ export const SOCIAL_SCIENCES_SUBJECTS = [
     id: 'pedagogy',
     categoryId: 'social_sciences',
     names: {
-      uz: "Pedagogika va Ta'lim",
-      ru: "Педагогика и Обучение",
-      en: "Pedagogy & Education"
+      uz: "Pedagogika va ta’lim",
+      ru: "Педагогика и образование",
+      en: "Education"
     },
-    aliases: ['pedagogika', 'talim', 'ta\'lim', 'oqituvchilik', 'o\'qituvchilik', 'pedagogy', 'education', 'teaching', 'педагогика', 'образование'],
+    aliases: ['pedagogika', 'talim', 'ta\'lim', 'ta’lim', 'oqituvchilik', 'o\'qituvchilik', 'pedagogy', 'education', 'teaching', 'педагогика', 'образование', 'педагогика и образование'],
     defaultColor: '#10b981',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`
   }

@@ -67,7 +67,21 @@ export const I18N = {
     ultradianNote: "The duration of the cycles (90 min work / 20 min rest) is fixed on the basis of the biological rhythms of the human brain and is not subject to change.",
     showSeconds: "Show seconds",
     use12HourFormat: "12-hour format",
-    stopwatchNote: "Use a stopwatch to track tasks for free"
+    stopwatchNote: "Use a stopwatch to track tasks for free",
+    chooseCustomIcon: "Maxsus ikonka tanlash",
+    searchIconPlaceholder: "Qidirish...",
+    nothingFound: "Hech narsa topilmadi",
+    subjectModalTitle: "Yangi fan qo'shish",
+    subjectModalNameLabel: "FAN NOMI",
+    subjectModalPlaceholder: "masalan: AI, Python, Kiberxavfsizlik",
+    subjectModalColorLabel: "RANG MAVZUSI",
+    subjectModalIconLabel: "IKONKA",
+    subjectModalCancel: "Bekor qilish",
+    subjectModalSave: "Fan yaratish",
+    subjectModalPreviewDefault: "Yangi fan",
+    colorPickerTitle: "Ranglar palitrasi",
+    colorPickerApply: "Qo'llash",
+    iconPickerTitle: "Ikonkalar to'plami"
   },
   ru: {
     localeCode: 'ru-RU',
@@ -137,7 +151,21 @@ export const I18N = {
     ultradianNote: "The duration of the cycles (90 min work / 20 min rest) is fixed on the basis of the biological rhythms of the human brain and is not subject to change.",
     showSeconds: "Показывать секунды",
     use12HourFormat: "12-часовой формат",
-    stopwatchNote: "Use a stopwatch to track tasks for free"
+    stopwatchNote: "Use a stopwatch to track tasks for free",
+    chooseCustomIcon: "Выбрать иконку",
+    searchIconPlaceholder: "Поиск...",
+    nothingFound: "Ничего не найдено",
+    subjectModalTitle: "Добавить предмет",
+    subjectModalNameLabel: "НАЗВАНИЕ ПРЕДМЕТА",
+    subjectModalPlaceholder: "например: ИИ, Python, Кибербезопасность",
+    subjectModalColorLabel: "ЦВЕТОВАЯ ТЕМА",
+    subjectModalIconLabel: "ИКОНКА",
+    subjectModalCancel: "Отмена",
+    subjectModalSave: "Создать предмет",
+    subjectModalPreviewDefault: "Новый предмет",
+    colorPickerTitle: "Палитра цветов",
+    colorPickerApply: "Применить",
+    iconPickerTitle: "Выбор иконки"
   },
   en: {
     localeCode: 'en-US',
@@ -207,7 +235,21 @@ export const I18N = {
     ultradianNote: "The duration of the cycles (90 min work / 20 min rest) is fixed on the basis of the biological rhythms of the human brain and is not subject to change.",
     showSeconds: "Show seconds",
     use12HourFormat: "12-hour format",
-    stopwatchNote: "Use a stopwatch to track tasks for free"
+    stopwatchNote: "Use a stopwatch to track tasks for free",
+    chooseCustomIcon: "Choose Custom Icon",
+    searchIconPlaceholder: "Search...",
+    nothingFound: "Nothing found",
+    subjectModalTitle: "Add New Subject",
+    subjectModalNameLabel: "SUBJECT NAME",
+    subjectModalPlaceholder: "e.g. AI, Python, Cybersecurity",
+    subjectModalColorLabel: "COLOR THEME",
+    subjectModalIconLabel: "ICON",
+    subjectModalCancel: "Cancel",
+    subjectModalSave: "Create Subject",
+    subjectModalPreviewDefault: "New Subject",
+    colorPickerTitle: "Color Palette",
+    colorPickerApply: "Apply",
+    iconPickerTitle: "Choose Icon"
   }
 };
 

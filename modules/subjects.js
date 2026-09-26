@@ -8,21 +8,21 @@ import { getSubjectLocalizedName } from './subjects-db.js';
 const DEFAULT_SUBJECTS = [
   { 
     id: 'math', 
-    name: 'Matematika (Math)', 
+    name: 'Matematika', 
     names: {
-      uz: "Matematika (Math)",
-      ru: "Математика (Math)",
-      en: "Mathematics (Math)"
+      uz: "Matematika",
+      ru: "Математика",
+      en: "Math"
     },
     color: '#7c3aed', 
     icon: 'calculator' 
   },
   { 
     id: 'english', 
-    name: 'Ingliz tili (English)', 
+    name: 'Ingliz tili', 
     names: {
-      uz: "Ingliz tili (English)",
-      ru: "Английский (English)",
+      uz: "Ingliz tili",
+      ru: "Английский язык",
       en: "English"
     },
     color: '#f97316', 
@@ -30,10 +30,10 @@ const DEFAULT_SUBJECTS = [
   },
   { 
     id: 'physics', 
-    name: 'Fizika (Physics)', 
+    name: 'Fizika', 
     names: {
-      uz: "Fizika (Physics)",
-      ru: "Физика (Physics)",
+      uz: "Fizika",
+      ru: "Физика",
       en: "Physics"
     },
     color: '#10b981', 
@@ -41,10 +41,10 @@ const DEFAULT_SUBJECTS = [
   },
   { 
     id: 'other', 
-    name: 'Boshqa (Other)', 
+    name: 'Boshqa', 
     names: {
-      uz: "Boshqa (Other)",
-      ru: "Другое (Other)",
+      uz: "Boshqa",
+      ru: "Другое",
       en: "Other"
     },
     color: '#4ec9b0', 

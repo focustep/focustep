@@ -20,8 +20,8 @@ export const SUBJECT_CATEGORIES = [
   {
     id: 'personal_development',
     names: {
-      uz: "3. Personal development",
-      ru: "3. Личностное развитие (Personal Development)",
+      uz: "3. Shaxsiy rivojlanish",
+      ru: "3. Личностное развитие",
       en: "3. Personal Development"
     },
     icon: 'book'

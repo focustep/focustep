@@ -3,9 +3,9 @@ export const HEALTHCARE_SUBJECTS = [
     id: 'medicine',
     categoryId: 'healthcare',
     names: {
-      uz: "Tibbiyot (Medicine)",
-      ru: "Медицина (Medicine)",
-      en: "Medicine"
+      uz: "Umumiy tibbiyot",
+      ru: "Общая медицина",
+      en: "General Medicine"
     },
     aliases: ['umumiy tibbiyot', 'tibbiyot', 'davolash ishi', 'shifokor', 'doktor', 'terapiya', 'jarrohlik', 'medicine', 'общая медицина', 'лечебное дело'],
     defaultColor: '#ef4444',
@@ -15,8 +15,8 @@ export const HEALTHCARE_SUBJECTS = [
     id: 'dentistry',
     categoryId: 'healthcare',
     names: {
-      uz: "Stomatologiya (Dental)",
-      ru: "Стоматология (Dental)",
+      uz: "Stomatologiya",
+      ru: "Стоматология",
       en: "Dentistry"
     },
     aliases: ['stomatologiya', 'tish', 'tish shifokori', 'dentistry', 'dental', 'ortodontiya', 'стоматология', 'зубной'],
@@ -27,11 +27,11 @@ export const HEALTHCARE_SUBJECTS = [
     id: 'pharmacy',
     categoryId: 'healthcare',
     names: {
-      uz: "Farmatsevtika (Pharmacy)",
-      ru: "Фармацевтика (Pharmacy)",
+      uz: "Farmatsiya",
+      ru: "Фармация",
       en: "Pharmacy"
     },
-    aliases: ['farmatsevtika', 'farmakologiya', 'dori', 'dorishunoslik', 'apteka', 'pharmacy', 'pharmacology', 'фармацевтика', 'фармакология'],
+    aliases: ['farmatsevtika', 'farmatsiya', 'farmakologiya', 'dori', 'dorishunoslik', 'apteka', 'pharmacy', 'pharmacology', 'фармацевтика', 'фармакология', 'фармация'],
     defaultColor: '#10b981',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9.5 17.5 6a3.2 3.2 0 0 0-4.5-4.5L3.5 11a3.2 3.2 0 0 0 4.5 4.5L10.5 13"/><path d="m7.8 5.8 4.7 4.7"/><circle cx="15.8" cy="15.8" r="5.5"/><path d="m11.9 17.8 7.8-4"/></svg>`
   },
@@ -39,11 +39,11 @@ export const HEALTHCARE_SUBJECTS = [
     id: 'nursing',
     categoryId: 'healthcare',
     names: {
-      uz: "Hamshiralik (Nursing)",
-      ru: "Сестринское дело (Nursing)",
+      uz: "Hamshiralik ishi",
+      ru: "Сестринское дело",
       en: "Nursing"
     },
-    aliases: ['hamshiralik ishi', 'hamshira', 'medsestra', 'tibbiy parvarish', 'nursing', 'сестринское дело'],
+    aliases: ['hamshiralik ishi', 'hamshiralik', 'hamshira', 'medsestra', 'tibbiy parvarish', 'nursing', 'сестринское дело'],
     defaultColor: '#f43f5e',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 7v6"/><path d="M9 10h6"/></svg>`
   },
@@ -51,8 +51,8 @@ export const HEALTHCARE_SUBJECTS = [
     id: 'psychology',
     categoryId: 'healthcare',
     names: {
-      uz: "Psixologiya (Psychology)",
-      ru: "Психология (Psychology)",
+      uz: "Psixologiya",
+      ru: "Психология",
       en: "Psychology"
     },
     aliases: ['psixologiya', 'ruhshunoslik', 'kognitiv psixologiya', 'psychology', 'психология'],
@@ -63,11 +63,11 @@ export const HEALTHCARE_SUBJECTS = [
     id: 'nutrition',
     categoryId: 'healthcare',
     names: {
-      uz: "Nutritsiologiya (Nutrition)",
-      ru: "Нутрициология (Nutrition)",
-      en: "Nutrition & Diet"
+      uz: "Oziqlanish va dietologiya",
+      ru: "Питание и диетология",
+      en: "Nutrition & Dietetics"
     },
-    aliases: ['ozuqalanish va dietologiya', 'nutrition', 'dietologiya', 'soglom ovqatlanish', 'parhez', 'nutritsiologiya', 'нутрициология', 'диетология'],
+    aliases: ['ozuqalanish va dietologiya', 'oziqlanish va dietologiya', 'nutrition', 'dietologiya', 'soglom ovqatlanish', 'parhez', 'nutritsiologiya', 'нутрициология', 'диетология', 'питание'],
     defaultColor: '#84cc16',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5c-1.8-2-5.5-2-7.8.8-2.5 3-2 8 .8 11.2 2.2 2.5 5 2.5 7 1 2 1.5 4.8 1.5 7-1 2.8-3.2 3.3-8.2.8-11.2-2.3-2.8-6-2.8-7.8-.8Z"/><path d="M12 7.5c-.8-2.5-2.5-4.2-4.8-4.8"/><path d="M12 7.2c1.2-2.8 3.5-4.2 5.5-4.2 0 2.5-1.5 4.8-5.5 4.2Z"/></svg>`
   },
@@ -75,11 +75,11 @@ export const HEALTHCARE_SUBJECTS = [
     id: 'veterinary',
     categoryId: 'healthcare',
     names: {
-      uz: "Veterinariya (Vet)",
-      ru: "Ветеринария (Vet)",
-      en: "Veterinary"
+      uz: "Veterinariya",
+      ru: "Ветеринарная медицина",
+      en: "Veterinary Medicine"
     },
-    aliases: ['veterinariya', 'veterinar', 'hayvonlar shifokori', 'veterinary', 'vet', 'ветеринария'],
+    aliases: ['veterinariya', 'veterinar', 'hayvonlar shifokori', 'veterinary', 'vet', 'ветеринария', 'ветеринарная медицина'],
     defaultColor: '#d97706',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11.5c-4.5 0-7.5 3-7.5 6.5 0 2.5 2 4 4.5 4 1.8 0 2.5-1.5 3-1.5s1.2 1.5 3 1.5c2.5 0 4.5-1.5 4.5-4 0-3.5-3-6.5-7.5-6.5Z"/><ellipse cx="3.8" cy="11.8" rx="2" ry="3.2" transform="rotate(-15 3.8 11.8)"/><ellipse cx="8.5" cy="5.8" rx="2.3" ry="3.8" transform="rotate(-5 8.5 5.8)"/><ellipse cx="15.5" cy="5.8" rx="2.3" ry="3.8" transform="rotate(5 15.5 5.8)"/><ellipse cx="20.2" cy="11.8" rx="2" ry="3.2" transform="rotate(15 20.2 11.8)"/></svg>`
   }

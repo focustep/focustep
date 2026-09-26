@@ -3,11 +3,11 @@ export const PERSONAL_DEVELOPMENT_SUBJECTS = [
     id: 'reading',
     categoryId: 'personal_development',
     names: {
-      uz: "Reading (Mutolaa)",
-      ru: "Чтение (Reading)",
+      uz: "Kitob o‘qish",
+      ru: "Чтение",
       en: "Reading"
     },
-    aliases: ['reading', 'mutolaa', 'kitobxonlik', 'kitob oqish', 'kitob o\'qish', 'kitob', 'reading books', 'kitoblar', 'чтение', 'книги', 'чтение книг'],
+    aliases: ['reading', 'kitob o‘qish', 'kitob oqish', 'mutolaa', 'kitobxonlik', 'kitob o\'qish', 'kitob', 'reading books', 'kitoblar', 'чтение', 'книги', 'чтение книг'],
     defaultColor: '#f59e0b',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`
   },
@@ -15,8 +15,8 @@ export const PERSONAL_DEVELOPMENT_SUBJECTS = [
     id: 'writing',
     categoryId: 'personal_development',
     names: {
-      uz: "Writing (Yozish)",
-      ru: "Писательство (Writing)",
+      uz: "Yozish",
+      ru: "Письмо",
       en: "Writing"
     },
     aliases: ['writing', 'yozuvchilik', 'creative writing', 'kontent yaratish', 'kopirayting', 'insho', 'maqola yozish', 'yozish', 'писательство', 'копирайтинг', 'письмо'],

@@ -3,8 +3,8 @@ export const LANGUAGES_SUBJECTS = [
     id: 'english_lang',
     categoryId: 'languages',
     names: {
-      uz: "Ingliz tili (English)",
-      ru: "Английский (English)",
+      uz: "Ingliz tili",
+      ru: "Английский язык",
       en: "English"
     },
     aliases: ['ingliz tili', 'english', 'ielts', 'toefl', 'cefr', 'inglizcha', 'английский язык', 'английский'],
@@ -15,9 +15,9 @@ export const LANGUAGES_SUBJECTS = [
     id: 'chinese_lang',
     categoryId: 'languages',
     names: {
-      uz: "Xitoy tili (Chinese)",
-      ru: "Китайский (Chinese)",
-      en: "Chinese"
+      uz: "Xitoy tili (mandarin)",
+      ru: "Китайский язык (мандарин)",
+      en: "Mandarin Chinese"
     },
     aliases: ['xitoy tili', 'mandarin', 'xitoycha', 'hsk', 'chinese', 'китайский язык', 'китайский', 'мандарин'],
     defaultColor: '#ef4444',
@@ -27,8 +27,8 @@ export const LANGUAGES_SUBJECTS = [
     id: 'spanish_lang',
     categoryId: 'languages',
     names: {
-      uz: "Ispan tili (Spanish)",
-      ru: "Испанский (Spanish)",
+      uz: "Ispan tili",
+      ru: "Испанский язык",
       en: "Spanish"
     },
     aliases: ['ispan tili', 'espanol', 'español', 'ispancha', 'dele', 'spanish', 'испанский язык', 'испанский'],
@@ -39,8 +39,8 @@ export const LANGUAGES_SUBJECTS = [
     id: 'arabic_lang',
     categoryId: 'languages',
     names: {
-      uz: "Arab tili (Arabic)",
-      ru: "Арабский (Arabic)",
+      uz: "Arab tili",
+      ru: "Арабский язык",
       en: "Arabic"
     },
     aliases: ['arab tili', 'arabcha', 'arab tili grammatikasi', 'tajvid', 'arabic', 'арабский язык', 'арабский'],
@@ -51,8 +51,8 @@ export const LANGUAGES_SUBJECTS = [
     id: 'french_lang',
     categoryId: 'languages',
     names: {
-      uz: "Fransuz tili (French)",
-      ru: "Французский (French)",
+      uz: "Fransuz tili",
+      ru: "Французский язык",
       en: "French"
     },
     aliases: ['fransuz tili', 'fransuzcha', 'francais', 'français', 'delf', 'dalf', 'french', 'французский язык', 'французский'],
@@ -63,8 +63,8 @@ export const LANGUAGES_SUBJECTS = [
     id: 'russian_lang',
     categoryId: 'languages',
     names: {
-      uz: "Rus tili (Russian)",
-      ru: "Русский (Russian)",
+      uz: "Rus tili",
+      ru: "Русский язык",
       en: "Russian"
     },
     aliases: ['rus tili', 'ruscha', 'grammatika', 'russian', 'русский язык', 'русский', 'рки'],
@@ -75,8 +75,8 @@ export const LANGUAGES_SUBJECTS = [
     id: 'korean_lang',
     categoryId: 'languages',
     names: {
-      uz: "Koreys tili (Korean)",
-      ru: "Корейский (Korean)",
+      uz: "Koreys tili",
+      ru: "Корейский язык",
       en: "Korean"
     },
     aliases: ['koreys tili', 'hangul', 'koreyscha', 'topik', 'korean', 'корейский язык', 'корейский', 'топик'],
@@ -87,8 +87,8 @@ export const LANGUAGES_SUBJECTS = [
     id: 'japanese_lang',
     categoryId: 'languages',
     names: {
-      uz: "Yapon tili (Japanese)",
-      ru: "Японский (Japanese)",
+      uz: "Yapon tili",
+      ru: "Японский язык",
       en: "Japanese"
     },
     aliases: ['yapon tili', 'nihongo', 'kanji', 'hiragana', 'katakana', 'jlpt', 'japanese', 'японский язык', 'японский'],

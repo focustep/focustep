@@ -3,20 +3,20 @@ export const EMERGING_SUBJECTS = [
     id: 'prompt_engineering_ai_ethics',
     categoryId: 'emerging',
     names: {
-      uz: "Prompt Injiniring (AI Prompts)",
-      ru: "Промпт-инжиниринг (AI)",
-      en: "Prompt Engineering (AI)"
+      uz: "Prompt-injiniring va AI etikasi",
+      ru: "Промпт-инжиниринг и этика ИИ",
+      en: "Prompt Engineering & AI Ethics"
     },
-    aliases: ['prompt-injiniring va ai-etika', 'prompt engineering', 'prompt injiniring', 'ai etika', 'sun\'iy intellekt etikasi', 'prompt yozish', 'ai ethics', 'llm prompt', 'genai', 'generative ai', 'промпт инжиниринг', 'этика ии', 'промптинг', 'ии этика'],
+    aliases: ['prompt-injiniring va ai-etika', 'prompt-injiniring va ai etikasi', 'prompt engineering', 'prompt injiniring', 'ai etika', 'sun\'iy intellekt etikasi', 'prompt yozish', 'ai ethics', 'llm prompt', 'genai', 'generative ai', 'magic wand', 'wand', 'промпт инжиниринг', 'этика ии', 'промптинг', 'ии этика', 'промпт-инжиниринг и этика ии'],
     defaultColor: '#8b5cf6',
-    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4"/><path d="M3 5h4"/><path d="M19 17v4"/><path d="M17 19h4"/></svg>`
+    svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="15.5 2 16.73 5.8 20.73 5.8 17.5 8.15 18.73 11.95 15.5 9.6 12.27 11.95 13.5 8.15 10.27 5.8 14.27 5.8"/><path d="m3.5 20.5 10.3-10.3"/></svg>`
   },
   {
     id: 'climate_science',
     categoryId: 'emerging',
     names: {
-      uz: "Iqlim va Ekologiya (Climate)",
-      ru: "Климатология (Climate)",
+      uz: "Iqlimshunoslik",
+      ru: "Наука о климате",
       en: "Climate Science"
     },
     aliases: ['klimat fanlari', 'climate science', 'iqlimshunoslik', 'iqlim ozgarishi', 'klimatologiya', 'global isish', 'ekoiqlim', 'iqlim monitoringi', 'климатология', 'наука о климате', 'изменение климата', 'климат'],
@@ -27,8 +27,8 @@ export const EMERGING_SUBJECTS = [
     id: 'space_tech_business',
     categoryId: 'emerging',
     names: {
-      uz: "Kosmik texnologiyalar (Space)",
-      ru: "Космонавтика (Space Tech)",
+      uz: "Kosmik texnologiyalar",
+      ru: "Космические технологии",
       en: "Space Technology"
     },
     aliases: ['kosmik texnologiyalar va kosmik biznes', 'kosmik texnologiyalar', 'kosmik biznes', 'space tech', 'newspace', 'raketasozlik', 'kosmonavtika', 'sun\'iy yo\'ldoshlar', 'aerospace', 'satellite', 'космические технологии', 'космический бизнес', 'космонавтика', 'new space', 'спутники'],
@@ -39,8 +39,8 @@ export const EMERGING_SUBJECTS = [
     id: 'quantum_computing',
     categoryId: 'emerging',
     names: {
-      uz: "Kvant hisoblash (Quantum)",
-      ru: "Квантовые вычисления (Quantum)",
+      uz: "Kvant hisoblash",
+      ru: "Квантовые вычисления",
       en: "Quantum Computing"
     },
     aliases: ['kvant hisoblash', 'quantum computing', 'kvant fizikasi hisoblash', 'qubit', 'kvant dasturlash', 'qiskit', 'quantum algorithms', 'kvant kompyuteri', 'квантовые вычисления', 'кубиты', 'квантовый компьютер', 'квантовые алгоритмы'],
@@ -51,11 +51,11 @@ export const EMERGING_SUBJECTS = [
     id: 'esports_game_design',
     categoryId: 'emerging',
     names: {
-      uz: "O'yin yaratish (GameDev)",
-      ru: "Геймдев (Game Design)",
-      en: "Game Design & Dev"
+      uz: "E-sport va o‘yin yaratish",
+      ru: "Киберспорт и разработка игр",
+      en: "Esports & Game Design"
     },
-    aliases: ['e-sport va o\'yin dizayni', 'e-sport', 'esport', 'oyin dizayni', 'game design', 'gamedev', 'kibersport', 'oyun ishlab chiqish', 'unity', 'unreal engine', 'level design', 'киберспорт', 'геймдизайн', 'разработка игр', 'игровая индустрия'],
+    aliases: ['e-sport va o\'yin dizayni', 'e-sport va o‘yin yaratish', 'e-sport', 'esport', 'oyin dizayni', 'game design', 'gamedev', 'kibersport', 'oyun ishlab chiqish', 'unity', 'unreal engine', 'level design', 'киберспорт', 'геймдизайн', 'разработка игр', 'игровая индустрия', 'киберспорт и разработка игр'],
     defaultColor: '#f43f5e',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect width="20" height="12" x="2" y="6" rx="6"/></svg>`
   }

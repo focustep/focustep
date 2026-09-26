@@ -49,19 +49,19 @@ export function getSubjectLocalizedName(subject, lang = 'uz', subjectsDatabase =
   if (typeof subject === 'string') {
     const sLower = subject.toLowerCase().trim();
     if (sLower === 'other' || sLower.includes('boshqa') || sLower.includes('другое')) {
-      const otherNames = { uz: "Boshqa (Other)", ru: "Другое (Other)", en: "Other" };
+      const otherNames = { uz: "Boshqa", ru: "Другое", en: "Other" };
       return otherNames[l];
     }
     if (sLower === 'math' || sLower === 'mathematics') {
-      const mathNames = { uz: "Matematika (Math)", ru: "Математика (Math)", en: "Mathematics (Math)" };
+      const mathNames = { uz: "Matematika", ru: "Математика", en: "Math" };
       return mathNames[l];
     }
     if (sLower === 'english' || sLower === 'english_lang') {
-      const engNames = { uz: "Ingliz tili (English)", ru: "Английский (English)", en: "English" };
+      const engNames = { uz: "Ingliz tili", ru: "Английский язык", en: "English" };
       return engNames[l];
     }
     if (sLower === 'physics') {
-      const physNames = { uz: "Fizika (Physics)", ru: "Физика (Physics)", en: "Physics" };
+      const physNames = { uz: "Fizika", ru: "Физика", en: "Physics" };
       return physNames[l];
     }
     if (subjectsDatabase && subjectsDatabase.length > 0) {
@@ -81,19 +81,19 @@ export function getSubjectLocalizedName(subject, lang = 'uz', subjectsDatabase =
 
   // Built-in special cases
   if (subject.id === 'other' || (subject.name && subject.name.toLowerCase() === 'other')) {
-    const otherNames = { uz: "Boshqa (Other)", ru: "Другое (Other)", en: "Other" };
+    const otherNames = { uz: "Boshqa", ru: "Другое", en: "Other" };
     return otherNames[l];
   }
   if (subject.id === 'math' || subject.id === 'mathematics') {
-    const mathNames = { uz: "Matematika (Math)", ru: "Математика (Math)", en: "Mathematics (Math)" };
+    const mathNames = { uz: "Matematika", ru: "Математика", en: "Math" };
     return mathNames[l];
   }
   if (subject.id === 'english' || subject.id === 'english_lang') {
-    const engNames = { uz: "Ingliz tili (English)", ru: "Английский (English)", en: "English" };
+    const engNames = { uz: "Ingliz tili", ru: "Английский язык", en: "English" };
     return engNames[l];
   }
   if (subject.id === 'physics') {
-    const physNames = { uz: "Fizika (Physics)", ru: "Физика (Physics)", en: "Physics" };
+    const physNames = { uz: "Fizika", ru: "Физика", en: "Physics" };
     return physNames[l];
   }
 
