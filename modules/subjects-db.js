@@ -19,6 +19,20 @@ import {
 
 export { SUBJECT_CATEGORIES };
 
+export const OTHER_SUBJECTS = [
+  {
+    id: 'other',
+    categoryId: 'other',
+    names: {
+      uz: "Boshqa",
+      ru: "Другое",
+      en: "Other"
+    },
+    aliases: ["other", "boshqa", "другое", "разное", "uchta nuqta", "dots"],
+    svg: standardIcons['more-horizontal']
+  }
+];
+
 export const SUBJECTS_DATABASE = [
   ...TECH_SUBJECTS,
   ...NATURAL_SCIENCES_SUBJECTS,
@@ -29,7 +43,8 @@ export const SUBJECTS_DATABASE = [
   ...HUMANITIES_SUBJECTS,
   ...LANGUAGES_SUBJECTS,
   ...ARTS_SUBJECTS,
-  ...EMERGING_SUBJECTS
+  ...EMERGING_SUBJECTS,
+  ...OTHER_SUBJECTS
 ];
 
 // Search helper function across UZ, RU, and EN

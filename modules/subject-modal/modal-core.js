@@ -33,10 +33,6 @@ export function openSubjectModal() {
   modal.classList.add('open');
   document.body.classList.add('subject-modal-open');
   document.documentElement.classList.add('subject-modal-open');
-
-  if (nameInput) {
-    setTimeout(() => nameInput.focus(), 50);
-  }
 }
 
 export function closeSubjectModal() {
@@ -380,14 +376,22 @@ export function initSubjectModal() {
   }
 
   // Reload button to reset recent colors back to default static palette
+  let resetColorTimeout = null;
   const resetColorBtn = document.getElementById('subject-color-reset-btn');
   if (resetColorBtn) {
     resetColorBtn.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (resetColorTimeout) {
+        clearTimeout(resetColorTimeout);
+        resetColorTimeout = null;
+      }
       resetColorBtn.classList.remove('spinning');
       void resetColorBtn.offsetWidth;
       resetColorBtn.classList.add('spinning');
-      setTimeout(() => resetColorBtn.classList.remove('spinning'), 600);
+      resetColorTimeout = setTimeout(() => {
+        resetColorBtn.classList.remove('spinning');
+        resetColorTimeout = null;
+      }, 550);
       resetPresetColorsToDefault();
     });
   }

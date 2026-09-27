@@ -4,7 +4,7 @@ import { renderStats } from './stats.js';
 import { openSubjectModal } from './subject-modal.js';
 import { getSubjectSvg } from './subjects-db.js';
 import { showToast } from './activity.js';
-import { tr } from './i18n.js';
+import { tr, onLanguageChange } from './i18n.js';
 
 export function renderTimerSubjectBadge(syncDropdown = false) {
   const badgeEl = document.getElementById('timer-subject-badge');
@@ -16,7 +16,67 @@ export function renderTimerSubjectBadge(syncDropdown = false) {
 
   const subjects = getSubjects();
   const activeId = getActiveSubjectId();
-  const activeSubject = subjects.find(s => s.id === activeId) || subjects[0] || { name: 'Math', color: '#7c3aed' };
+  const activeSubject = subjects.find(s => s.id === activeId);
+
+  // 1. Agar hamma fanlar o'chirilgan bo'lsa (ro'yxatda birorta ham fan qolmasa):
+  // previewda dumaloq mint indikator va mint plashka bo'ladi,
+  // subject name esa 3 ta tilga mos "Add subject" / "Fan qo'shish" / "Добавить предмет" bo'ladi.
+  if (subjects.length === 0) {
+    const mintColor = '#4ec9b0';
+    dotEl.className = 'timer-subject-dot';
+    dotEl.innerHTML = '';
+    dotEl.style.backgroundColor = mintColor;
+    dotEl.style.boxShadow = `0 0 10px ${mintColor}99`;
+
+    const addText = tr().addSubject || (tr().localeCode === 'ru-RU' ? 'Добавить предмет' : tr().localeCode === 'uz-UZ' ? "Fan qo'shish" : 'Add subject');
+    nameEl.textContent = addText;
+    nameEl.style.color = '#ffffff';
+
+    badgeEl.style.borderColor = `${mintColor}66`;
+    badgeEl.style.boxShadow = `0 4px 14px rgba(0, 0, 0, 0.25), 0 0 12px ${mintColor}33`;
+
+    if (chevronEl) {
+      chevronEl.style.color = mintColor;
+    }
+    if (editBtn) {
+      editBtn.style.borderColor = `${mintColor}44`;
+    }
+    if (syncDropdown) {
+      renderTimerSubjectDropdown();
+    }
+    updateDropdownPosition();
+    return;
+  }
+
+  // 2. Fanlar mavjud bo'lsa, ammo tanlangan fan yo'q bo'lsa (tanlov olib tashlangan):
+  // preview plashkasida dumaloq mint rangli indikator (icon o'rniga) va "Choose subject" / "Fan tanlash" / "Выбрать предмет" chiqadi.
+  if (!activeSubject) {
+    const mintColor = '#4ec9b0';
+    dotEl.className = 'timer-subject-dot';
+    dotEl.innerHTML = '';
+    dotEl.style.backgroundColor = mintColor;
+    dotEl.style.boxShadow = `0 0 10px ${mintColor}99`;
+
+    const chooseText = tr().chooseSubject || (tr().localeCode === 'ru-RU' ? 'Выбрать предмет' : tr().localeCode === 'uz-UZ' ? "Fan tanlash" : 'Choose subject');
+    nameEl.textContent = chooseText;
+    nameEl.style.color = '#ffffff';
+
+    badgeEl.style.borderColor = `${mintColor}66`;
+    badgeEl.style.boxShadow = `0 4px 14px rgba(0, 0, 0, 0.25), 0 0 12px ${mintColor}33`;
+
+    if (chevronEl) {
+      chevronEl.style.color = mintColor;
+    }
+    if (editBtn) {
+      editBtn.style.borderColor = `${mintColor}44`;
+    }
+    if (syncDropdown) {
+      renderTimerSubjectDropdown();
+    }
+    updateDropdownPosition();
+    return;
+  }
+
   const color = activeSubject.color || '#4ec9b0';
 
   // Render SVG Icon if subject has icon, otherwise render glowing dot indicator
@@ -71,9 +131,18 @@ export function renderTimerSubjectDropdown() {
   const listEl = document.getElementById('timer-subject-dropdown-list');
   if (!listEl) return;
 
-  const subjects = getSubjects();
+  const allSubjects = getSubjects();
   const activeId = getActiveSubjectId();
-  const canDeleteAny = subjects.length > 1;
+  const canDeleteAny = true; // Barcha fanlarni, hatto oxirgisini ham o'chirishga ruxsat beriladi
+
+  // Yangi qo'shilgan fan yoki tanlangan fan har doim 1 da (ro'yxat boshida) tursin
+  const subjects = [...allSubjects].sort((a, b) => {
+    if (activeId) {
+      if (a.id === activeId) return -1;
+      if (b.id === activeId) return 1;
+    }
+    return 0;
+  });
 
   // Keyed reconciliation: preserve existing DOM elements without modifying innerHTML on existing elements
   const existingElements = new Map();
@@ -152,7 +221,13 @@ export function renderTimerSubjectDropdown() {
       item.addEventListener('click', (e) => {
         if (e.target.closest('.timer-subject-item-delete-btn')) return;
         e.stopPropagation();
-        setActiveSubjectId(subject.id);
+        const curActiveId = getActiveSubjectId();
+        if (curActiveId === item.dataset.subjectId) {
+          // Tanlangan predmet ustiga yana bir marta bosilsa tanlov olib tashlanadi
+          setActiveSubjectId(null);
+        } else {
+          setActiveSubjectId(item.dataset.subjectId);
+        }
         renderTimerSubjectBadge();
         renderDailyGoalCard();
         renderStats();
@@ -174,14 +249,34 @@ export function renderTimerSubjectDropdown() {
             const deleted = deleteSubject(subject.id);
             if (deleted) {
               item.remove();
+
               const remainingSubjects = getSubjects();
-              if (remainingSubjects.length <= 1) {
-                listEl.querySelectorAll('.timer-subject-item-delete-btn').forEach(btn => btn.style.display = 'none');
+              if (remainingSubjects.length === 0) {
+                // Agar barcha fanlar o'chirilgan bo'lsa, menyuni darhol yopamiz
+                closeTimerSubjectDropdown();
+                renderTimerSubjectBadge(false);
+                renderDailyGoalCard();
+                renderStats();
+                return;
               }
+
+              // O'chirilgan fan ayni paytda tanlangan bo'lsa, dropdown ro'yxatida yangi faol fanga checkmarkni o'tkazamiz
+              const newActiveId = getActiveSubjectId();
+              Array.from(listEl.children).forEach(child => {
+                if (child.dataset && child.dataset.subjectId) {
+                  const isNowSelected = Boolean(newActiveId && child.dataset.subjectId === newActiveId);
+                  const chk = child.querySelector('.timer-subject-check-icon');
+                  if (chk) {
+                    chk.style.display = isNowSelected ? 'block' : 'none';
+                  }
+                  child.classList.toggle('active', isNowSelected);
+                }
+              });
+
+              // Tepadagi preview nishoni darhol yangi tanlangan fanga yangilanadi
               renderTimerSubjectBadge(false);
               renderDailyGoalCard();
               renderStats();
-              updateDropdownPosition();
             }
           }, 200);
         };
@@ -208,6 +303,7 @@ export function renderTimerSubjectDropdown() {
       if (delEl) {
         delEl.style.display = canDeleteAny ? 'flex' : 'none';
       }
+      listEl.appendChild(item);
     }
   });
 
@@ -220,53 +316,46 @@ export function renderTimerSubjectDropdown() {
   }
 }
 
-export function updateDropdownPosition(force = false) {
+export function updateDropdownPosition() {
   const wrapper = document.getElementById('timer-subject-badge-wrapper');
   const badgeEl = document.getElementById('timer-subject-badge');
-  const nameEl = document.getElementById('timer-subject-name');
   const dropdown = document.getElementById('timer-subject-dropdown');
   if (!wrapper || !badgeEl || !dropdown) return;
 
-  // Agar dropdown ochiq bo'lsa va majburiy (force) yangilanish bo'lmasa, ochilib turgan paytda joylashuv qimirlamaydi
-  if (wrapper.classList.contains('open') && !force) {
-    return;
-  }
-
-  const badgeWidth = badgeEl.offsetWidth;
-  const dropdownWidth = dropdown.offsetWidth || 220;
-  const diff = Math.abs(badgeWidth - dropdownWidth);
-  const textLength = nameEl ? (nameEl.textContent || '').trim().length : 0;
-
-  // Agar matn uzunligi 17 tadan ortiq bo'lsa yoki badge va dropdown kengligi bir-biriga yaqin (±4px) bo'lsa:
-  // Dropdown faqat switch subject badge'iga tekislanadi.
-  // Aks holda switch subject va quick edit (qalamcha) tugmasining umumiy markazida turadi.
-  if (textLength > 17 || diff <= 4) {
-    const badgeCenter = badgeEl.offsetLeft + (badgeWidth / 2);
-    dropdown.style.left = `${badgeCenter}px`;
-    dropdown.classList.add('aligned-to-badge');
-  } else {
-    dropdown.style.left = '50%';
-    dropdown.classList.remove('aligned-to-badge');
-  }
+  const badgeCenter = badgeEl.offsetLeft + (badgeEl.offsetWidth / 2);
+  dropdown.style.left = `${badgeCenter}px`;
+  dropdown.classList.add('aligned-to-badge');
 }
 
 export function closeTimerSubjectDropdown() {
   const wrapper = document.getElementById('timer-subject-badge-wrapper');
   if (wrapper) {
+    const wasOpen = wrapper.classList.contains('open');
     wrapper.classList.remove('open');
+    if (wasOpen) {
+      // Dropdown yopilganda badge'ni eng so'nggi faol fanga moslab silliq yangilaymiz
+      renderTimerSubjectBadge(false);
+      updateDropdownPosition();
+    }
   }
 }
 
 export function toggleTimerSubjectDropdown() {
   const wrapper = document.getElementById('timer-subject-badge-wrapper');
   if (!wrapper) return;
+  const subjects = getSubjects();
+  if (subjects.length === 0) {
+    closeTimerSubjectDropdown();
+    openSubjectModal();
+    return;
+  }
   const isOpening = !wrapper.classList.contains('open');
   if (isOpening) {
     renderTimerSubjectDropdown();
-    updateDropdownPosition(true);
+    updateDropdownPosition();
     wrapper.classList.add('open');
   } else {
-    wrapper.classList.remove('open');
+    closeTimerSubjectDropdown();
   }
 }
 
@@ -276,9 +365,29 @@ export function initTimerSubjectBadge() {
   const addBtn = document.getElementById('timer-subject-dropdown-add-btn');
   const wrapper = document.getElementById('timer-subject-badge-wrapper');
 
+  const updateAddBtnText = () => {
+    if (addBtn) {
+      const span = addBtn.querySelector('span');
+      if (span) {
+        span.textContent = tr().addSubject || 'Add subject';
+      }
+    }
+  };
+  updateAddBtnText();
+
+  onLanguageChange(() => {
+    updateAddBtnText();
+    renderTimerSubjectBadge();
+  });
+
   if (badgeEl) {
     badgeEl.addEventListener('click', (e) => {
       e.stopPropagation();
+      const subjects = getSubjects();
+      if (subjects.length === 0) {
+        openSubjectModal();
+        return;
+      }
       toggleTimerSubjectDropdown();
     });
   }
@@ -308,6 +417,13 @@ export function initTimerSubjectBadge() {
   document.addEventListener('click', (e) => {
     if (!wrapper) return;
     if (!wrapper.contains(e.target)) {
+      closeTimerSubjectDropdown();
+    }
+  });
+
+  // Close when pressing Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && wrapper?.classList.contains('open')) {
       closeTimerSubjectDropdown();
     }
   });

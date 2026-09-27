@@ -212,12 +212,20 @@ export function initTimer() {
     });
   }
 
+  let resetBtnTimeout = null;
   if (resetBtn) {
     resetBtn.addEventListener('click', function() {
+      if (resetBtnTimeout) {
+        clearTimeout(resetBtnTimeout);
+        resetBtnTimeout = null;
+      }
       resetBtn.classList.remove('anim-spin');
       void resetBtn.offsetWidth;
       resetBtn.classList.add('anim-spin');
-      setTimeout(() => resetBtn.classList.remove('anim-spin'), 650);
+      resetBtnTimeout = setTimeout(() => {
+        resetBtn.classList.remove('anim-spin');
+        resetBtnTimeout = null;
+      }, 650);
 
       stopTimer();
       timerState.remaining = getBase();
@@ -330,13 +338,21 @@ export function initTimer() {
   }
 
   // Focus Mode Reset / Restart Button (Multifunctional across all 5 modes)
+  let focusBtnResetTimeout = null;
   const focusBtnReset = document.getElementById('focus-btn-reset');
   if (focusBtnReset) {
     focusBtnReset.addEventListener('click', function() {
+      if (focusBtnResetTimeout) {
+        clearTimeout(focusBtnResetTimeout);
+        focusBtnResetTimeout = null;
+      }
       focusBtnReset.classList.remove('anim-spin');
       void focusBtnReset.offsetWidth;
       focusBtnReset.classList.add('anim-spin');
-      setTimeout(() => focusBtnReset.classList.remove('anim-spin'), 650);
+      focusBtnResetTimeout = setTimeout(() => {
+        focusBtnReset.classList.remove('anim-spin');
+        focusBtnResetTimeout = null;
+      }, 650);
 
       stopTimer();
       if (timerState.currentFocusMode === 'pomodoro') {

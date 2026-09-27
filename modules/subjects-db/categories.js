@@ -88,5 +88,14 @@ export const SUBJECT_CATEGORIES = [
       en: "10. Emerging & Hybrid Fields (Fast-growing in 2026)"
     },
     icon: 'sparkles'
+  },
+  {
+    id: 'other',
+    names: {
+      uz: "11. Boshqa",
+      ru: "11. Другое",
+      en: "11. Other"
+    },
+    icon: 'more-horizontal'
   }
 ];

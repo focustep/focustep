@@ -20,22 +20,18 @@ export const modalState = {
   currentAutosuggestList: []
 };
 
-// Default initial color and icon from persistent queue
+// Default initial color from persistent queue; icons start unselected
 const initialColors = getSessionPresetColors();
 if (initialColors && initialColors.length > 0) {
   modalState.selectedColor = initialColors[0];
 }
 
-const initialIcons = getSessionPresetIcons();
-if (initialIcons && initialIcons.length > 0) {
-  modalState.selectedIcon = initialIcons[0].id;
-}
+modalState.selectedIcon = '';
 
 export function resetModalState() {
   const sessionColors = getSessionPresetColors();
-  const sessionIcons = getSessionPresetIcons();
   modalState.selectedColor = (sessionColors && sessionColors.length > 0) ? sessionColors[0] : PRESET_COLORS[0];
-  modalState.selectedIcon = (sessionIcons && sessionIcons.length > 0) ? sessionIcons[0].id : '';
+  modalState.selectedIcon = '';
   modalState.isCustomSelected = false;
   modalState.isCustomIconSelected = false;
   modalState.autosuggestActiveIndex = -1;

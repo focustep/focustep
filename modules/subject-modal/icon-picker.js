@@ -306,7 +306,7 @@ export function renderIconSelector() {
   const isPresetIcon = sessionPresetIcons.some(p => p.id === modalState.selectedIcon);
   const isCustomActive = modalState.isCustomIconSelected || (!isPresetIcon && modalState.selectedIcon !== '');
 
-  // 1. Static Custom Icon Button (Always fixed in first position)
+  // 1. Static Custom Icon Button (Always fixed in first position - Slot 1)
   const customBtnLabel = tr().chooseCustomIcon || 'Choose custom icon';
   const customBtn = document.createElement('button');
   customBtn.type = 'button';
@@ -339,7 +339,7 @@ export function renderIconSelector() {
 
   iconContainer.appendChild(customBtn);
 
-  // 2. Randomized Preset Icons (Slots 2 to 8: 7 randomized icons from different categories)
+  // 2. Randomized Preset Icons (Slots 2 to 8: 7 randomized icons from categories)
   const lang = getLang();
   sessionPresetIcons.forEach(item => {
     const btn = document.createElement('button');

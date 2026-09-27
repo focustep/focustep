@@ -96,14 +96,9 @@ export function setGoalForSubject(subjectId, minutes) {
 export function getSubjects() {
   try {
     const raw = localStorage.getItem(SUBJECTS_KEY);
-    if (raw) {
+    if (raw !== null) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        // Ensure Other subject is present at the bottom
-        if (!parsed.some(s => s.id === 'other' || s.name.toLowerCase() === 'other')) {
-          parsed.push({ id: 'other', name: 'Other', color: '#4ec9b0', icon: 'more-horizontal' });
-          saveSubjects(parsed);
-        }
+      if (Array.isArray(parsed)) {
         return parsed;
       }
     }
@@ -121,16 +116,21 @@ export function saveSubjects(subjects) {
 export function getActiveSubjectId() {
   try {
     const id = localStorage.getItem(ACTIVE_SUBJECT_KEY);
+    if (id === 'none' || id === '') return null;
     const subjects = getSubjects();
     if (id && subjects.some(s => s.id === id)) return id;
-    if (subjects.length > 0) return subjects[0].id;
+    if (id === null && subjects.length > 0) return subjects[0].id;
   } catch (e) {}
-  return 'math';
+  return null;
 }
 
 export function setActiveSubjectId(id) {
   try {
-    localStorage.setItem(ACTIVE_SUBJECT_KEY, id);
+    if (id) {
+      localStorage.setItem(ACTIVE_SUBJECT_KEY, id);
+    } else {
+      localStorage.setItem(ACTIVE_SUBJECT_KEY, 'none');
+    }
   } catch (e) {}
 }
 
@@ -147,10 +147,12 @@ export function addSubject(newSubject) {
     name: newSubject.name.trim() || 'New Subject',
     names: newSubject.names || undefined,
     color: newSubject.color || '#4ec9b0',
-    icon: newSubject.icon || 'book'
+    icon: newSubject.icon || ''
   };
-  subjects.push(subjectToAdd);
+  // Yangi qo'shilgan fan har doim 1-o'rinda tursin
+  subjects.unshift(subjectToAdd);
   saveSubjects(subjects);
+  setActiveSubjectId(id);
   
   // Set default goal for new subject (e.g. 60m)
   const defaultGoal = newSubject.defaultGoal || 60;
@@ -177,7 +179,7 @@ export function saveSubjectUndoStack(stack) {
 
 export function deleteSubject(subjectId) {
   let subjects = getSubjects();
-  if (subjects.length <= 1) return null; // Keep at least one
+  if (subjects.length === 0) return null;
   const subjectToDelete = subjects.find(s => s.id === subjectId);
   const index = subjects.findIndex(s => s.id === subjectId);
   if (subjectToDelete) {
@@ -193,9 +195,18 @@ export function deleteSubject(subjectId) {
   }
   subjects = subjects.filter(s => s.id !== subjectId);
   saveSubjects(subjects);
+
   if (getActiveSubjectId() === subjectId) {
-    setActiveSubjectId(subjects[0].id);
+    if (subjects.length > 0) {
+      // Tanlangan predmet o'chirilsa, undan keyingi predmet avtomatik tanlanadi
+      // Agar o'chirilgani eng oxirgisi bo'lsa, ro'yxatning yangi oxirgi predmeti tanlanadi
+      const nextIndex = (index >= 0 && index < subjects.length) ? index : subjects.length - 1;
+      setActiveSubjectId(subjects[nextIndex].id);
+    } else {
+      setActiveSubjectId(null);
+    }
   }
+
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('focustep:subjectsUpdated', { detail: { deletedId: subjectId } }));
   }

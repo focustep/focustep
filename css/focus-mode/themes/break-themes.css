@@ -1,0 +1,404 @@
+/* ==========================================================================
+   POMODORO BREAK PHASE THEMES & COLOR GLOWS
+   - Short Break: Green (#118F3B)
+   - Long Break: Blue (#2B45C7)
+   ========================================================================== */
+
+/* 1. SHORT BREAK THEME (#118F3B) */
+.focus-mode-view.phase-break,
+body.phase-break {
+  --phase-accent: #118F3B;
+  --phase-accent-hover: #15a544;
+  --phase-accent-soft: rgba(17, 143, 59, 0.28);
+  --phase-accent-glow: rgba(17, 143, 59, 0.45);
+}
+
+.focus-mode-view.phase-break {
+  background-color: #08140d !important;
+  background: radial-gradient(ellipse 90% 70% at 50% 32%, #0e2b1b 0%, #08160e 55%, #050d09 100%) !important;
+}
+
+[data-theme="light"] .focus-mode-view.phase-break {
+  background-color: #ebf6ee !important;
+  background: radial-gradient(ellipse 90% 70% at 50% 32%, #d7f0e0 0%, #eaf6ee 58%, #dfefe4 100%) !important;
+}
+
+.focus-mode-view.phase-break .focus-stadium-progress {
+  stroke: #118F3B !important;
+  filter: drop-shadow(0 0 10px rgba(17, 143, 59, 0.65)) !important;
+}
+
+.focus-mode-view.phase-break .focus-stadium-glow {
+  background: radial-gradient(ellipse at center, #118F3B 0%, transparent 72%) !important;
+  opacity: 0.35 !important;
+}
+
+.focus-mode-view.phase-break .focus-skeleton-capsule-main.is-running {
+  border-color: #118F3B !important;
+  box-shadow: 0 0 24px -2px rgba(17, 143, 59, 0.45), var(--shadow) !important;
+}
+
+.focus-mode-view.phase-break .focus-stadium-start-btn {
+  background: #118F3B !important;
+  border-color: #118F3B !important;
+  box-shadow: 0 4px 16px -4px rgba(17, 143, 59, 0.6) !important;
+}
+
+.focus-mode-view.phase-break .focus-stadium-start-btn:hover {
+  background: #15a544 !important;
+  border-color: #15a544 !important;
+  box-shadow: 0 8px 24px -4px rgba(17, 143, 59, 0.75) !important;
+}
+
+.focus-mode-view.phase-break .focus-session-status-container {
+  border-color: rgba(17, 143, 59, 0.45);
+  box-shadow: 0 2px 10px -2px rgba(17, 143, 59, 0.35);
+}
+
+.focus-mode-view.phase-break .focus-session-status-text {
+  color: #ffffff !important;
+}
+
+.focus-mode-view.phase-break .focus-session-status-dot {
+  background: #118F3B !important;
+  box-shadow: 0 0 10px #118F3B !important;
+}
+
+.focus-mode-view.phase-break .focus-session-info-badge {
+  border-color: rgba(17, 143, 59, 0.45) !important;
+  box-shadow: 0 0 10px rgba(17, 143, 59, 0.35) !important;
+}
+
+.focus-mode-view.phase-break .focus-session-label {
+  color: #ffffff !important;
+}
+
+.focus-mode-view.phase-break .focus-session-num {
+  color: #ffffff !important;
+}
+
+/* Top bar focus button & fullscreen toggle in Short Break */
+.focus-mode-view.phase-break #focus-mode-exit-btn,
+body.phase-break #focus-mode-btn,
+body.phase-break .focus-mode-btn {
+  background: #118F3B !important;
+  border-color: #118F3B !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(17, 143, 59, 0.7) !important;
+}
+
+.focus-mode-view.phase-break #focus-mode-exit-btn:hover,
+body.phase-break #focus-mode-btn:hover,
+body.phase-break .focus-mode-btn:hover {
+  background: #15a544 !important;
+  border-color: #15a544 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 24px rgba(17, 143, 59, 0.9) !important;
+}
+
+.focus-mode-view.phase-break .focus-mode-fs-toggle input:checked + .mini-switch-slider {
+  background: #118F3B !important;
+  box-shadow: 0 0 10px rgba(17, 143, 59, 0.4) !important;
+}
+
+.focus-mode-view.phase-break .focus-mode-fs-toggle:hover .mini-switch-label {
+  color: #ffffff !important;
+}
+
+.focus-mode-view.phase-break .focus-custom-pill {
+  border-color: rgba(17, 143, 59, 0.45);
+  color: #118F3B;
+}
+
+.focus-mode-view.phase-break .focus-skeleton-pill:hover {
+  border-color: #118F3B;
+  color: #ffffff !important;
+  background: rgba(17, 143, 59, 0.18);
+  box-shadow: 0 0 12px rgba(17, 143, 59, 0.45);
+}
+
+.focus-mode-view.phase-break .focus-custom-pill:hover {
+  border-color: #118F3B !important;
+  color: #ffffff !important;
+  background: rgba(17, 143, 59, 0.18) !important;
+  box-shadow: 0 0 14px rgba(17, 143, 59, 0.5) !important;
+}
+
+/* Short Break Reset Button */
+.focus-mode-view.phase-break .focus-btn-reset {
+  border: none !important;
+  background: rgba(17, 143, 59, 0.15) !important;
+}
+
+.focus-mode-view.phase-break .focus-btn-reset:hover {
+  border: none !important;
+  color: #ffffff !important;
+  background: rgba(17, 143, 59, 0.28) !important;
+  box-shadow: 0 0 14px rgba(17, 143, 59, 0.5), inset 0 0 6px rgba(17, 143, 59, 0.25) !important;
+}
+
+/* Short Break: Left Card gear icon, active tab glow & border, hover and toggle */
+.focus-mode-view.phase-break .focus-skeleton-left .focus-mode-gear-box {
+  border-color: rgba(17, 143, 59, 0.45) !important;
+  color: #118F3B !important;
+  box-shadow: 0 0 8px rgba(17, 143, 59, 0.25) !important;
+}
+
+.focus-mode-view.phase-break .focus-skeleton-left .focus-mode-tab:hover {
+  border-color: #118F3B;
+  color: #ffffff !important;
+  background: rgba(17, 143, 59, 0.14);
+}
+
+.focus-mode-view.phase-break .focus-skeleton-left .focus-mode-tab.is-active {
+  border-color: #118F3B !important;
+  background: rgba(17, 143, 59, 0.18) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(17, 143, 59, 0.4), inset 0 0 6px rgba(17, 143, 59, 0.2) !important;
+}
+
+.focus-mode-view.phase-break .focus-skeleton-left .focus-pomo-phase-btn:hover {
+  border-color: #118F3B;
+  color: #ffffff !important;
+  background: rgba(17, 143, 59, 0.14);
+}
+
+.focus-mode-view.phase-break .focus-skeleton-left .focus-pomo-phase-btn.is-active {
+  border-color: #118F3B !important;
+  background: rgba(17, 143, 59, 0.22) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(17, 143, 59, 0.45), inset 0 0 6px rgba(17, 143, 59, 0.25) !important;
+}
+
+.focus-mode-view.phase-break .focus-skeleton-left .focus-autostart-label-toggle input:checked + .mini-switch-slider {
+  background: #118F3B !important;
+  box-shadow: 0 0 10px rgba(17, 143, 59, 0.4) !important;
+}
+
+/* Short Break: Right Card task icon, add button (+), todo input focus, and checkbox checked */
+.focus-mode-view.phase-break .focus-skeleton-right .focus-card-icon-box {
+  border-color: rgba(17, 143, 59, 0.45) !important;
+  color: #118F3B !important;
+  box-shadow: 0 0 8px rgba(17, 143, 59, 0.25) !important;
+}
+.focus-mode-view.phase-break .focus-skeleton-right #focus-todo-input:focus,
+.focus-mode-view.phase-break .focus-skeleton-right .todo-item:focus-within {
+  border-color: #118F3B !important;
+  box-shadow: 0 0 0 2px rgba(17, 143, 59, 0.35), 0 0 14px rgba(17, 143, 59, 0.4) !important;
+}
+.focus-mode-view.phase-break .focus-skeleton-right #focus-todo-add-btn {
+  background: #118F3B !important;
+  border-color: #118F3B !important;
+  box-shadow: 0 4px 14px -3px rgba(17, 143, 59, 0.6) !important;
+}
+.focus-mode-view.phase-break .focus-skeleton-right #focus-todo-add-btn:hover {
+  background: #15a544 !important;
+  border-color: #15a544 !important;
+}
+.focus-mode-view.phase-break .focus-skeleton-right .todo-item input[type="checkbox"] {
+  accent-color: #118F3B !important;
+}
+
+/* 2. LONG BREAK THEME (#2B45C7) */
+.focus-mode-view.phase-long-break,
+body.phase-long-break {
+  --phase-accent: #2B45C7;
+  --phase-accent-hover: #3653dc;
+  --phase-accent-soft: rgba(43, 69, 199, 0.28);
+  --phase-accent-glow: rgba(43, 69, 199, 0.45);
+}
+
+.focus-mode-view.phase-long-break {
+  background-color: #080e22 !important;
+  background: radial-gradient(ellipse 90% 70% at 50% 32%, #101c46 0%, #091026 55%, #050817 100%) !important;
+}
+
+[data-theme="light"] .focus-mode-view.phase-long-break {
+  background-color: #eaf0fc !important;
+  background: radial-gradient(ellipse 90% 70% at 50% 32%, #d7e4fb 0%, #eaf0fc 58%, #dfe8fa 100%) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-stadium-progress {
+  stroke: #2B45C7 !important;
+  filter: drop-shadow(0 0 10px rgba(43, 69, 199, 0.65)) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-stadium-glow {
+  background: radial-gradient(ellipse at center, #2B45C7 0%, transparent 72%) !important;
+  opacity: 0.35 !important;
+}
+
+.focus-mode-view.phase-long-break .focus-skeleton-capsule-main {
+  border-color: rgba(43, 69, 199, 0.6) !important;
+  box-shadow: 0 0 18px -2px rgba(43, 69, 199, 0.35), var(--shadow) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-skeleton-capsule-main.is-running {
+  border-color: #2B45C7 !important;
+  box-shadow: 0 0 28px -2px rgba(43, 69, 199, 0.55), var(--shadow) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-stadium-start-btn {
+  background: #2B45C7 !important;
+  border-color: #2B45C7 !important;
+  box-shadow: 0 4px 16px -4px rgba(43, 69, 199, 0.6) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-stadium-start-btn:hover {
+  background: #3653dc !important;
+  border-color: #3653dc !important;
+  box-shadow: 0 8px 24px -4px rgba(43, 69, 199, 0.75) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-session-status-container {
+  border-color: rgba(43, 69, 199, 0.45);
+  box-shadow: 0 2px 10px -2px rgba(43, 69, 199, 0.35);
+}
+
+.focus-mode-view.phase-long-break .focus-session-status-text {
+  color: #ffffff !important;
+}
+
+.focus-mode-view.phase-long-break .focus-session-status-dot {
+  background: #2B45C7 !important;
+  box-shadow: 0 0 10px #2B45C7 !important;
+}
+
+.focus-mode-view.phase-long-break .focus-session-info-badge {
+  border-color: rgba(43, 69, 199, 0.45) !important;
+  box-shadow: 0 0 10px rgba(43, 69, 199, 0.35) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-session-label {
+  color: #ffffff !important;
+}
+
+.focus-mode-view.phase-long-break .focus-session-num {
+  color: #ffffff !important;
+}
+
+/* Top bar focus button & fullscreen toggle in Long Break */
+.focus-mode-view.phase-long-break #focus-mode-exit-btn,
+body.phase-long-break #focus-mode-btn,
+body.phase-long-break .focus-mode-btn {
+  background: #2B45C7 !important;
+  border-color: #2B45C7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(43, 69, 199, 0.7) !important;
+}
+
+.focus-mode-view.phase-long-break #focus-mode-exit-btn:hover,
+body.phase-long-break #focus-mode-btn:hover,
+body.phase-long-break .focus-mode-btn:hover {
+  background: #3a57e8 !important;
+  border-color: #3a57e8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 24px rgba(43, 69, 199, 0.9) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-mode-fs-toggle input:checked + .mini-switch-slider {
+  background: #2B45C7 !important;
+  box-shadow: 0 0 10px rgba(43, 69, 199, 0.4) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-mode-fs-toggle:hover .mini-switch-label {
+  color: #ffffff !important;
+}
+
+.focus-mode-view.phase-long-break .focus-custom-pill {
+  border-color: rgba(43, 69, 199, 0.45);
+  color: #2B45C7;
+}
+
+.focus-mode-view.phase-long-break .focus-skeleton-pill:hover {
+  border-color: #2B45C7;
+  color: #ffffff !important;
+  background: rgba(43, 69, 199, 0.18);
+  box-shadow: 0 0 12px rgba(43, 69, 199, 0.45);
+}
+
+.focus-mode-view.phase-long-break .focus-custom-pill:hover {
+  border-color: #2B45C7 !important;
+  color: #ffffff !important;
+  background: rgba(43, 69, 199, 0.2) !important;
+  box-shadow: 0 0 14px rgba(43, 69, 199, 0.5) !important;
+}
+
+/* Long Break Reset Button */
+.focus-mode-view.phase-long-break .focus-btn-reset,
+body.phase-long-break .focus-btn-reset {
+  border: none !important;
+  background: rgba(43, 69, 199, 0.22) !important;
+  box-shadow: 0 0 10px rgba(43, 69, 199, 0.35), inset 0 0 4px rgba(43, 69, 199, 0.15) !important;
+  color: #ffffff !important;
+}
+
+.focus-mode-view.phase-long-break .focus-btn-reset:hover,
+body.phase-long-break .focus-btn-reset:hover {
+  border: none !important;
+  background: rgba(43, 69, 199, 0.32) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(43, 69, 199, 0.6), inset 0 0 8px rgba(43, 69, 199, 0.3) !important;
+}
+
+/* Long Break: Left Card gear icon, active tab glow & border, hover and toggle */
+.focus-mode-view.phase-long-break .focus-skeleton-left .focus-mode-gear-box {
+  border-color: rgba(43, 69, 199, 0.45) !important;
+  color: #2B45C7 !important;
+  box-shadow: 0 0 8px rgba(43, 69, 199, 0.25) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-skeleton-left .focus-mode-tab:hover {
+  border-color: #2B45C7;
+  color: #ffffff !important;
+  background: rgba(43, 69, 199, 0.14);
+}
+
+.focus-mode-view.phase-long-break .focus-skeleton-left .focus-mode-tab.is-active {
+  border-color: #2B45C7 !important;
+  background: rgba(43, 69, 199, 0.2) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(43, 69, 199, 0.4), inset 0 0 6px rgba(43, 69, 199, 0.2) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-skeleton-left .focus-pomo-phase-btn:hover {
+  border-color: #2B45C7;
+  color: #ffffff !important;
+  background: rgba(43, 69, 199, 0.14);
+}
+
+.focus-mode-view.phase-long-break .focus-skeleton-left .focus-pomo-phase-btn.is-active {
+  border-color: #2B45C7 !important;
+  background: rgba(43, 69, 199, 0.25) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(43, 69, 199, 0.45), inset 0 0 6px rgba(43, 69, 199, 0.25) !important;
+}
+
+.focus-mode-view.phase-long-break .focus-skeleton-left .focus-autostart-label-toggle input:checked + .mini-switch-slider {
+  background: #2B45C7 !important;
+  box-shadow: 0 0 10px rgba(43, 69, 199, 0.4) !important;
+}
+
+/* Long Break: Right Card task icon, add button (+), todo input focus, and checkbox checked */
+.focus-mode-view.phase-long-break .focus-skeleton-right .focus-card-icon-box {
+  border-color: rgba(43, 69, 199, 0.45) !important;
+  color: #2B45C7 !important;
+  box-shadow: 0 0 8px rgba(43, 69, 199, 0.25) !important;
+}
+.focus-mode-view.phase-long-break .focus-skeleton-right #focus-todo-input:focus,
+.focus-mode-view.phase-long-break .focus-skeleton-right .todo-item:focus-within {
+  border-color: #2B45C7 !important;
+  box-shadow: 0 0 0 2px rgba(43, 69, 199, 0.35), 0 0 14px rgba(43, 69, 199, 0.4) !important;
+}
+.focus-mode-view.phase-long-break .focus-skeleton-right #focus-todo-add-btn {
+  background: #2B45C7 !important;
+  border-color: #2B45C7 !important;
+  box-shadow: 0 4px 14px -3px rgba(43, 69, 199, 0.6) !important;
+}
+.focus-mode-view.phase-long-break .focus-skeleton-right #focus-todo-add-btn:hover {
+  background: #3653dc !important;
+  border-color: #3653dc !important;
+}
+.focus-mode-view.phase-long-break .focus-skeleton-right .todo-item input[type="checkbox"] {
+  accent-color: #2B45C7 !important;
+}

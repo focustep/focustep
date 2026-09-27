@@ -1,0 +1,36 @@
+/* ==========================================================================
+   ULTRADIAN RHYTHM CONTROLS
+   - Hide extra time buttons
+   - Place Reset button in custom extra position cleanly
+   ========================================================================== */
+
+.focus-mode-view.is-ultradian-mode #focus-custom-extra-btn,
+body.is-ultradian-mode #focus-custom-extra-btn,
+.focus-mode-view.is-ultradian-mode .focus-skeleton-pill-row,
+body.is-ultradian-mode .focus-skeleton-pill-row {
+  display: none !important;
+}
+
+.focus-mode-view.is-ultradian-mode .focus-skeleton-controls,
+body.is-ultradian-mode .focus-skeleton-controls {
+  gap: 0 !important;
+  margin-top: clamp(14px, 2.5vh, 22px);
+}
+
+.focus-mode-view.is-ultradian-mode .focus-reset-center-row,
+body.is-ultradian-mode .focus-reset-center-row {
+  margin-top: 0 !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.focus-mode-view.is-ultradian-mode .focus-btn-reset,
+body.is-ultradian-mode .focus-btn-reset {
+  min-width: clamp(106px, 13vw, 138px);
+  height: clamp(29px, 3.5vh, 35px);
+  padding: 0 clamp(12px, 1.5vw, 18px);
+  font-size: clamp(12px, 1.25vw, 13.5px);
+  border: none !important;
+}

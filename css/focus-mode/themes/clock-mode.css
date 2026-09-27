@@ -1,0 +1,175 @@
+/* ==========================================================================
+   CLOCK MODE SPECIFIC STYLES
+   - Card headers & switches
+   - Capsule styling with always-active neon border and breathing glow
+   - Hidden controls (Start/Stop, Reset, Extra buttons, wheel picker, pomo dots)
+   ========================================================================== */
+
+.focus-mode-view.is-clock-mode .focus-set-time-card,
+body.is-clock-mode .focus-set-time-card {
+  justify-content: flex-start !important;
+  padding: 16px 14px 20px !important;
+}
+
+.focus-clock-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0 4px 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.focus-clock-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #557086;
+  margin-bottom: 24px;
+  padding-top: 2px;
+}
+
+.focus-clock-hdr-icon {
+  stroke: #557086;
+  stroke-width: 2.2;
+}
+
+.focus-clock-switches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.focus-clock-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  user-select: none;
+  width: fit-content;
+}
+
+.focus-clock-toggle-item input[type="checkbox"] {
+  display: none;
+}
+
+.focus-clock-pill-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  background-color: #2b3947;
+  border-radius: 9999px;
+  transition: background-color 0.22s ease, box-shadow 0.22s ease;
+  flex-shrink: 0;
+}
+
+.focus-clock-pill-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.focus-clock-toggle-item input[type="checkbox"]:checked + .focus-clock-pill-switch {
+  background-color: #3CD4A0;
+  box-shadow: 0 0 12px rgba(60, 212, 160, 0.35);
+}
+
+.focus-clock-toggle-item input[type="checkbox"]:checked + .focus-clock-pill-switch .focus-clock-pill-knob {
+  transform: translateX(20px);
+}
+
+.focus-clock-item-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+/* Clock mode - Hide Start/Stop, Reset, Extra buttons, wheel picker, pomo dots, redundant set-time head */
+.focus-mode-view.is-clock-mode .focus-stadium-actions,
+body.is-clock-mode .focus-stadium-actions,
+.focus-mode-view.is-clock-mode #focus-start-btn,
+body.is-clock-mode #focus-start-btn,
+.focus-mode-view.is-clock-mode #focus-btn-reset,
+body.is-clock-mode #focus-btn-reset,
+.focus-mode-view.is-clock-mode .focus-ios-wheel-box,
+body.is-clock-mode .focus-ios-wheel-box,
+.focus-mode-view.is-clock-mode .focus-set-time-head,
+body.is-clock-mode .focus-set-time-head,
+.focus-mode-view.is-clock-mode #focus-custom-extra-btn,
+body.is-clock-mode #focus-custom-extra-btn,
+.focus-mode-view.is-clock-mode .focus-skeleton-pill-row,
+body.is-clock-mode .focus-skeleton-pill-row,
+.focus-mode-view.is-clock-mode .focus-reset-center-row,
+body.is-clock-mode .focus-reset-center-row,
+.focus-mode-view.is-clock-mode .focus-pomo-dots,
+body.is-clock-mode .focus-pomo-dots {
+  display: none !important;
+}
+
+/* Clock mode - Capsule styling with always-active neon border and breathing glow (Timer Start effekti bilan bir xil) */
+.focus-mode-view.is-clock-mode .focus-skeleton-capsule-main,
+body.is-clock-mode .focus-skeleton-capsule-main {
+  border-color: var(--accent) !important;
+  box-shadow: var(--shadow), 0 0 18px -2px var(--accent-soft), 0 0 28px -4px var(--accent-alpha) !important;
+}
+
+.focus-mode-view.is-clock-mode .focus-stadium-glow,
+body.is-clock-mode .focus-stadium-glow {
+  opacity: 0.30 !important;
+  animation: stadiumBreathe 3.2s ease-in-out infinite !important;
+}
+
+[data-theme="dark"] .focus-mode-view.is-clock-mode .focus-stadium-glow,
+[data-theme="dark"] body.is-clock-mode .focus-stadium-glow {
+  opacity: 0.38 !important;
+  animation: stadiumBreatheDark 3.2s ease-in-out infinite !important;
+}
+
+.focus-mode-view.is-clock-mode .focus-stadium-track,
+body.is-clock-mode .focus-stadium-track {
+  display: block !important;
+  stroke: var(--accent) !important;
+  stroke-width: 3.5 !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 6px rgba(47, 111, 104, 0.4));
+}
+
+[data-theme="dark"] .focus-mode-view.is-clock-mode .focus-stadium-track,
+[data-theme="dark"] body.is-clock-mode .focus-stadium-track {
+  filter: drop-shadow(0 0 8px rgba(84, 203, 180, 0.55));
+}
+
+.focus-mode-view.is-clock-mode .focus-stadium-progress,
+body.is-clock-mode .focus-stadium-progress {
+  display: none !important;
+}
+
+.focus-mode-view.is-clock-mode .focus-digital-timer,
+body.is-clock-mode .focus-digital-timer {
+  transform: none !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.focus-mode-view.is-clock-mode #focus-extra-info,
+body.is-clock-mode #focus-extra-info {
+  display: none !important;
+}
