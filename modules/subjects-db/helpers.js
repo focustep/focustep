@@ -65,7 +65,7 @@ export function getSubjectLocalizedName(subject, lang = 'uz', subjectsDatabase =
       return physNames[l];
     }
     if (subjectsDatabase && subjectsDatabase.length > 0) {
-      const found = subjectsDatabase.find(s => s.id === subject || s.id === sLower) || getSubjectByMatch(subject, subjectsDatabase);
+      const found = subjectsDatabase.find(s => s.id === subject || s.id === sLower);
       if (found && found.names) {
         return found.names[l] || found.names.uz || subject;
       }
@@ -73,14 +73,14 @@ export function getSubjectLocalizedName(subject, lang = 'uz', subjectsDatabase =
     return subject;
   }
 
-  // 2. Direct .names property on subject object
+  // 2. Direct .names property on subject object (for default subjects or preset selections)
   if (subject.names && typeof subject.names === 'object') {
     if (subject.names[l]) return subject.names[l];
     if (subject.names.uz) return subject.names.uz;
   }
 
-  // Built-in special cases
-  if (subject.id === 'other' || (subject.name && subject.name.toLowerCase() === 'other')) {
+  // Built-in special cases by ID
+  if (subject.id === 'other') {
     const otherNames = { uz: "Boshqa", ru: "Другое", en: "Other" };
     return otherNames[l];
   }
@@ -97,23 +97,9 @@ export function getSubjectLocalizedName(subject, lang = 'uz', subjectsDatabase =
     return physNames[l];
   }
 
-  // 3. Match from database by id or icon
-  if (subjectsDatabase && subjectsDatabase.length > 0) {
-    const byIdOrIcon = subjectsDatabase.find(s => 
-      s.id === subject.id || 
-      (subject.icon && s.id === subject.icon)
-    );
-    if (byIdOrIcon && byIdOrIcon.names) {
-      return byIdOrIcon.names[l] || byIdOrIcon.names.uz || subject.name;
-    }
-
-    // 4. Match from database by name or alias
-    if (subject.name) {
-      const byName = getSubjectByMatch(subject.name, subjectsDatabase);
-      if (byName && byName.names) {
-        return byName.names[l] || byName.names.uz || subject.name;
-      }
-    }
+  // 3. For any custom created subject, return its custom name
+  if (subject.name && typeof subject.name === 'string' && subject.name.trim()) {
+    return subject.name.trim();
   }
 
   return subject.name || subject.id || '';

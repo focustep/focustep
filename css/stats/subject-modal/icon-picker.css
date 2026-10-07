@@ -17,8 +17,16 @@
   border-radius: 12px;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translateZ(0);
+}
+
+.subject-icon-btn svg {
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
 }
 
 [data-theme="light"] .subject-icon-btn {
@@ -30,6 +38,7 @@
   background: rgba(255, 255, 255, 0.08);
   color: var(--text);
   border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px) translateZ(0);
 }
 
 .subject-icon-btn.selected {
@@ -55,8 +64,16 @@
   border-radius: 12px;
   color: var(--text);
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translateZ(0);
+}
+
+.subject-custom-icon-btn svg {
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
 }
 
 .subject-custom-icon-btn:hover {
@@ -86,7 +103,7 @@
   position: absolute;
   left: calc(100% + 18px);
   top: 50%;
-  transform: translateY(-50%) scale(0.95);
+  transform: translateY(-50%) scale(0.92) translateX(-10px);
   transform-origin: left center;
   width: 336px;
   max-height: 480px;
@@ -99,18 +116,19 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.22s ease;
+  transition: opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.26s ease;
   display: flex;
   flex-direction: column;
   gap: 12px;
   box-sizing: border-box;
+  will-change: transform, opacity;
 }
 
 .subject-icon-picker-popover.open {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateY(-50%) scale(1);
+  transform: translateY(-50%) scale(1) translateX(0);
 }
 
 [data-theme="light"] .subject-icon-picker-popover {
@@ -123,7 +141,7 @@
   .subject-icon-picker-popover {
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%) scale(0.95);
+    transform: translate(-50%, -46%) scale(0.92);
     transform-origin: center center;
     width: calc(100% - 32px);
     max-width: 340px;
@@ -192,7 +210,7 @@
 
 .icon-picker-search-input {
   width: 100%;
-  padding: 8px 10px 8px 32px;
+  padding: 8px 32px 8px 32px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
@@ -226,6 +244,45 @@
   border-color: #4ec9b0 !important;
   outline: none !important;
   box-shadow: none !important;
+}
+
+.icon-picker-clear-btn {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  transform: translateY(-50%) translateZ(0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+  z-index: 5;
+  opacity: 0.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-picker-clear-btn svg {
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+}
+
+.icon-picker-clear-btn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  opacity: 1;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.icon-picker-clear-btn:active {
+  transform: translateY(-50%) scale(0.92);
 }
 
 /* Scroll Area with small smooth greyish oval scrollbar */
@@ -286,6 +343,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  contain: content;
 }
 
 .icon-picker-category-title {

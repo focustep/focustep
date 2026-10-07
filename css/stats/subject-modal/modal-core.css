@@ -18,7 +18,8 @@ html.subject-modal-open {
   z-index: 10000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  will-change: opacity, visibility;
+  transition: opacity 0.16s ease, visibility 0.16s ease;
 }
 
 .subject-custom-modal-container.open {
@@ -37,6 +38,17 @@ html.subject-modal-open {
   -webkit-backdrop-filter: blur(14px);
 }
 
+@keyframes modalScaleIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 .subject-modal-dialog {
   position: relative;
   width: 90%;
@@ -47,7 +59,8 @@ html.subject-modal-open {
   padding: 24px;
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5);
   z-index: 2;
-  animation: modalScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+  animation: modalScaleIn 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 [data-theme="light"] .subject-modal-dialog {
@@ -81,13 +94,22 @@ html.subject-modal-open {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.15s ease;
+  border-radius: 9px;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translateZ(0);
+}
+
+.subject-modal-close-btn svg {
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
 }
 
 .subject-modal-close-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--text);
+  transform: scale(1.05) translateZ(0);
 }
 
 [data-theme="light"] .subject-modal-close-btn:hover {
@@ -106,10 +128,13 @@ html.subject-modal-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
+  padding: 0;
   background: transparent;
   border: none;
-  border-radius: 16px;
+  box-sizing: border-box;
 }
 
 [data-theme="light"] .subject-modal-preview-wrapper {
@@ -120,42 +145,85 @@ html.subject-modal-open {
 .subject-modal-preview-badge {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 6px 14px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  padding: 0 16px;
   background: rgba(255, 255, 255, 0.06);
   border: 1.5px solid #7c3aed;
   border-radius: 999px;
+  box-sizing: border-box;
   transition: border-color 0.2s ease;
 }
 
 .subject-modal-preview-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #7c3aed;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 20px;
+  height: 20px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-sizing: border-box;
+  position: relative;
+  overflow: visible;
+  transition: none !important;
+}
+
+.subject-modal-dot-circle {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: block;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .subject-modal-preview-dot.has-icon {
-  width: 18px;
-  height: 18px;
   background: transparent !important;
 }
 
-.subject-modal-preview-dot.has-icon svg {
-  width: 16px;
-  height: 16px;
+.subject-modal-preview-dot svg {
+  width: 17px !important;
+  height: 17px !important;
   display: block;
+  flex-shrink: 0;
+}
+
+.subject-modal-icon-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  will-change: transform, opacity;
+  transform-origin: center center;
+  transform: scale(1);
+  opacity: 1;
+}
+
+.subject-modal-icon-content.icon-scale-down {
+  animation: timerIconScaleDown 0.075s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.subject-modal-icon-content.icon-scale-init {
+  transform: scale(0.18) !important;
+  opacity: 0 !important;
+}
+
+.subject-modal-icon-content.icon-scale-up {
+  animation: timerIconScaleUp 0.095s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .subject-modal-preview-text {
   font-size: 14px;
   font-weight: 700;
   color: var(--text);
+  line-height: 1;
+  white-space: nowrap;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Field Container */
@@ -172,11 +240,58 @@ html.subject-modal-open {
   min-height: 22px;
 }
 
+.subject-modal-label-group-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .subject-modal-label {
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
   letter-spacing: 0.06em;
+}
+
+.subject-modal-char-counter {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  opacity: 0.75;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.subject-modal-char-counter.limit-reached {
+  color: #ef4444;
+  opacity: 1;
+  font-weight: 700;
+}
+
+.subject-modal-error-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #ef4444;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes inputShakeSmooth {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+.subject-modal-input-wrap.shake-error {
+  animation: inputShakeSmooth 0.38s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+.subject-modal-input.is-invalid {
+  border-color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.06) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18) !important;
 }
 
 .subject-modal-reload-btn {
@@ -225,13 +340,16 @@ html.subject-modal-open {
 
 .subject-modal-input {
   width: 100%;
-  padding: 12px 42px 12px 16px;
+  height: 46px;
+  padding: 0 42px 0 16px;
   background: rgba(255, 255, 255, 0.04);
   border: 1.5px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
   color: var(--text);
   font-size: 14.5px;
   font-weight: 500;
+  line-height: 44px;
+  box-sizing: border-box;
   outline: none !important;
   font-family: inherit;
   transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
@@ -276,7 +394,7 @@ html.subject-modal-open {
   position: absolute;
   right: 8px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) translateZ(0);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -288,9 +406,16 @@ html.subject-modal-open {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+  transition: color 0.18s ease, background 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
   z-index: 5;
   opacity: 0.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.subject-input-clear-btn svg {
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
 }
 
 .subject-input-clear-btn:hover {

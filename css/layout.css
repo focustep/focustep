@@ -1,4 +1,16 @@
 * { box-sizing: border-box; }
+svg {
+  shape-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+}
+svg path, svg line, svg polyline, svg circle, svg rect, svg polygon {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+button, input, select, textarea {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 html {
   -webkit-tap-highlight-color: transparent;
   scroll-behavior: smooth;
@@ -329,4 +341,77 @@ footer.foot, .foot {
 
 .ai-input-row button:hover {
   background: #42b59d;
+}
+
+/* Top Website Notification Banner */
+.top-site-notification {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-26px);
+  background: rgba(22, 30, 36, 0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  color: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  padding: 10px 18px 10px 14px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.25);
+  z-index: 999999;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+}
+
+.top-site-notification.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+[data-theme="light"] .top-site-notification {
+  background: rgba(255, 255, 255, 0.96);
+  color: #12181d;
+  border-color: rgba(0, 0, 0, 0.14);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.top-site-notification-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.top-site-notification-text {
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes notificationShake {
+  0% { transform: translateX(-50%) translateY(0); }
+  15% { transform: translateX(calc(-50% - 9px)) translateY(0); }
+  30% { transform: translateX(calc(-50% + 9px)) translateY(0); }
+  45% { transform: translateX(calc(-50% - 6px)) translateY(0); }
+  60% { transform: translateX(calc(-50% + 6px)) translateY(0); }
+  75% { transform: translateX(calc(-50% - 3px)) translateY(0); }
+  90% { transform: translateX(calc(-50% + 3px)) translateY(0); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+.top-site-notification.shake {
+  animation: notificationShake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }

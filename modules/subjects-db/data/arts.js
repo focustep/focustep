@@ -63,11 +63,11 @@ export const ARTS_SUBJECTS = [
     id: 'animation_3d',
     categoryId: 'arts',
     names: {
-      uz: "Animatsiya va 3D-modellashtirish",
-      ru: "Анимация и 3D-моделирование",
-      en: "Animation & 3D Modeling"
+      uz: "3D va Animatsiya",
+      ru: "3D и анимация",
+      en: "3D & Animation"
     },
-    aliases: ['animatsiya', 'animatsiya va 3d-modellashtirish', '3d-modellashtirish', '3d', 'blender', 'maya', 'motion design', 'animation', '3d modeling', 'анимация', '3d-моделирование', 'анимация и 3d-моделирование'],
+    aliases: ['animatsiya', '3d va animatsiya', 'animatsiya va 3d-modellashtirish', '3d-modellashtirish', '3d', 'blender', 'maya', 'motion design', 'animation', '3d animation', '3d modeling', 'анимация', '3d и анимация', '3d-моделирование', 'анимация и 3d-моделирование'],
     defaultColor: '#10b981',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 8-9-5-9 5v8l9 5 9-5V8z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v9"/></svg>`
   }

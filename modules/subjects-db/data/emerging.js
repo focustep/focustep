@@ -3,11 +3,11 @@ export const EMERGING_SUBJECTS = [
     id: 'prompt_engineering_ai_ethics',
     categoryId: 'emerging',
     names: {
-      uz: "Prompt-injiniring va AI etikasi",
-      ru: "Промпт-инжиниринг и этика ИИ",
-      en: "Prompt Engineering & AI Ethics"
+      uz: "Prompt-injiniring",
+      ru: "Промпт-инжиниринг",
+      en: "Prompt Engineering"
     },
-    aliases: ['prompt-injiniring va ai-etika', 'prompt-injiniring va ai etikasi', 'prompt engineering', 'prompt injiniring', 'ai etika', 'sun\'iy intellekt etikasi', 'prompt yozish', 'ai ethics', 'llm prompt', 'genai', 'generative ai', 'magic wand', 'wand', 'промпт инжиниринг', 'этика ии', 'промптинг', 'ии этика', 'промпт-инжиниринг и этика ии'],
+    aliases: ['prompt-injiniring', 'prompt engineering', 'prompt-injiniring va ai-etika', 'prompt-injiniring va ai etikasi', 'prompt injiniring', 'ai etika', 'sun\'iy intellekt etikasi', 'prompt yozish', 'ai ethics', 'llm prompt', 'genai', 'generative ai', 'magic wand', 'wand', 'промпт инжиниринг', 'промпт-инжиниринг', 'этика ии', 'промптинг', 'ии этика', 'промпт-инжиниринг и этика ии'],
     defaultColor: '#8b5cf6',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="15.5 2 16.73 5.8 20.73 5.8 17.5 8.15 18.73 11.95 15.5 9.6 12.27 11.95 13.5 8.15 10.27 5.8 14.27 5.8"/><path d="m3.5 20.5 10.3-10.3"/></svg>`
   },

@@ -14,7 +14,7 @@ const DEFAULT_SUBJECTS = [
       ru: "Математика",
       en: "Math"
     },
-    color: '#7c3aed', 
+    color: '#8b5cf6', 
     icon: 'calculator' 
   },
   { 
@@ -99,7 +99,12 @@ export function getSubjects() {
     if (raw !== null) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        return parsed;
+        return parsed.map(s => {
+          if (s && s.color && s.color.toLowerCase() === '#f5c4c4') {
+            return { ...s, color: '#ffffff' };
+          }
+          return s;
+        });
       }
     }
   } catch (e) {}
@@ -138,6 +143,36 @@ export function getSubjectName(subject, lang = getLang()) {
   return getSubjectLocalizedName(subject, lang);
 }
 
+export function isDuplicateSubjectName(name, excludeSubjectId = null) {
+  if (!name || typeof name !== 'string') return false;
+  const normalized = name.trim().toLowerCase();
+  if (!normalized) return false;
+
+  const subjects = getSubjects();
+  return subjects.some(s => {
+    if (excludeSubjectId && s.id === excludeSubjectId) {
+      return false;
+    }
+    // 1. Direct name match
+    if (s.name && s.name.trim().toLowerCase() === normalized) {
+      return true;
+    }
+    // 2. Localized name match in current UI language
+    const locName = getSubjectName(s);
+    if (locName && locName.trim().toLowerCase() === normalized) {
+      return true;
+    }
+    // 3. Multilingual dictionary match across languages
+    if (s.names && typeof s.names === 'object') {
+      const vals = Object.values(s.names);
+      if (vals.some(v => typeof v === 'string' && v.trim().toLowerCase() === normalized)) {
+        return true;
+      }
+    }
+    return false;
+  });
+}
+
 export function addSubject(newSubject) {
   const subjects = getSubjects();
   // Ensure unique ID
@@ -147,7 +182,7 @@ export function addSubject(newSubject) {
     name: newSubject.name.trim() || 'New Subject',
     names: newSubject.names || undefined,
     color: newSubject.color || '#4ec9b0',
-    icon: newSubject.icon || ''
+    icon: (newSubject.icon && typeof newSubject.icon === 'string') ? newSubject.icon : ''
   };
   // Yangi qo'shilgan fan har doim 1-o'rinda tursin
   subjects.unshift(subjectToAdd);
@@ -159,6 +194,42 @@ export function addSubject(newSubject) {
   setGoalForSubject(id, defaultGoal);
   
   return subjectToAdd;
+}
+
+export function updateSubject(subjectId, updates) {
+  const subjects = getSubjects();
+  const index = subjects.findIndex(s => s.id === subjectId);
+  if (index === -1) return null;
+
+  const existing = subjects[index];
+  const newName = updates.name ? updates.name.trim() : existing.name;
+
+  let names = existing.names;
+  if (updates.names !== undefined) {
+    names = updates.names;
+  } else if (updates.name) {
+    const curLoc = getSubjectName(existing);
+    if (newName !== curLoc && newName !== existing.name) {
+      names = undefined;
+    }
+  }
+
+  const updatedSubject = {
+    ...existing,
+    id: existing.id,
+    name: newName,
+    names,
+    color: updates.color || existing.color,
+    icon: updates.icon !== undefined ? updates.icon : existing.icon
+  };
+
+  subjects[index] = updatedSubject;
+  saveSubjects(subjects);
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('focustep:subjectsUpdated', { detail: { updated: updatedSubject } }));
+  }
+  return updatedSubject;
 }
 
 const SUBJECT_UNDO_STACK_KEY = 'focustep_subject_undo_stack';
@@ -254,9 +325,11 @@ export function getSessions() {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        // Filter out template demo sessions ('1', '2', '3') if present
-        const nonDemo = parsed.filter(s => s && s.id !== '1' && s.id !== '2' && s.id !== '3');
-        const cleaned = cleanOldSessions(nonDemo);
+        // Filter out template demo sessions ('1', '2', '3') and sessions without a valid subject
+        const subjects = getSubjects();
+        const subjectIdSet = new Set(subjects.map(s => s.id));
+        const validSessions = parsed.filter(s => s && s.id !== '1' && s.id !== '2' && s.id !== '3' && s.subjectId && subjectIdSet.has(s.subjectId));
+        const cleaned = cleanOldSessions(validSessions);
         if (cleaned.length !== parsed.length) {
           saveSessions(cleaned);
         }
@@ -351,8 +424,11 @@ export function undoLastSessionDelete() {
 
 export function logSession(subjectId, durationSec) {
   if (durationSec < 1) return null; // Log sessions from 1 second
+  if (!subjectId || subjectId === 'none') return null; // Do not log if no subject is selected (Choose subject / Add subject)
   const subjects = getSubjects();
-  const subject = subjects.find(s => s.id === subjectId) || subjects[0] || { id: 'math', name: 'Math' };
+  const subject = subjects.find(s => s.id === subjectId);
+  if (!subject) return null; // Only log for real, existing subjects
+
   let sessions = getSessions();
   const newSession = {
     id: String(Date.now() + '_' + Math.floor(Math.random() * 1000)),

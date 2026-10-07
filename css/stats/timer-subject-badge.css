@@ -64,16 +64,23 @@
 }
 
 .timer-subject-dot {
-  width: 9px;
-  height: 9px;
+  width: 20px !important;
+  height: 20px !important;
   border-radius: 50%;
+  background: transparent !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   flex-shrink: 0;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  position: relative;
+  overflow: visible;
+  transition: none !important;
 }
 
 .timer-subject-dot.has-icon {
-  width: 20px;
-  height: 20px;
+  width: 20px !important;
+  height: 20px !important;
   border-radius: 0;
   background: transparent !important;
   box-shadow: none !important;
@@ -83,11 +90,68 @@
   flex-shrink: 0;
 }
 
-.timer-subject-dot.has-icon svg {
+.timer-subject-dot svg {
   width: 18px !important;
   height: 18px !important;
   display: block;
   flex-shrink: 0;
+}
+
+.timer-subject-dot-circle {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Snappy Smooth Icon Change Animation: First icon becomes smaller -> second icon enters already small -> second icon scales to normal state */
+.timer-subject-icon-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  will-change: transform, opacity;
+  transform-origin: center center;
+  transform: scale(1);
+  opacity: 1;
+}
+
+@keyframes timerIconScaleDown {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+}
+
+@keyframes timerIconScaleUp {
+  0% {
+    transform: scale(0.18);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.timer-subject-icon-content.icon-scale-down {
+  animation: timerIconScaleDown 0.075s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.timer-subject-icon-content.icon-scale-init {
+  transform: scale(0.18) !important;
+  opacity: 0 !important;
+}
+
+.timer-subject-icon-content.icon-scale-up {
+  animation: timerIconScaleUp 0.095s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .timer-subject-name {
@@ -147,17 +211,18 @@
   position: absolute;
   top: calc(100% + 8px);
   left: 50%;
-  transform: translateX(-50%) translateY(6px) scale(0.96);
-  width: 220px;
+  transform: translate3d(-50%, 6px, 0) scale(0.96);
+  width: 236px;
   background: #1a2228;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 16px;
-  padding: 8px;
+  padding: 6px;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.18s ease;
+  will-change: transform, opacity;
+  transition: opacity 0.14s ease, transform 0.14s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.14s ease;
   z-index: 1000;
 }
 
@@ -171,27 +236,27 @@
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transform: translateX(-50%) translateY(0) scale(1);
+  transform: translate3d(-50%, 0, 0) scale(1);
 }
 
 /* Isolated Scroll Container */
 .timer-subject-dropdown-list {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  max-height: 220px;
+  gap: 2px;
+  max-height: 224px;
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
-  scrollbar-color: #28333c transparent;
-  padding: 3px 3px 2px 3px;
+  scrollbar-color: #374654 transparent;
+  padding: 2px;
 }
 
-/* Custom Webkit Scrollbar (Matching Custom Mode card surface & clean subtle slider) */
+/* Custom Webkit Scrollbar */
 .timer-subject-dropdown-list::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
 }
 
 .timer-subject-dropdown-list::-webkit-scrollbar-track {
@@ -200,15 +265,13 @@
 }
 
 .timer-subject-dropdown-list::-webkit-scrollbar-thumb {
-  background: #242f38;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #2b3844;
   border-radius: 999px;
   transition: background 0.15s ease;
 }
 
 .timer-subject-dropdown-list::-webkit-scrollbar-thumb:hover {
-  background: #374654;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: #415364;
 }
 
 .timer-subject-dropdown-list::-webkit-scrollbar-corner {
@@ -226,15 +289,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px;
-  border-radius: 10px;
+  padding: 0 8px;
+  border-radius: 9px;
   background: transparent;
   border: 1px solid transparent;
   color: #ffffff !important;
   font-size: 13.5px;
   font-weight: 500;
   width: 100%;
-  height: 42px;
+  height: 38px;
   box-sizing: border-box;
   cursor: pointer;
   position: relative;
@@ -265,17 +328,17 @@
 .timer-subject-item-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
-  flex: 1;
+  flex: 1 1 auto;
   overflow: hidden;
   pointer-events: none;
 }
 
 .timer-subject-item-icon-wrap {
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,8 +347,8 @@
 }
 
 .timer-subject-item-icon-wrap svg {
-  width: 17px !important;
-  height: 17px !important;
+  width: 16px !important;
+  height: 16px !important;
   display: block;
 }
 
@@ -304,8 +367,10 @@
   justify-content: center;
   position: relative;
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  max-width: 24px;
   margin-left: 6px;
 }
 
@@ -323,22 +388,21 @@
 /* X Delete button on hover */
 .timer-subject-item-delete-btn {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border-radius: 6px;
   background: transparent;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
   border: none;
-  transition: opacity 0.12s ease, color 0.12s ease, background 0.12s ease, transform 0.12s ease;
+  transition: opacity 0.12s ease, color 0.12s ease, background 0.12s ease;
 }
 
 .timer-subject-dropdown-item:hover .timer-subject-item-delete-btn,
@@ -355,7 +419,6 @@
 .timer-subject-item-delete-btn:hover {
   color: #ef4444;
   background: rgba(239, 68, 68, 0.16);
-  transform: scale(1.1);
 }
 
 [data-theme="light"] .timer-subject-item-delete-btn {
@@ -367,22 +430,21 @@
   background: rgba(239, 68, 68, 0.12);
 }
 
-/* Fast and smooth GPU-accelerated delete animation */
+/* Fast and smooth delete animation without lateral drift */
 .timer-subject-dropdown-item.is-deleting {
   pointer-events: none !important;
   opacity: 0 !important;
-  transform: translate3d(0, -2px, 0) scale(0.85) !important;
   max-height: 0 !important;
   height: 0 !important;
   min-height: 0 !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-  margin-top: -3px !important;
+  margin-top: 0 !important;
   margin-bottom: 0 !important;
   border-width: 0 !important;
   border-color: transparent !important;
   overflow: hidden !important;
-  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.2, 0, 0, 1), height 0.2s cubic-bezier(0.2, 0, 0, 1), padding 0.2s cubic-bezier(0.2, 0, 0, 1), margin 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
+  transition: opacity 0.14s ease, height 0.14s ease, padding 0.14s ease, margin 0.14s ease !important;
 }
 
 .timer-subject-dropdown-divider {
@@ -440,4 +502,77 @@
 .timer-subject-dropdown-add-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff !important;
+}
+
+/* Top Notification Alert (e.g. Choose subject to edit) */
+.top-alert-notification {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  background: #182026;
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  z-index: 999999;
+  opacity: 0;
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+[data-theme="light"] .top-alert-notification {
+  background: var(--surface, #ffffff);
+  color: var(--text, #0f172a);
+  border-color: var(--border, rgba(0, 0, 0, 0.12));
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.top-alert-notification.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.top-alert-notification.hidden-state {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-22px);
+  pointer-events: none;
+}
+
+/* Attention-grabbing Shake Animation when user repeatedly clicks without selection */
+@keyframes topAlertShake {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+  15% {
+    transform: translateX(calc(-50% - 9px)) translateY(0) rotate(-1.5deg);
+  }
+  30% {
+    transform: translateX(calc(-50% + 9px)) translateY(0) rotate(1.5deg);
+  }
+  45% {
+    transform: translateX(calc(-50% - 7px)) translateY(0) rotate(-1deg);
+  }
+  60% {
+    transform: translateX(calc(-50% + 7px)) translateY(0) rotate(1deg);
+  }
+  75% {
+    transform: translateX(calc(-50% - 3px)) translateY(0) rotate(-0.5deg);
+  }
+  90% {
+    transform: translateX(calc(-50% + 3px)) translateY(0) rotate(0.5deg);
+  }
+}
+
+.top-alert-notification.shake {
+  animation: topAlertShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }

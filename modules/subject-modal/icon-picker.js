@@ -1,6 +1,5 @@
 import { modalState } from './state.js';
 import { updateLivePreview } from './preview.js';
-import { closeColorPickerPopover } from './color-picker.js';
 import { SUBJECT_CATEGORIES, SUBJECTS_DATABASE, getSubjectSvg } from '../subjects-db.js';
 import { getLang, tr } from '../i18n.js';
 
@@ -30,16 +29,25 @@ export function getSubjectItemById(iconId) {
   return null;
 }
 
-// Generate randomized icons from diverse categories across SUBJECTS_DATABASE
+// Generate randomized icons from diverse categories across SUBJECTS_DATABASE, always guaranteeing the 'other' icon is included
 export function generateRandomSessionIcons(count = 7) {
-  const categories = [...SUBJECT_CATEGORIES].sort(() => Math.random() - 0.5);
+  const otherItem = getSubjectItemById('other');
   const picked = [];
   const usedSubjectIds = new Set();
   const usedCategoryIds = new Set();
 
+  if (otherItem) {
+    picked.push(otherItem);
+    usedSubjectIds.add('other');
+    usedCategoryIds.add('other');
+  }
+
+  // Shuffle categories excluding 'other'
+  const categories = SUBJECT_CATEGORIES.filter(c => c.id !== 'other').sort(() => Math.random() - 0.5);
+
   for (const cat of categories) {
     if (picked.length >= count) break;
-    const catSubjects = SUBJECTS_DATABASE.filter(s => (s.categoryId === cat.id || s.category === cat.id) && s.svg);
+    const catSubjects = SUBJECTS_DATABASE.filter(s => (s.categoryId === cat.id || s.category === cat.id) && s.svg && s.id !== 'other');
     if (catSubjects.length > 0) {
       const available = catSubjects.filter(s => !usedSubjectIds.has(s.id));
       const pool = available.length > 0 ? available : catSubjects;
@@ -72,7 +80,8 @@ export function generateRandomSessionIcons(count = 7) {
     }
   }
 
-  return picked;
+  // Randomize the order of picked icons so 'other' icon's slot is also randomly positioned
+  return picked.sort(() => Math.random() - 0.5);
 }
 
 function savePresetIconsToStorage(list) {
@@ -82,7 +91,7 @@ function savePresetIconsToStorage(list) {
   } catch (e) {}
 }
 
-// Initialize recent preset icons from storage or generate fresh
+// Initialize recent preset icons from storage or generate fresh, ensuring 'other' is always included
 export function initRecentPresetIcons() {
   let savedIds = [];
   try {
@@ -103,6 +112,19 @@ export function initRecentPresetIcons() {
           usedIds.add(id);
         }
       }
+    }
+  }
+
+  // Always ensure 'other' icon is in the list
+  if (!usedIds.has('other')) {
+    const otherItem = getSubjectItemById('other');
+    if (otherItem) {
+      if (result.length >= 7) {
+        result[result.length - 1] = otherItem;
+      } else {
+        result.push(otherItem);
+      }
+      usedIds.add('other');
     }
   }
 
@@ -143,7 +165,7 @@ export function getSessionPresetIcons() {
   return sessionPresetIcons;
 }
 
-// Shifts newly used icon to slot 1, pushes existing right, deletes the last one
+// Shifts newly used icon to slot 1, pushes existing right, preserves 'other' icon
 export function recordUsedIcon(iconId) {
   if (!iconId) return;
   const item = getSubjectItemById(iconId);
@@ -157,14 +179,34 @@ export function recordUsedIcon(iconId) {
   sessionPresetIcons.unshift(item);
 
   if (sessionPresetIcons.length > 7) {
-    sessionPresetIcons = sessionPresetIcons.slice(0, 7);
+    // If length exceeds 7, remove the last non-'other' icon so 'other' is never lost
+    const otherIndex = sessionPresetIcons.findIndex(p => p.id === 'other');
+    if (otherIndex === -1) {
+      sessionPresetIcons = sessionPresetIcons.slice(0, 6);
+      const otherItem = getSubjectItemById('other');
+      if (otherItem) sessionPresetIcons.push(otherItem);
+    } else {
+      while (sessionPresetIcons.length > 7) {
+        let removeIdx = -1;
+        for (let i = sessionPresetIcons.length - 1; i >= 0; i--) {
+          if (sessionPresetIcons[i].id !== 'other') {
+            removeIdx = i;
+            break;
+          }
+        }
+        if (removeIdx !== -1) {
+          sessionPresetIcons.splice(removeIdx, 1);
+        } else {
+          sessionPresetIcons.pop();
+        }
+      }
+    }
   }
 
   savePresetIconsToStorage(sessionPresetIcons);
 }
 
 export function openIconPickerPopover() {
-  closeColorPickerPopover();
   const popover = document.getElementById('subject-icon-picker-popover');
   if (!popover) return;
 
@@ -174,6 +216,10 @@ export function openIconPickerPopover() {
   }
 
   const searchInput = document.getElementById('icon-picker-search-input');
+  const clearBtn = document.getElementById('icon-picker-clear-btn');
+  if (clearBtn) {
+    clearBtn.style.display = 'none';
+  }
   if (searchInput) {
     searchInput.placeholder = tr().searchIconPlaceholder || 'Qidirish...';
     searchInput.value = '';
@@ -183,6 +229,15 @@ export function openIconPickerPopover() {
   renderIconPickerContent('');
   popover.classList.add('open');
   popover.setAttribute('aria-hidden', 'false');
+
+  if (modalState.selectedIcon) {
+    setTimeout(() => {
+      const selectedItem = popover.querySelector(`.icon-picker-item[data-item-id="${modalState.selectedIcon}"]`);
+      if (selectedItem) {
+        selectedItem.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }, 80);
+  }
 }
 
 export function closeIconPickerPopover() {
@@ -206,17 +261,24 @@ function initScrollAreaDelegation(scrollArea) {
     const localizedItemName = btn.dataset.itemName;
     if (!itemId) return;
 
+    const nameInput = document.getElementById('subject-modal-name-input');
+    const currentInputVal = nameInput ? nameInput.value.trim() : '';
+
     if (modalState.selectedIcon === itemId) {
       modalState.selectedIcon = '';
       modalState.isCustomIconSelected = false;
+      if (nameInput && localizedItemName && currentInputVal === localizedItemName.trim()) {
+        nameInput.value = '';
+        nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
     } else {
       modalState.selectedIcon = itemId;
       modalState.isCustomIconSelected = true;
       recordUsedIcon(itemId);
 
-      const nameInput = document.getElementById('subject-modal-name-input');
-      if (nameInput && localizedItemName) {
+      if (nameInput && !currentInputVal && localizedItemName) {
         nameInput.value = localizedItemName;
+        nameInput.dispatchEvent(new Event('input', { bubbles: true }));
       }
     }
 
@@ -232,7 +294,6 @@ export function renderIconPickerContent(query = '') {
 
   initScrollAreaDelegation(scrollArea);
 
-  scrollArea.innerHTML = '';
   const q = query.trim().toLowerCase();
   const lang = getLang();
   const fragment = document.createDocumentFragment();
@@ -286,15 +347,15 @@ export function renderIconPickerContent(query = '') {
 
   if (fragment.children.length === 0) {
     const emptyEl = document.createElement('div');
-    emptyEl.style.padding = '20px 10px';
+    emptyEl.style.padding = '24px 10px';
     emptyEl.style.textAlign = 'center';
-    emptyEl.style.fontSize = '12px';
+    emptyEl.style.fontSize = '12.5px';
     emptyEl.style.color = 'var(--text-muted)';
     emptyEl.textContent = tr().nothingFound || 'Hech narsa topilmadi';
     fragment.appendChild(emptyEl);
   }
 
-  scrollArea.appendChild(fragment);
+  scrollArea.replaceChildren(fragment);
 }
 
 export function renderIconSelector() {
@@ -316,7 +377,7 @@ export function renderIconSelector() {
 
   // If a custom subject icon is selected, show its SVG in the custom button; otherwise show the custom picker plus/circle icon
   const currentCustomSvg = (!isPresetIcon && getSubjectSvg(modalState.selectedIcon)) || `
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="16"></line>
       <line x1="8" y1="12" x2="16" y2="12"></line>
@@ -353,18 +414,25 @@ export function renderIconSelector() {
     btn.innerHTML = item.svg;
 
     btn.addEventListener('click', () => {
+      const nameInput = document.getElementById('subject-modal-name-input');
+      const currentInputVal = nameInput ? nameInput.value.trim() : '';
+      const itemName = item.names?.[lang] || item.names?.uz || item.names?.ru || item.names?.en || item.id;
+
       if (modalState.selectedIcon === item.id && !modalState.isCustomIconSelected) {
         modalState.selectedIcon = '';
         modalState.isCustomIconSelected = false;
+        if (nameInput && itemName && currentInputVal === itemName.trim()) {
+          nameInput.value = '';
+          nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
       } else {
         modalState.selectedIcon = item.id;
         modalState.isCustomIconSelected = false;
         recordUsedIcon(item.id);
 
-        const nameInput = document.getElementById('subject-modal-name-input');
-        const itemName = item.names?.[lang] || item.names?.uz || item.names?.ru || item.names?.en || item.id;
-        if (nameInput && itemName) {
+        if (nameInput && !currentInputVal && itemName) {
           nameInput.value = itemName;
+          nameInput.dispatchEvent(new Event('input', { bubbles: true }));
         }
       }
 

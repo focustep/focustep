@@ -3,9 +3,9 @@ export const TECH_SUBJECTS = [
     id: 'ai',
     categoryId: 'tech',
     names: {
-      uz: "Sun’iy intellekt (AI)",
-      ru: "Искусственный интеллект (ИИ)",
-      en: "Artificial Intelligence (AI)"
+      uz: "AI (Sun'iy intellekt)",
+      ru: "ИИ",
+      en: "AI"
     },
     aliases: ['ai', 'gemini', 'suniy intellekt', 'sun\'iy intellekt', 'sun’iy intellekt', 'ии', 'искусственный интеллект', 'artificial intelligence', 'sparkles'],
     defaultColor: '#3b82f6',
@@ -87,11 +87,11 @@ export const TECH_SUBJECTS = [
     id: 'mobile_dev',
     categoryId: 'tech',
     names: {
-      uz: "Mobil ilovalar yaratish",
-      ru: "Разработка мобильных приложений",
-      en: "Mobile App Development"
+      uz: "Mobil dasturlash",
+      ru: "Мобильная разработка",
+      en: "Mobile Dev"
     },
-    aliases: ['mobil ilovalar yaratish', 'mobil dasturlash', 'mobile app development', 'мобильная разработка', 'flutter', 'react native', 'ios', 'android'],
+    aliases: ['mobil ilovalar yaratish', 'mobil dasturlash', 'mobile app development', 'mobile dev', 'мобильная разработка', 'flutter', 'react native', 'ios', 'android'],
     defaultColor: '#8b5cf6',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="3" ry="3"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`
   },
@@ -111,11 +111,11 @@ export const TECH_SUBJECTS = [
     id: 'blockchain',
     categoryId: 'tech',
     names: {
-      uz: "Blokcheyn va kriptovalyutalar",
-      ru: "Блокчейн и криптовалюты",
-      en: "Blockchain & Cryptocurrencies"
+      uz: "Blokcheyn va Kripto",
+      ru: "Блокчейн и крипта",
+      en: "Blockchain & Crypto"
     },
-    aliases: ['blokcheyn', 'kriptovalyuta', 'blokcheyn va kriptovalyutalar', 'blockchain', 'crypto', 'блокчейн', 'криптовалюта'],
+    aliases: ['blokcheyn', 'kriptovalyuta', 'blokcheyn va kriptovalyutalar', 'blokcheyn va kripto', 'blockchain', 'crypto', 'blockchain & crypto', 'блокчейн', 'криптовалюта', 'блокчейн и крипта'],
     defaultColor: '#f59e0b',
     svg: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9 7h3.8a2.5 2.5 0 0 1 0 5H9"/><path d="M9 12h4.2a2.5 2.5 0 0 1 0 5H9"/><line x1="9" y1="7" x2="9" y2="17"/></svg>`
   },

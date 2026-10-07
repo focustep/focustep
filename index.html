@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FocusStep - Study Timer</title>
+  <title>Focustep</title>
   <meta name="description" content="Clean, modular study timer application with Pomodoro cycles, streak calendar, task lists, and focus modes.">
-  <meta property="og:title" content="FocusStep - Study Timer">
+  <meta property="og:title" content="Focustep">
   <meta property="og:description" content="Clean, modular study timer application with Pomodoro cycles, streak calendar, task lists, and focus modes.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -266,7 +266,7 @@
             <svg class="timer-subject-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </div>
 
-          <button type="button" class="timer-subject-edit-btn" id="timer-subject-edit-btn" data-tooltip="Quick edit in Stats & Goals" aria-label="Edit subjects in Stats & Goals">
+          <button type="button" class="timer-subject-edit-btn" id="timer-subject-edit-btn" data-tooltip="Subject Editor" aria-label="Subject Editor">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -660,7 +660,7 @@
     <div class="subject-modal-header">
       <h3 id="subject-modal-title" class="subject-modal-title">Add New Subject</h3>
       <button type="button" class="subject-modal-close-btn" id="subject-modal-close-btn" aria-label="Close">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -678,11 +678,17 @@
 
       <!-- 1. Subject Name Input with Auto-suggest -->
       <div class="subject-modal-field">
-        <label for="subject-modal-name-input" class="subject-modal-label" id="subject-modal-name-label">SUBJECT NAME</label>
+        <div class="subject-modal-label-row">
+          <div class="subject-modal-label-group-left">
+            <label for="subject-modal-name-input" class="subject-modal-label" id="subject-modal-name-label">SUBJECT NAME</label>
+            <span class="subject-modal-char-counter" id="subject-modal-char-counter">0/20</span>
+          </div>
+          <span class="subject-modal-error-text" id="subject-modal-error-text" style="display: none;"></span>
+        </div>
         <div class="subject-modal-input-wrap" id="subject-modal-input-wrap">
-          <input type="text" id="subject-modal-name-input" class="subject-modal-input" placeholder="e.g. AI, Python, Kiberxavfsizlik" maxlength="32" autocomplete="off" />
+          <input type="text" id="subject-modal-name-input" class="subject-modal-input" placeholder="e.g. AI, Python, Kiberxavfsizlik" maxlength="20" autocomplete="off" />
           <button type="button" class="subject-input-clear-btn" id="subject-name-clear-btn" title="Tozalash" aria-label="Tozalash">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision">
               <polyline points="3 6 5 6 21 6"></polyline>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
               <line x1="10" y1="11" x2="10" y2="17"></line>
@@ -698,12 +704,6 @@
       <div class="subject-modal-field">
         <div class="subject-modal-label-row">
           <span class="subject-modal-label" id="subject-modal-color-label">COLOR THEME</span>
-          <button type="button" class="subject-modal-reload-btn" id="subject-color-reset-btn" title="Ranglarni tiklash" aria-label="Ranglarni tiklash">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-              <path d="M3 3v5h5"></path>
-            </svg>
-          </button>
         </div>
         <div class="subject-modal-colors" id="subject-modal-colors">
           <!-- Injected via subject-modal.js -->
@@ -724,59 +724,33 @@
       <button type="button" class="subject-modal-btn save" id="subject-modal-save-btn">Create Subject</button>
     </div>
 
-    <!-- Custom Color Picker Popover (Positioned to the left of the modal) -->
-    <div class="subject-color-picker-popover" id="subject-color-picker-popover" aria-hidden="true">
-      <div class="color-picker-header">
-        <span class="color-picker-title">Color Palette</span>
-        <button type="button" class="color-picker-close-btn" id="color-picker-close-btn" aria-label="Close picker">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-      
-      <!-- 2D Saturation / Value Gradient Canvas -->
-      <div class="color-picker-canvas-wrap" id="color-picker-canvas-wrap">
-        <canvas id="color-picker-canvas" class="color-picker-canvas" width="220" height="120"></canvas>
-        <div class="color-picker-cursor" id="color-picker-cursor"></div>
-      </div>
-
-      <!-- Rainbow Hue Slider -->
-      <div class="color-picker-slider-row">
-        <input type="range" id="color-picker-hue-slider" class="color-picker-hue-slider" min="0" max="360" value="260" aria-label="Hue Slider" />
-      </div>
-
-      <!-- Bottom Controls: Preview Dot + HEX input + Select button -->
-      <div class="color-picker-footer-row">
-        <div class="color-picker-preview-dot" id="color-picker-preview-dot"></div>
-        <div class="color-picker-hex-wrap">
-          <span class="color-picker-hex-hash">#</span>
-          <input type="text" id="color-picker-hex-input" class="color-picker-hex-input" value="6366F1" maxlength="6" spellcheck="false" autocomplete="off" />
-        </div>
-        <button type="button" id="color-picker-apply-btn" class="color-picker-apply-btn">Apply</button>
-      </div>
-    </div>
-
     <!-- Custom Icon Picker Popover (Positioned to the right of the modal) -->
     <div class="subject-icon-picker-popover" id="subject-icon-picker-popover" aria-hidden="true">
       <div class="icon-picker-header">
         <div class="icon-picker-title-row">
           <span class="icon-picker-title" data-i18n="chooseCustomIcon">Maxsus ikonka tanlash</span>
           <button type="button" class="icon-picker-close-btn" id="icon-picker-close-btn" aria-label="Close icon picker">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision">
               <line x1="18" y1="6" x2="6" y2="18"/>
               <line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
           </button>
         </div>
         <!-- Search input for icons -->
-        <div class="icon-picker-search-wrap">
-          <svg class="icon-picker-search-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="icon-picker-search-wrap" id="icon-picker-search-wrap">
+          <svg class="icon-picker-search-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision">
             <circle cx="11" cy="11" r="8"/>
             <line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
           <input type="text" id="icon-picker-search-input" class="icon-picker-search-input" data-i18n-placeholder="searchIconPlaceholder" placeholder="Qidirish..." autocomplete="off" />
+          <button type="button" class="icon-picker-clear-btn" id="icon-picker-clear-btn" title="Tozalash (Ctrl+Z qaytarish)" aria-label="Tozalash" style="display: none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </button>
         </div>
       </div>
 

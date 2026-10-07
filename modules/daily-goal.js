@@ -2,6 +2,7 @@ import { getSubjects, getActiveSubjectId, setActiveSubjectId, getGoalForSubject,
 import { openSubjectModal } from './subject-modal.js';
 import { renderTimerSubjectBadge } from './timer-subject-badge.js';
 import { getSubjectSvg } from './subjects-db.js';
+import { tr } from './i18n.js';
 
 let isWheelOpen = false;
 let isSubjectDropdownOpen = false;
@@ -15,6 +16,7 @@ function formatGoalHM(minutes) {
 }
 
 function getTodaySubjectStudiedMinutes(subjectId) {
+  if (!subjectId) return 0;
   const sessions = getSessions();
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0).getTime();
@@ -32,7 +34,47 @@ function getTodaySubjectStudiedMinutes(subjectId) {
 export function renderDailyGoalCard() {
   const subjects = getSubjects();
   const activeSubjectId = getActiveSubjectId();
-  const currentSubject = subjects.find(s => s.id === activeSubjectId) || subjects[0] || { id: 'math', name: 'Math', color: '#7c3aed' };
+  const currentSubject = subjects.find(s => s.id === activeSubjectId);
+  
+  // Update UI Elements
+  const ringSvg = document.getElementById('daily-goal-ring-circle');
+  const percentEl = document.getElementById('daily-goal-percent-text');
+  const timeTextEl = document.getElementById('daily-goal-time-text');
+  const subjectDot = document.getElementById('daily-goal-subject-dot');
+  const subjectName = document.getElementById('daily-goal-subject-name');
+
+  if (!currentSubject) {
+    const isNoSubjects = subjects.length === 0;
+    const labelText = isNoSubjects 
+      ? (tr().addSubject || (tr().localeCode === 'ru-RU' ? 'Добавить предмет' : tr().localeCode === 'uz-UZ' ? "Fan qo'shish" : 'Add subject'))
+      : (tr().chooseSubject || (tr().localeCode === 'ru-RU' ? 'Выбрать предмет' : tr().localeCode === 'uz-UZ' ? "Fan tanlash" : 'Choose subject'));
+
+    if (subjectDot) {
+      subjectDot.className = 'daily-goal-subject-dot';
+      subjectDot.innerHTML = '';
+      subjectDot.style.backgroundColor = '#4ec9b0';
+      subjectDot.style.boxShadow = '0 0 10px rgba(78, 201, 176, 0.6)';
+    }
+    if (subjectName) {
+      subjectName.textContent = labelText;
+    }
+    if (percentEl) {
+      percentEl.textContent = '0%';
+    }
+    if (timeTextEl) {
+      timeTextEl.textContent = '0m / 0m';
+    }
+    if (ringSvg) {
+      const circumference = 2 * Math.PI * 40;
+      ringSvg.style.stroke = '#4ec9b0';
+      ringSvg.style.strokeDasharray = `${circumference}`;
+      ringSvg.style.strokeDashoffset = `${circumference}`;
+    }
+
+    renderSubjectDropdownList();
+    renderTimerSubjectBadge();
+    return;
+  }
   
   const targetMinutes = getGoalForSubject(currentSubject.id);
   const studiedMinutes = getTodaySubjectStudiedMinutes(currentSubject.id);
@@ -42,14 +84,6 @@ export function renderDailyGoalCard() {
   if (targetMinutes > 0) {
     percent = Math.min(100, Math.round((studiedMinutes / targetMinutes) * 100));
   }
-
-  // Update UI Elements
-  const ringSvg = document.getElementById('daily-goal-ring-circle');
-  const percentEl = document.getElementById('daily-goal-percent-text');
-  const timeTextEl = document.getElementById('daily-goal-time-text');
-  const subjectBtn = document.getElementById('daily-goal-subject-trigger');
-  const subjectDot = document.getElementById('daily-goal-subject-dot');
-  const subjectName = document.getElementById('daily-goal-subject-name');
   
   if (subjectDot) {
     const svg = getSubjectSvg(currentSubject.icon || currentSubject.id);
@@ -192,6 +226,10 @@ let selectedMinutes = 0;
 
 export function openGoalTimeWheel() {
   const activeSubjectId = getActiveSubjectId();
+  if (!activeSubjectId) {
+    toggleSubjectDropdown();
+    return;
+  }
   const currentGoalMins = getGoalForSubject(activeSubjectId);
   selectedHours = Math.floor(currentGoalMins / 60);
   selectedMinutes = Math.round((currentGoalMins % 60) / 5) * 5;
@@ -376,8 +414,10 @@ export function initDailyGoalCard() {
   if (saveGoalBtn) {
     saveGoalBtn.addEventListener('click', () => {
       const activeSubjectId = getActiveSubjectId();
-      const totalMins = selectedHours * 60 + selectedMinutes;
-      setGoalForSubject(activeSubjectId, totalMins);
+      if (activeSubjectId) {
+        const totalMins = selectedHours * 60 + selectedMinutes;
+        setGoalForSubject(activeSubjectId, totalMins);
+      }
       closeGoalTimeWheel();
       renderDailyGoalCard();
     });

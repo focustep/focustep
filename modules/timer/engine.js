@@ -27,7 +27,9 @@ let activeSessionAccumulatedSec = 0;
 function checkAndLogActiveSession() {
   if (activeSessionAccumulatedSec >= 1) {
     const activeSubjId = getActiveSubjectId();
-    logSession(activeSubjId, activeSessionAccumulatedSec);
+    if (activeSubjId && activeSubjId !== 'none') {
+      logSession(activeSubjId, activeSessionAccumulatedSec);
+    }
     activeSessionAccumulatedSec = 0;
   }
 }
@@ -40,11 +42,15 @@ if (typeof window !== 'undefined') {
 
 export function saveTimerState() {
   try {
-    localStorage.setItem(todayKey('timer'), JSON.stringify({
-      remaining: timerState.remaining,
-      total: timerState.total,
-      extraAdded: timerState.extraAdded
-    }));
+    const activeSubjId = getActiveSubjectId();
+    // Only write day progress/stats/calendar data when a real subject is chosen
+    if (activeSubjId && activeSubjId !== 'none') {
+      localStorage.setItem(todayKey('timer'), JSON.stringify({
+        remaining: timerState.remaining,
+        total: timerState.total,
+        extraAdded: timerState.extraAdded
+      }));
+    }
   } catch(e){}
   notifyStateChange();
 }

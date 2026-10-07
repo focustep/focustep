@@ -5,12 +5,13 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-  max-height: 210px;
+  max-height: 220px;
   overflow-y: auto;
+  overflow-x: hidden;
   background: #182026;
   border: 1.5px solid rgba(255, 255, 255, 0.16);
   border-radius: 14px;
-  padding: 6px;
+  padding: 6px 4px 6px 6px;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 120;
   opacity: 0;
@@ -20,6 +21,13 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  transform: translateZ(0);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
 }
 
 .subject-name-autosuggest.open {
@@ -32,14 +40,44 @@
   background: var(--surface);
   border-color: var(--border);
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.06);
+  scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
+}
+
+/* Custom Sleek Oval Scrollbar matching Choose Custom Icon popover */
+.subject-name-autosuggest::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.subject-name-autosuggest::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 999px;
+  margin: 4px 0;
+}
+
+.subject-name-autosuggest::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  transition: background 0.15s ease;
+}
+
+.subject-name-autosuggest::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.38);
+}
+
+[data-theme="light"] .subject-name-autosuggest::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.22);
+}
+
+[data-theme="light"] .subject-name-autosuggest::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.38);
 }
 
 .subject-autosuggest-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 8px 10px;
+  justify-content: flex-start;
+  padding: 6px 8px;
   border-radius: 10px;
   background: transparent;
   border: none;
@@ -49,6 +87,7 @@
   color: var(--text);
   font-family: inherit;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .subject-autosuggest-item:hover,
@@ -64,14 +103,14 @@
 .subject-autosuggest-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
   flex: 1;
 }
 
 .subject-autosuggest-icon-badge {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -84,13 +123,7 @@
 .subject-autosuggest-icon-badge svg {
   width: 16px;
   height: 16px;
-}
-
-.subject-autosuggest-text {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  gap: 1px;
+  display: block;
 }
 
 .subject-autosuggest-name {
@@ -100,23 +133,30 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
+  margin: 0;
 }
 
-.subject-autosuggest-sub {
-  font-size: 11px;
+.subject-autosuggest-empty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
   color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.35;
+  user-select: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.subject-autosuggest-category-tag {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: rgba(78, 201, 176, 0.12);
+.subject-autosuggest-empty-icon {
+  flex-shrink: 0;
+  opacity: 0.75;
   color: #4ec9b0;
-  border: 1px solid rgba(78, 201, 176, 0.25);
-  white-space: nowrap;
 }
+
+[data-theme="light"] .subject-autosuggest-empty {
+  background: rgba(0, 0, 0, 0.03);
+}
+

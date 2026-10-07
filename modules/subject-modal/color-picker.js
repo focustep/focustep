@@ -1,242 +1,43 @@
-import { PRESET_COLORS as DEFAULT_PRESET_COLORS } from './constants.js';
+import { PRESET_COLORS } from './constants.js';
 import { modalState } from './state.js';
-import { hsvToHex, hexToHsv } from './color-utils.js';
 import { updateLivePreview } from './preview.js';
 import { closeIconPickerPopover } from './icon-picker.js';
+import { isWhiteColor } from './color-utils.js';
 
-const COLOR_STORAGE_KEY = 'focustep_recent_preset_colors';
-
-function savePresetColorsToStorage(list) {
-  try {
-    localStorage.setItem(COLOR_STORAGE_KEY, JSON.stringify(list));
-  } catch (e) {}
-}
-
-export function initRecentPresetColors() {
-  let savedColors = [];
-  try {
-    const raw = localStorage.getItem(COLOR_STORAGE_KEY);
-    if (raw) savedColors = JSON.parse(raw);
-  } catch (e) {}
-
-  const result = [];
-  const used = new Set();
-
-  if (Array.isArray(savedColors) && savedColors.length > 0) {
-    for (const c of savedColors) {
-      if (result.length >= 9) break;
-      if (typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c)) {
-        const norm = c.toLowerCase();
-        if (!used.has(norm)) {
-          result.push(norm);
-          used.add(norm);
-        }
-      }
-    }
-  }
-
-  // Fill up to 9 colors with default preset colors without randomizing
-  for (const c of DEFAULT_PRESET_COLORS) {
-    if (result.length >= 9) break;
-    const norm = c.toLowerCase();
-    if (!used.has(norm)) {
-      result.push(norm);
-      used.add(norm);
-    }
-  }
-
-  savePresetColorsToStorage(result);
-  return result;
-}
-
-export let sessionPresetColors = initRecentPresetColors();
+export const sessionPresetColors = [...PRESET_COLORS];
 
 export function getSessionPresetColors() {
   return sessionPresetColors;
 }
 
-// Shifts newly used color to slot 1, pushes existing right, deletes the last one
 export function recordUsedColor(hex) {
-  if (!hex || typeof hex !== 'string') return;
-  const norm = hex.trim().toLowerCase();
-  if (!/^#[0-9a-fA-F]{6}$/.test(norm)) return;
-
-  const existingIndex = sessionPresetColors.findIndex(c => c.toLowerCase() === norm);
-  if (existingIndex !== -1) {
-    sessionPresetColors.splice(existingIndex, 1);
-  }
-
-  sessionPresetColors.unshift(norm);
-
-  if (sessionPresetColors.length > 9) {
-    sessionPresetColors = sessionPresetColors.slice(0, 9);
-  }
-
-  savePresetColorsToStorage(sessionPresetColors);
+  // No-op: Palette colors remain static and curated
 }
 
-// Resets recent colors back to the original 9 static preset colors
 export function resetPresetColorsToDefault() {
-  sessionPresetColors = [...DEFAULT_PRESET_COLORS.map(c => c.toLowerCase())];
-  savePresetColorsToStorage(sessionPresetColors);
-  modalState.selectedColor = sessionPresetColors[0];
+  modalState.selectedColor = PRESET_COLORS[0];
   modalState.isCustomSelected = false;
   renderPalette();
   updateLivePreview();
 }
 
-export function triggerDonutSpin(reverse = false) {
-  const donut = document.querySelector('.subject-custom-color-swatch .rainbow-donut-circle');
-  if (!donut) return;
-  donut.classList.remove('anim-spin', 'anim-spin-reverse');
-  void donut.offsetWidth;
-  donut.classList.add(reverse ? 'anim-spin-reverse' : 'anim-spin');
-  setTimeout(() => {
-    donut.classList.remove('anim-spin', 'anim-spin-reverse');
-  }, 750);
-}
-
 export function openColorPickerPopover() {
-  closeIconPickerPopover();
-  const popover = document.getElementById('subject-color-picker-popover');
-  if (!popover) return;
-
-  const hsv = hexToHsv(modalState.customColorValue);
-  modalState.pickerHue = hsv.h;
-  modalState.pickerSat = hsv.s;
-  modalState.pickerVal = hsv.v;
-
-  initColorPickerUI();
-  popover.classList.add('open');
-  popover.setAttribute('aria-hidden', 'false');
-  triggerDonutSpin(false);
+  // Popover removed
 }
 
 export function closeColorPickerPopover() {
-  const popover = document.getElementById('subject-color-picker-popover');
-  if (popover && popover.classList.contains('open')) {
-    popover.classList.remove('open');
-    popover.setAttribute('aria-hidden', 'true');
-    triggerDonutSpin(true);
-  }
+  // Popover removed
 }
 
-export function initColorPickerUI() {
-  const slider = document.getElementById('color-picker-hue-slider');
-  const hexInput = document.getElementById('color-picker-hex-input');
-  const previewDot = document.getElementById('color-picker-preview-dot');
-
-  if (slider) slider.value = Math.round(modalState.pickerHue);
-  if (hexInput) hexInput.value = modalState.customColorValue.replace(/^#/, '').toUpperCase();
-  if (previewDot) previewDot.style.backgroundColor = modalState.customColorValue;
-
-  drawCanvasGradient();
-  updateCanvasCursor();
-}
-
-export function drawCanvasGradient() {
-  const canvas = document.getElementById('color-picker-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-
-  const width = canvas.width;
-  const height = canvas.height;
-
-  ctx.clearRect(0, 0, width, height);
-
-  // 1. Horizontal gradient: White to Hue Color
-  const gradH = ctx.createLinearGradient(0, 0, width, 0);
-  gradH.addColorStop(0, '#ffffff');
-  gradH.addColorStop(1, `hsl(${modalState.pickerHue}, 100%, 50%)`);
-  ctx.fillStyle = gradH;
-  ctx.fillRect(0, 0, width, height);
-
-  // 2. Vertical gradient: Transparent to Black
-  const gradV = ctx.createLinearGradient(0, 0, 0, height);
-  gradV.addColorStop(0, 'rgba(0,0,0,0)');
-  gradV.addColorStop(1, '#000000');
-  ctx.fillStyle = gradV;
-  ctx.fillRect(0, 0, width, height);
-}
-
-export function updateCanvasCursor() {
-  const canvas = document.getElementById('color-picker-canvas');
-  const cursor = document.getElementById('color-picker-cursor');
-  if (!canvas || !cursor) return;
-
-  const rect = canvas.getBoundingClientRect();
-  if (!rect.width || !rect.height) return;
-
-  const rawX = modalState.pickerSat * rect.width;
-  const rawY = (1 - modalState.pickerVal) * rect.height;
-
-  const cursorRadius = 7;
-  const visualX = Math.max(cursorRadius, Math.min(rect.width - cursorRadius, rawX));
-  const visualY = Math.max(cursorRadius, Math.min(rect.height - cursorRadius, rawY));
-
-  cursor.style.left = `${visualX}px`;
-  cursor.style.top = `${visualY}px`;
-}
-
-export function handleCanvasPick(e) {
-  const canvas = document.getElementById('color-picker-canvas');
-  if (!canvas) return;
-
-  const rect = canvas.getBoundingClientRect();
-  if (!rect.width || !rect.height) return;
-
-  let clientX, clientY;
-  if (e.touches && e.touches.length > 0) {
-    clientX = e.touches[0].clientX;
-    clientY = e.touches[0].clientY;
-  } else if (e.changedTouches && e.changedTouches.length > 0) {
-    clientX = e.changedTouches[0].clientX;
-    clientY = e.changedTouches[0].clientY;
-  } else if (typeof e.clientX === 'number') {
-    clientX = e.clientX;
-    clientY = e.clientY;
-  } else {
-    return;
-  }
-
-  const rawX = clientX - rect.left;
-  const rawY = clientY - rect.top;
-
-  const clampedX = Math.max(0, Math.min(rect.width, rawX));
-  const clampedY = Math.max(0, Math.min(rect.height, rawY));
-
-  modalState.pickerSat = clampedX / rect.width;
-  modalState.pickerVal = 1 - (clampedY / rect.height);
-
-  const hex = hsvToHex(modalState.pickerHue, modalState.pickerSat, modalState.pickerVal);
-  setCustomColor(hex);
-
-  const cursor = document.getElementById('color-picker-cursor');
-  if (cursor) {
-    const cursorRadius = 7;
-    const visualX = Math.max(cursorRadius, Math.min(rect.width - cursorRadius, clampedX));
-    const visualY = Math.max(cursorRadius, Math.min(rect.height - cursorRadius, clampedY));
-    cursor.style.left = `${visualX}px`;
-    cursor.style.top = `${visualY}px`;
-  }
-}
-
-export function setCustomColor(hex, updatePaletteDom = false) {
-  modalState.customColorValue = hex;
+export function setCustomColor(hex) {
   modalState.selectedColor = hex;
-  modalState.isCustomSelected = true;
-
-  const hexInput = document.getElementById('color-picker-hex-input');
-  const previewDot = document.getElementById('color-picker-preview-dot');
-  if (hexInput) hexInput.value = hex.replace(/^#/, '').toUpperCase();
-  if (previewDot) previewDot.style.backgroundColor = hex;
-
   updateLivePreview();
-  if (updatePaletteDom) {
-    renderPalette();
-  }
+  renderPalette();
 }
+
+export function drawCanvasGradient() {}
+export function updateCanvasCursor() {}
+export function handleCanvasPick() {}
 
 export function renderPalette() {
   const paletteContainer = document.getElementById('subject-modal-colors');
@@ -244,56 +45,28 @@ export function renderPalette() {
 
   paletteContainer.innerHTML = '';
 
-  const isPresetColor = sessionPresetColors.some(c => c.toLowerCase() === (modalState.selectedColor || '').toLowerCase());
-  const isCustomActive = modalState.isCustomSelected || (!isPresetColor && modalState.selectedColor !== '');
-
-  // 1. Custom Rainbow Donut Swatch (First position in Row 1)
-  const customBtn = document.createElement('button');
-  customBtn.type = 'button';
-  customBtn.className = `subject-custom-color-swatch ${isCustomActive ? 'selected' : ''}`;
-  customBtn.setAttribute('aria-label', 'Custom Color');
-  customBtn.title = 'Choose custom color';
-
-  customBtn.innerHTML = `
-    <span class="rainbow-donut-circle"></span>
-  `;
-
-  customBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const popover = document.getElementById('subject-color-picker-popover');
-    const isOpen = popover && popover.classList.contains('open');
-
-    if (isOpen) {
-      closeColorPickerPopover();
-    } else {
-      modalState.isCustomSelected = true;
-      modalState.selectedColor = modalState.customColorValue;
-      updateLivePreview();
-      renderPalette();
-      openColorPickerPopover();
-    }
-  });
-
-  paletteContainer.appendChild(customBtn);
-
-  // 2. Preset Colors (Slots 2 to 10: 9 persistent colors, shifting on usage)
-  sessionPresetColors.forEach(color => {
+  PRESET_COLORS.forEach(color => {
     const sw = document.createElement('button');
     sw.type = 'button';
-    const isSelected = (!isCustomActive) && (color.toLowerCase() === (modalState.selectedColor || '').toLowerCase());
-    sw.className = `subject-color-swatch ${isSelected ? 'selected' : ''}`;
-    sw.style.backgroundColor = color;
-    sw.setAttribute('aria-label', color);
+    const isWhite = isWhiteColor(color);
+    const isSelected = (color.toLowerCase() === (modalState.selectedColor || '').toLowerCase()) ||
+                       (isWhite && isWhiteColor(modalState.selectedColor));
+    
+    sw.className = `subject-color-swatch ${isSelected ? 'selected' : ''} ${isWhite ? 'is-white-swatch' : ''}`;
+    sw.style.backgroundColor = isWhite ? '#ffffff' : color;
+    sw.setAttribute('aria-label', isWhite ? 'White' : color);
+    sw.setAttribute('data-color', isWhite ? '#ffffff' : color);
     
     if (isSelected) {
-      sw.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      const checkStroke = isWhite ? '#0f172a' : '#ffffff';
+      sw.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${checkStroke}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
     }
 
-    sw.addEventListener('click', () => {
+    sw.addEventListener('click', (e) => {
+      e.stopPropagation();
+      modalState.selectedColor = isWhite ? '#ffffff' : color;
       modalState.isCustomSelected = false;
-      modalState.selectedColor = color;
-      recordUsedColor(color);
-      closeColorPickerPopover();
+      closeIconPickerPopover();
       renderPalette();
       updateLivePreview();
     });

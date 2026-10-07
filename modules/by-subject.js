@@ -214,7 +214,8 @@ export function renderBySubjectCard() {
       <div class="by-subject-chips-grid">
         ${subjectStats.map(item => {
           const color = item.color || '#4ec9b0';
-          const iconHtml = getSubjectSvg(item.icon) || getSubjectSvg(item.id) || standardIcons['book'] || '';
+          const svg = item.icon ? getSubjectSvg(item.icon) : (item.id === 'other' || item.id === 'math' || item.id === 'english' || item.id === 'physics' ? getSubjectSvg(item.id) : null);
+          const iconHtml = svg ? svg : `<span style="width: 8px; height: 8px; border-radius: 50%; background-color: ${color}; box-shadow: 0 0 6px ${color}88;"></span>`;
           const subjDisplayName = getSubjectName(item);
           return `
             <div class="by-subject-chip" 
