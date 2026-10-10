@@ -1,7 +1,7 @@
 import { getRecentActivitySessions, clearAllSessions, deleteSession, undoLastSessionDelete, undoLastSubjectDelete, getSubjectName } from './subjects.js';
 import { renderTimerSubjectBadge, renderTimerSubjectDropdown, updateDropdownPosition } from './timer-subject-badge.js';
-import { renderDailyGoalCard } from './daily-goal.js';
 import { renderStats } from './stats.js';
+import { statsStore } from './stats/store.js';
 import { tr } from './i18n.js';
 
 function formatSessionDuration(sec) {
@@ -88,7 +88,11 @@ export function renderActivityFeed() {
   const clearBtn = document.getElementById('stats-activity-clear-btn');
   if (!container) return;
 
-  const sessions = getRecentActivitySessions();
+  let sessions = getRecentActivitySessions();
+  const filterId = statsStore.getSubjectFilter();
+  if (filterId) {
+    sessions = sessions.filter(s => s.subjectId === filterId);
+  }
   container.innerHTML = '';
 
   if (clearBtn) {
@@ -182,7 +186,6 @@ function attachUndoListener() {
         e.preventDefault();
         e.stopPropagation();
         renderTimerSubjectBadge();
-        renderDailyGoalCard();
         renderStats();
         renderTimerSubjectDropdown();
         updateDropdownPosition();
@@ -213,6 +216,10 @@ attachUndoListener();
 export function initActivityFeed() {
   renderActivityFeed();
   attachUndoListener();
+
+  statsStore.subscribe(() => {
+    renderActivityFeed();
+  });
 
   if (typeof window !== 'undefined') {
     window.addEventListener('focustep:sessionLogged', () => {

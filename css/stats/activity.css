@@ -1,14 +1,17 @@
-/* ---------- Activity Card (Right Standalone Column Matching Mockup) ---------- */
+/* ---------- Activity Card (Top Right Compact Card) ---------- */
 .stats-activity-card {
+  grid-column: 2;
+  grid-row: 1;
   background: #1c242a;
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 28px 24px 22px;
+  padding: 22px 20px 18px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.16);
   box-sizing: border-box;
-  min-height: 680px;
+  min-height: auto;
+  max-height: 380px;
 }
 
 [data-theme="light"] .stats-activity-card {
@@ -19,11 +22,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
 }
 
 .stats-activity-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text);
   margin: 0;
@@ -34,6 +37,11 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  max-height: 210px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding-right: 4px;
+  margin-bottom: 10px;
 }
 
 .stats-activity-item {

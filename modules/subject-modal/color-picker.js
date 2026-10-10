@@ -58,8 +58,8 @@ export function renderPalette() {
     sw.setAttribute('data-color', isWhite ? '#ffffff' : color);
     
     if (isSelected) {
-      const checkStroke = isWhite ? '#0f172a' : '#ffffff';
-      sw.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${checkStroke}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+      const checkStroke = '#000000';
+      sw.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${checkStroke}" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
     }
 
     sw.addEventListener('click', (e) => {

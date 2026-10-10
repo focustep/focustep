@@ -11,24 +11,31 @@ let currentBadgeIconKey = null;
 let badgeIconAnimTimeout = null;
 
 function formatBadgeSvg(svg, color) {
-  if (!svg) return '';
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(svg, 'image/svg+xml');
-  const svgEl = doc.querySelector('svg');
-  if (svgEl) {
-    const isFillOnly = svgEl.getAttribute('fill') === 'currentColor' && (!svgEl.getAttribute('stroke') || svgEl.getAttribute('stroke') === 'none');
-    if (isFillOnly) {
-      svgEl.setAttribute('fill', color);
-      svgEl.removeAttribute('stroke');
-    } else {
-      svgEl.setAttribute('stroke', color);
+  if (!svg || typeof svg !== 'string') return '';
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svg, 'text/html');
+    const svgEl = doc.querySelector('svg');
+    if (svgEl) {
+      const isFillOnly = svgEl.getAttribute('fill') === 'currentColor' && (!svgEl.getAttribute('stroke') || svgEl.getAttribute('stroke') === 'none');
+      if (isFillOnly) {
+        svgEl.setAttribute('fill', color);
+        svgEl.removeAttribute('stroke');
+      } else {
+        svgEl.setAttribute('stroke', color);
+      }
+      svgEl.setAttribute('width', '18');
+      svgEl.setAttribute('height', '18');
+      svgEl.setAttribute('style', 'width: 18px; height: 18px; display: block;');
+      if (svgEl.style) {
+        svgEl.style.width = '18px';
+        svgEl.style.height = '18px';
+        svgEl.style.display = 'block';
+      }
+      return svgEl.outerHTML;
     }
-    svgEl.setAttribute('width', '18');
-    svgEl.setAttribute('height', '18');
-    svgEl.style.width = '18px';
-    svgEl.style.height = '18px';
-    svgEl.style.display = 'block';
-    return svgEl.outerHTML;
+  } catch (e) {
+    console.error('Failed to format badge SVG:', e);
   }
   return svg;
 }

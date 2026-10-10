@@ -328,12 +328,7 @@ export function getSessions() {
         // Filter out template demo sessions ('1', '2', '3') and sessions without a valid subject
         const subjects = getSubjects();
         const subjectIdSet = new Set(subjects.map(s => s.id));
-        const validSessions = parsed.filter(s => s && s.id !== '1' && s.id !== '2' && s.id !== '3' && s.subjectId && subjectIdSet.has(s.subjectId));
-        const cleaned = cleanOldSessions(validSessions);
-        if (cleaned.length !== parsed.length) {
-          saveSessions(cleaned);
-        }
-        return cleaned;
+        return parsed.filter(s => s && s.id !== '1' && s.id !== '2' && s.id !== '3' && s.subjectId && subjectIdSet.has(s.subjectId));
       }
     }
   } catch (e) {}
@@ -412,7 +407,7 @@ export function undoLastSessionDelete() {
     });
   }
 
-  sessions = cleanOldSessions(sessions).sort((a, b) => b.timestamp - a.timestamp);
+  sessions = sessions.sort((a, b) => b.timestamp - a.timestamp);
   saveSessions(sessions);
 
   if (typeof window !== 'undefined') {
@@ -438,7 +433,6 @@ export function logSession(subjectId, durationSec) {
     timestamp: Date.now()
   };
   sessions.unshift(newSession);
-  sessions = cleanOldSessions(sessions);
   saveSessions(sessions);
 
   if (typeof window !== 'undefined') {

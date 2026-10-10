@@ -11,6 +11,12 @@ function createTooltipElement() {
   tooltipEl.className = 'focustep-tooltip';
   tooltipEl.setAttribute('role', 'tooltip');
   tooltipEl.setAttribute('aria-hidden', 'true');
+  tooltipEl.style.position = 'fixed';
+  tooltipEl.style.top = '-9999px';
+  tooltipEl.style.left = '-9999px';
+  tooltipEl.style.pointerEvents = 'none';
+  tooltipEl.style.opacity = '0';
+  tooltipEl.style.zIndex = '999999';
   document.body.appendChild(tooltipEl);
   return tooltipEl;
 }
@@ -21,6 +27,7 @@ export function showTooltip(target, text, placement = 'top') {
   tip.textContent = text;
   tip.classList.add('visible');
   tip.setAttribute('aria-hidden', 'false');
+  tip.style.opacity = '1';
 
   const rect = target.getBoundingClientRect();
   const tipRect = tip.getBoundingClientRect();
@@ -61,6 +68,9 @@ export function hideTooltip() {
   if (!tooltipEl) return;
   tooltipEl.classList.remove('visible');
   tooltipEl.setAttribute('aria-hidden', 'true');
+  tooltipEl.style.opacity = '0';
+  tooltipEl.style.top = '-9999px';
+  tooltipEl.style.left = '-9999px';
 }
 
 export function initTooltips() {

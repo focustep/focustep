@@ -2,8 +2,8 @@
 @import "./stats/layout.css";
 @import "./stats/period-switcher.css";
 @import "./stats/metrics.css";
-@import "./stats/daily-goal.css";
+@import "./stats/this-week.css";
+@import "./stats/by-subject.css";
 @import "./stats/activity.css";
 @import "./stats/subject-modal.css";
-@import "./stats/by-subject.css";
 @import "./stats/timer-subject-badge.css";

@@ -37,13 +37,18 @@
 }
 
 .subject-color-swatch.selected {
-  border-color: #ffffff;
+  border: 1.5px solid transparent !important;
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
   transform: scale(1.04) translateZ(0);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
 }
 
 [data-theme="light"] .subject-color-swatch.selected {
-  border-color: #1a2228;
+  border: 1.5px solid transparent !important;
+  outline: 2px solid rgba(15, 23, 42, 0.35);
+  outline-offset: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
 }
 
 /* White Swatch Special Treatment for Contrast */
@@ -60,14 +65,15 @@
 
 .subject-color-swatch.is-white-swatch.selected {
   border: 2px solid #ffffff !important;
-  outline: 2px solid rgba(255, 255, 255, 0.35);
+  outline: 2px solid rgba(255, 255, 255, 0.6);
   outline-offset: 2px;
+  transform: scale(1.04) translateZ(0);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
 }
 
 [data-theme="light"] .subject-color-swatch.is-white-swatch.selected {
   border: 2px solid #0f172a !important;
-  outline: 2px solid rgba(15, 23, 42, 0.25);
+  outline: 2px solid rgba(15, 23, 42, 0.35);
   outline-offset: 2px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
 }

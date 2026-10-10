@@ -32,6 +32,8 @@ function getTodaySubjectStudiedMinutes(subjectId) {
 }
 
 export function renderDailyGoalCard() {
+  const card = document.getElementById('stats-daily-goal-card');
+  if (!card) return;
   const subjects = getSubjects();
   const activeSubjectId = getActiveSubjectId();
   const currentSubject = subjects.find(s => s.id === activeSubjectId);
@@ -270,6 +272,8 @@ function updatePickerDisplay() {
 }
 
 export function initDailyGoalCard() {
+  const card = document.getElementById('stats-daily-goal-card');
+  if (!card) return;
   const triggerBtn = document.getElementById('daily-goal-subject-trigger');
   if (triggerBtn) {
     triggerBtn.addEventListener('click', (e) => {
