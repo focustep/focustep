@@ -127,6 +127,21 @@ export function initCalendar() {
     });
   }
 
+  if (typeof window !== 'undefined') {
+    window.addEventListener('focustep:selectCalendarDate', (e) => {
+      const ds = e.detail?.dateKey;
+      if (ds && typeof ds === 'string') {
+        selectedDate = ds;
+        const parts = ds.split('-').map(Number);
+        if (parts.length === 3 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+          calMonth = new Date(parts[0], parts[1] - 1, 1);
+        }
+        renderCalendar();
+        renderDayDetail(ds);
+      }
+    });
+  }
+
   renderCalendar();
   renderDayDetail(selectedDate);
 }

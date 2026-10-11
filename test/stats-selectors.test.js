@@ -144,4 +144,40 @@ console.log('--- RUNNING STATS SELECTOR TESTS ---\n');
   assert(stats.deltaPct === null, 'Empty state deltaPct is null (hidden)');
 }
 
+// 8. Test getBySubject exact parity with getWeekDays
+{
+  const weekMonday = new Date(2026, 9, 5, 0, 0, 0, 0);
+  const now = new Date(2026, 9, 10, 12, 0, 0, 0); // Saturday
+  const subjects = [
+    { id: 'math', name: 'Math', color: '#8b5cf6' },
+    { id: 'english', name: 'English', color: '#f97316' },
+    { id: 'other', name: 'Other', color: '#4ec9b0' }
+  ];
+
+  const sessions = [
+    // This week Tuesday: 2 hours math
+    { id: '1', timestamp: new Date(2026, 9, 6, 14, 0).getTime(), durationSec: 7200, subjectId: 'math' },
+    // This week Friday: 1 hour english
+    { id: '2', timestamp: new Date(2026, 9, 9, 10, 0).getTime(), durationSec: 3600, subjectId: 'english' },
+    // Last week: 3 hours math (must be ignored in this week's getBySubject)
+    { id: '3', timestamp: new Date(2026, 8, 30, 10, 0).getTime(), durationSec: 10800, subjectId: 'math' },
+    // Next week: 4 hours english (must be ignored in this week's getBySubject)
+    { id: '4', timestamp: new Date(2026, 9, 13, 10, 0).getTime(), durationSec: 14400, subjectId: 'english' }
+  ];
+
+  const days = getWeekDays(weekMonday, sessions, subjects, now);
+  const weekSum = days.reduce((acc, d) => acc + d.totalSec, 0);
+  const bySubj = getBySubject('week', sessions, subjects, now);
+
+  assert(weekSum === 10800, 'Sum of weekDays totalSec is exactly 3 hours (10800s)');
+  assert(bySubj.totalPeriodSec === weekSum, 'getBySubject totalPeriodSec matches getWeekDays exactly (10800s)');
+  assert(bySubj.subjects[0].id === 'math' && bySubj.subjects[0].timeSec === 7200, 'Math has 7200s in this week');
+  assert(bySubj.subjects[1].id === 'english' && bySubj.subjects[1].timeSec === 3600, 'English has 3600s in this week');
+  assert(bySubj.subjects[2].id === 'other' && bySubj.subjects[2].timeSec === 0, 'Other has 0s');
+
+  const comp = getWeekComparison(weekMonday, sessions, now);
+  assert(comp.fullWeekTotalSec === 10800, 'fullWeekTotalSec is 10800s');
+  assert(comp.dailyAverageSec > 0, 'dailyAverageSec is computed accurately');
+}
+
 console.log(`\n🎉 ALL ${passed} TESTS PASSED SUCCESSFULLY!`);

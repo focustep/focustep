@@ -14,6 +14,7 @@
  */
 
 import { statsStore } from './store.js';
+import { getEffectiveNow } from './time.js';
 import {
   getWeekMonday,
   getWeekDays,
@@ -41,8 +42,12 @@ export function renderThisWeekCard() {
   const container = document.getElementById('stats-this-week-card');
   if (!container) return;
 
-  const now = new Date();
-  const weekMonday = getWeekMonday(now);
+  const currentWeekOffset = statsStore.getWeekOffset();
+  const now = getEffectiveNow();
+  const minWeekOffset = statsStore.getMinWeekOffset(now);
+  const canGoPrev = currentWeekOffset > minWeekOffset;
+  const baseMonday = getWeekMonday(now);
+  const weekMonday = new Date(baseMonday.getFullYear(), baseMonday.getMonth(), baseMonday.getDate() + currentWeekOffset * 7, 0, 0, 0, 0);
   const sessions = statsStore.getSessions();
   const subjects = statsStore.getSubjects();
 
@@ -53,7 +58,7 @@ export function renderThisWeekCard() {
   const locale = (tr() && tr().localeCode) || 'en-US';
   const dateRangeStr = getWeekDateRangeStr(weekMonday, locale);
 
-  const hasDataThisWeek = weekComp.thisWeekTotalSec > 0;
+  const hasDataThisWeek = (weekComp.fullWeekTotalSec || 0) > 0 || weekComp.thisWeekTotalSec > 0;
 
   // Max day total for Y-axis scale (minimum 60 minutes = 3600s so tiny weeks don't look huge)
   let maxDaySec = 3600;
@@ -64,41 +69,64 @@ export function renderThisWeekCard() {
 
   const chartHeightPx = 150; // Max bar container height
 
-  // Header markup
-  const deltaBadgeHtml = (!hasDataThisWeek || weekComp.deltaPct === null)
-    ? ''
-    : `
-      <div class="week-delta-chip ${weekComp.deltaPct >= 0 ? 'positive' : 'negative'}">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          ${weekComp.deltaPct >= 0
-            ? '<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>'
-            : '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>'}
-        </svg>
-        <span>${weekComp.deltaPct >= 0 ? '+' : ''}${weekComp.deltaPct}% ${tr().vsLastWeek || 'vs last week'}</span>
+  let titleText = tr().thisWeek || 'This week';
+  if (currentWeekOffset === -1) {
+    titleText = tr().lastWeekTitle || 'Last week';
+  } else if (currentWeekOffset < -1) {
+    titleText = `${Math.abs(currentWeekOffset)} ${tr().weeksAgo || 'weeks ago'}`;
+  }
+
+  // Delta chip comparison with last week (percentage diff vs previous week)
+  let deltaChipHtml = '';
+  if (weekComp.deltaPct !== null) {
+    const deltaVal = weekComp.deltaPct;
+    const isPositive = deltaVal >= 0;
+    const deltaClass = isPositive ? 'positive' : 'negative';
+    const sign = isPositive ? '+' : '';
+    const arrowSvg = isPositive
+      ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>`
+      : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+    const vsText = tr().vsLastWeek || 'vs last week';
+    deltaChipHtml = `
+      <div class="week-delta-chip ${deltaClass}">
+        ${arrowSvg}
+        <span>${sign}${deltaVal}% ${vsText}</span>
       </div>
     `;
+  }
 
   const headerHtml = `
     <div class="week-card-header">
       <div class="week-card-title-group">
-        <h3 class="week-card-title">${tr().thisWeek || 'This week'}</h3>
+        <div class="week-card-title-row">
+          <h3 class="week-card-title">${titleText}</h3>
+          <div class="week-nav-controls">
+            <button type="button" class="week-nav-btn ${!canGoPrev ? 'is-disabled' : ''}" id="week-nav-prev" aria-label="Previous week" title="${tr().prevWeek || 'Previous week'}" ${!canGoPrev ? 'disabled' : ''}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="week-nav-btn ${currentWeekOffset === 0 ? 'is-disabled' : ''}" id="week-nav-next" aria-label="Next week" title="${tr().nextWeek || 'Next week'}" ${currentWeekOffset === 0 ? 'disabled' : ''}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+            ${currentWeekOffset !== 0 ? `
+              <button type="button" class="week-nav-reset-btn" id="week-nav-reset" title="${tr().currentWeek || 'This week'}">
+                <span>${tr().currentWeek || 'This week'}</span>
+              </button>
+            ` : ''}
+          </div>
+        </div>
         <span class="week-card-range">${dateRangeStr}</span>
       </div>
-      <div class="week-card-header-right">
-        ${hasDataThisWeek ? `
-          <div class="week-legend-item">
-            <span class="week-legend-ghost-pill" aria-hidden="true"></span>
-            <span class="week-legend-label">${tr().lastWeek || 'last week'}</span>
-          </div>
-        ` : ''}
-        ${deltaBadgeHtml}
-      </div>
+      ${deltaChipHtml ? `
+        <div class="week-card-header-right">
+          ${deltaChipHtml}
+        </div>
+      ` : ''}
     </div>
   `;
-
-  // Average line height calculation
-  const avgHeightPx = Math.min(chartHeightPx - 6, Math.max(6, Math.round((weekComp.dailyAverageSec / maxDaySec) * chartHeightPx)));
-  const avgStr = formatDurationHM(weekComp.dailyAverageSec);
 
   // Ghost bar template heights for Empty state
   const ghostHeightsEmpty = [42, 75, 30, 60, 85, 52, 38];
@@ -107,6 +135,27 @@ export function renderThisWeekCard() {
   let bodyHtml = '';
 
   if (!hasDataThisWeek) {
+    const isPastWeek = currentWeekOffset < 0;
+
+    let emptyOverlayContent = '';
+    if (isPastWeek) {
+      emptyOverlayContent = `
+        <div class="week-empty-past-msg">${tr().weekEmptyPast || 'Bu haftada hech narsa qilinmagan'}</div>
+      `;
+    } else {
+      emptyOverlayContent = `
+        <h4 class="week-empty-title">${tr().weekEmptyTitle || 'Your week starts here'}</h4>
+        <p class="week-empty-sub">${tr().weekEmptySub || "Log your first session and today's bar will grow."}</p>
+        <button type="button" class="week-empty-start-btn" id="week-empty-start-btn">
+          <span>${tr().startSession || 'Start a session'}</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      `;
+    }
+
     // EMPTY STATE MOCKUP
     bodyHtml = `
       <div class="week-card-body is-empty">
@@ -127,15 +176,7 @@ export function renderThisWeekCard() {
 
             <!-- Centered Empty State Overlay -->
             <div class="week-empty-overlay">
-              <h4 class="week-empty-title">${tr().weekEmptyTitle || 'Your week starts here'}</h4>
-              <p class="week-empty-sub">${tr().weekEmptySub || "Log your first session and today's bar will grow."}</p>
-              <button type="button" class="week-empty-start-btn" id="week-empty-start-btn">
-                <span>${tr().startSession || 'Start a session'}</span>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </button>
+              ${emptyOverlayContent}
             </div>
           </div>
 
@@ -165,13 +206,6 @@ export function renderThisWeekCard() {
         <!-- Left: Chart Area -->
         <div class="week-chart-area">
           <div class="week-bars-wrapper" style="height: ${chartHeightPx}px;">
-            <!-- Horizontal Average Line -->
-            ${weekComp.dailyAverageSec > 0 ? `
-              <div class="week-avg-line" style="bottom: ${avgHeightPx}px;">
-                <span class="week-avg-badge">${tr().avgLabel || 'avg'} ${avgStr}</span>
-              </div>
-            ` : ''}
-
             <!-- 7 Columns -->
             <div class="week-bars-container">
               ${weekDays.map((day) => {
@@ -189,12 +223,12 @@ export function renderThisWeekCard() {
                 let segmentsHtml = '';
                 if (hasTime && day.bySubject.length > 0) {
                   segmentsHtml = day.bySubject.map((subj) => {
-                    const segPct = Math.max(2, (subj.timeSec / totalSec) * 100);
+                    const rangeInfo = subj.timeRangeText ? ` (${subj.timeRangeText})` : '';
                     return `
                       <div class="week-bar-segment" 
-                           style="height: ${segPct}%; background-color: ${subj.color || '#3ddbb6'};"
+                           style="flex: ${Math.max(1, subj.timeSec)} 1 0px; min-height: 2px; background-color: ${subj.color || '#3ddbb6'};"
                            data-subject-id="${subj.subjectId}"
-                           title="${subj.subjectName}: ${formatDurationHM(subj.timeSec)}">
+                           title="${subj.subjectName}: ${formatDurationHM(subj.timeSec)}${rangeInfo}">
                       </div>
                     `;
                   }).join('');
@@ -204,8 +238,21 @@ export function renderThisWeekCard() {
                 const tooltipRows = day.bySubject.map(s => `
                   <div class="week-glass-tooltip-row">
                     <span class="week-tooltip-dot" style="background-color: ${s.color};"></span>
-                    <span class="week-tooltip-subname">${s.subjectName}</span>
-                    <span class="week-tooltip-subtime">${formatDurationHM(s.timeSec)}</span>
+                    <div class="week-tooltip-sub-details">
+                      <div class="week-tooltip-sub-main">
+                        <span class="week-tooltip-subname">${s.subjectName}</span>
+                        <span class="week-tooltip-subtime">${formatDurationHM(s.timeSec)}</span>
+                      </div>
+                      ${s.timeRangeText ? `
+                        <div class="week-tooltip-subrange">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="week-tooltip-clock-icon">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                          </svg>
+                          <span>${s.timeRangeText}</span>
+                        </div>
+                      ` : ''}
+                    </div>
                   </div>
                 `).join('');
 
@@ -322,6 +369,33 @@ export function renderThisWeekCard() {
 
   container.innerHTML = headerHtml + bodyHtml;
 
+  // Week navigation controls (view previous weeks & return to current week)
+  const prevBtn = container.querySelector('#week-nav-prev');
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (statsStore.getWeekOffset() > statsStore.getMinWeekOffset()) {
+        statsStore.setWeekOffset(statsStore.getWeekOffset() - 1);
+      }
+    });
+  }
+  const nextBtn = container.querySelector('#week-nav-next');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (statsStore.getWeekOffset() < 0) {
+        statsStore.setWeekOffset(statsStore.getWeekOffset() + 1);
+      }
+    });
+  }
+  const resetNavBtn = container.querySelector('#week-nav-reset');
+  if (resetNavBtn) {
+    resetNavBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      statsStore.setWeekOffset(0);
+    });
+  }
+
   // Click on Empty State CTA -> Switch to Timer View
   const emptyStartBtn = container.querySelector('#week-empty-start-btn');
   if (emptyStartBtn) {
@@ -417,5 +491,17 @@ function openCalendarAtDate(dateKey) {
     navCalBtn.click();
     // Dispatch custom event to select date in calendar
     window.dispatchEvent(new CustomEvent('focustep:selectCalendarDate', { detail: { dateKey } }));
+  }
+}
+
+let thisWeekSubscribed = false;
+
+export function initThisWeekCard() {
+  renderThisWeekCard();
+  if (!thisWeekSubscribed) {
+    thisWeekSubscribed = true;
+    statsStore.subscribe(() => {
+      renderThisWeekCard();
+    });
   }
 }

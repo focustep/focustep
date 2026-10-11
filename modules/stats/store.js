@@ -8,6 +8,9 @@
  * - Emits backward-compatible window events: focustep:sessionLogged, focustep:statsUpdated
  */
 
+import { getEffectiveNow } from './time.js';
+import { getWeekMonday } from './selectors.js';
+
 const STORAGE_VERSION_KEY = 'focustep_storage_version';
 const CURRENT_STORAGE_VERSION = 2;
 
@@ -15,6 +18,7 @@ const SESSIONS_KEY = 'focustep_sessions';
 const SUBJECTS_KEY = 'focustep_subjects';
 const ACTIVE_PERIOD_KEY = 'focustep_active_period';
 const ACTIVE_SUBJECT_FILTER_KEY = 'focustep_stats_subject_filter';
+const FIRST_VISIT_KEY = 'focustep_first_visit_time';
 
 // Legacy keys to remove in migration
 const LEGACY_SUBJECT_GOALS_KEY = 'focustep_subject_goals';
@@ -61,8 +65,36 @@ class StatsStore {
     this.subjects = [];
     this.activePeriod = 'week'; // 'week' | 'month' | 'all'
     this.subjectFilter = null; // null | subjectId
+    this.weekOffset = 0; // 0 = current week, -1 = last week, etc.
+    this._isNotifying = false;
 
     this.init();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focustep:sessionLogged', (e) => {
+        if (e?.detail?.source === 'statsStore') return;
+        this.loadSessions();
+        this.notify({ emitEvent: false });
+      });
+      window.addEventListener('focustep:statsUpdated', (e) => {
+        if (e?.detail?.source === 'statsStore') return;
+        this.loadState();
+        this.notify({ emitEvent: false });
+      });
+      window.addEventListener('focustep:subjectsUpdated', () => {
+        this.loadSubjects();
+        this.notify({ emitEvent: false });
+      });
+      window.addEventListener('storage', (e) => {
+        if (e.key === SESSIONS_KEY) {
+          this.loadSessions();
+          this.notify({ emitEvent: false });
+        } else if (e.key === SUBJECTS_KEY) {
+          this.loadSubjects();
+          this.notify({ emitEvent: false });
+        }
+      });
+    }
   }
 
   init() {
@@ -107,22 +139,101 @@ class StatsStore {
   }
 
   loadState() {
+    this.loadSessions();
+    this.loadSubjects();
+    this.loadActivePeriod();
+    this.loadSubjectFilter();
+    this.initFirstVisit();
+  }
+
+  initFirstVisit() {
+    try {
+      if (typeof localStorage === 'undefined') return;
+      let raw = localStorage.getItem(FIRST_VISIT_KEY);
+      if (!raw) {
+        let earliest = Date.now();
+        if (this.sessions && this.sessions.length > 0) {
+          const minTs = Math.min(...this.sessions.map(s => Number(s.timestamp) || Date.now()));
+          if (minTs && !isNaN(minTs)) {
+            earliest = Math.min(earliest, minTs);
+          }
+        }
+        localStorage.setItem(FIRST_VISIT_KEY, String(earliest));
+      }
+    } catch (e) {}
+  }
+
+  getFirstVisitTime() {
+    let visitTs = null;
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const raw = localStorage.getItem(FIRST_VISIT_KEY);
+        if (raw) {
+          const parsed = parseInt(raw, 10);
+          if (!isNaN(parsed) && parsed > 0) {
+            visitTs = parsed;
+          }
+        }
+      }
+    } catch (e) {}
+
+    if (this.sessions && this.sessions.length > 0) {
+      const minSession = Math.min(...this.sessions.map(s => Number(s.timestamp) || Date.now()));
+      if (minSession && !isNaN(minSession)) {
+        if (!visitTs || minSession < visitTs) {
+          visitTs = minSession;
+        }
+      }
+    }
+
+    if (!visitTs) {
+      visitTs = Date.now();
+      try {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem(FIRST_VISIT_KEY, String(visitTs));
+        }
+      } catch (e) {}
+    }
+
+    return visitTs;
+  }
+
+  getMinWeekOffset(now = getEffectiveNow()) {
+    const currentMonday = getWeekMonday(now);
+    const firstVisitTs = this.getFirstVisitTime();
+    const firstVisitMonday = getWeekMonday(new Date(firstVisitTs));
+
+    const diffMs = currentMonday.getTime() - firstVisitMonday.getTime();
+    if (diffMs <= 0) {
+      return 0;
+    }
+    const diffWeeks = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
+    return -Math.max(0, diffWeeks);
+  }
+
+  loadSessions() {
     try {
       if (typeof localStorage === 'undefined') {
         this.sessions = [];
-        this.subjects = [...DEFAULT_SUBJECTS];
         return;
       }
-
-      // Load sessions
       const rawSessions = localStorage.getItem(SESSIONS_KEY);
       if (rawSessions) {
         this.sessions = JSON.parse(rawSessions) || [];
       } else {
         this.sessions = [];
       }
+    } catch (e) {
+      this.sessions = [];
+    }
+  }
 
-      // Load subjects
+  loadSubjects() {
+    try {
+      if (typeof localStorage === 'undefined') {
+        this.subjects = [...DEFAULT_SUBJECTS];
+        return;
+      }
       const rawSubjects = localStorage.getItem(SUBJECTS_KEY);
       if (rawSubjects) {
         this.subjects = JSON.parse(rawSubjects) || [...DEFAULT_SUBJECTS];
@@ -130,20 +241,27 @@ class StatsStore {
         this.subjects = [...DEFAULT_SUBJECTS];
         localStorage.setItem(SUBJECTS_KEY, JSON.stringify(this.subjects));
       }
+    } catch (e) {
+      this.subjects = [...DEFAULT_SUBJECTS];
+    }
+  }
 
-      // Load active period
+  loadActivePeriod() {
+    try {
+      if (typeof localStorage === 'undefined') return;
       const savedPeriod = localStorage.getItem(ACTIVE_PERIOD_KEY);
       if (savedPeriod && ['week', 'month', 'all'].includes(savedPeriod)) {
         this.activePeriod = savedPeriod;
       }
+    } catch (e) {}
+  }
 
-      // Load subject filter
+  loadSubjectFilter() {
+    try {
+      if (typeof localStorage === 'undefined') return;
       const savedFilter = localStorage.getItem(ACTIVE_SUBJECT_FILTER_KEY);
       this.subjectFilter = savedFilter || null;
-    } catch (e) {
-      this.sessions = [];
-      this.subjects = [...DEFAULT_SUBJECTS];
-    }
+    } catch (e) {}
   }
 
   saveSessions() {
@@ -167,26 +285,38 @@ class StatsStore {
     return () => this.subscribers.delete(listener);
   }
 
-  notify() {
-    for (const listener of this.subscribers) {
-      try {
-        listener(this);
-      } catch (err) {
-        console.error('Subscriber error:', err);
+  notify(options = {}) {
+    if (this._isNotifying) return;
+    this._isNotifying = true;
+    try {
+      for (const listener of this.subscribers) {
+        try {
+          listener(this);
+        } catch (err) {
+          console.error('Subscriber error:', err);
+        }
       }
-    }
-    // Backward compatibility events
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('focustep:statsUpdated'));
+      // Backward compatibility events
+      if (typeof window !== 'undefined' && options.emitEvent !== false) {
+        window.dispatchEvent(new CustomEvent('focustep:statsUpdated', { detail: { source: 'statsStore' } }));
+      }
+    } finally {
+      this._isNotifying = false;
     }
   }
 
   // --- Getters ---
   getSessions() {
+    if (!this.sessions || this.sessions.length === 0) {
+      this.loadSessions();
+    }
     return this.sessions;
   }
 
   getSubjects() {
+    if (!this.subjects || this.subjects.length === 0) {
+      this.loadSubjects();
+    }
     return this.subjects;
   }
 
@@ -198,15 +328,38 @@ class StatsStore {
     return this.subjectFilter;
   }
 
+  getWeekOffset() {
+    return this.weekOffset || 0;
+  }
+
   // --- Actions ---
   setActivePeriod(period) {
     if (!['week', 'month', 'all'].includes(period)) return;
     this.activePeriod = period;
+    if (period === 'week') {
+      this.weekOffset = 0;
+    }
     try {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem(ACTIVE_PERIOD_KEY, period);
       }
     } catch (e) {}
+    this.notify();
+  }
+
+  setWeekOffset(offset) {
+    const minOffset = this.getMinWeekOffset();
+    const numOffset = Math.max(minOffset, Math.min(0, parseInt(offset, 10) || 0));
+    if (this.weekOffset === numOffset && this.activePeriod === 'week') return;
+    this.weekOffset = numOffset;
+    if (this.activePeriod !== 'week') {
+      this.activePeriod = 'week';
+      try {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem(ACTIVE_PERIOD_KEY, 'week');
+        }
+      } catch (e) {}
+    }
     this.notify();
   }
 

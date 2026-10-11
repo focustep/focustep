@@ -1,5 +1,6 @@
 import { getLang } from './i18n.js';
 import { getSubjectLocalizedName } from './subjects-db.js';
+import { getEffectiveNow } from './stats/time.js';
 
 /**
  * Subjects & Activity Data Store
@@ -313,7 +314,7 @@ export function undoLastSubjectDelete() {
 
 export function cleanOldSessions(sessions) {
   if (!Array.isArray(sessions)) return [];
-  const now = Date.now();
+  const now = getEffectiveNow().getTime();
   // 3 days retention (72 hours)
   const threeDaysAgo = now - (3 * 24 * 60 * 60 * 1000);
   return sessions.filter(s => s && typeof s.timestamp === 'number' && s.timestamp >= threeDaysAgo);
@@ -325,14 +326,11 @@ export function getSessions() {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) {
-        // Filter out template demo sessions ('1', '2', '3') and sessions without a valid subject
-        const subjects = getSubjects();
-        const subjectIdSet = new Set(subjects.map(s => s.id));
-        return parsed.filter(s => s && s.id !== '1' && s.id !== '2' && s.id !== '3' && s.subjectId && subjectIdSet.has(s.subjectId));
+        // Filter out template demo sessions ('1', '2', '3') and keep all valid focus sessions
+        return parsed.filter(s => s && s.id !== '1' && s.id !== '2' && s.id !== '3' && ((s.durationSec && s.durationSec > 0) || (s.duration && s.duration > 0)));
       }
     }
   } catch (e) {}
-  saveSessions([]);
   return [];
 }
 
@@ -362,6 +360,7 @@ export function clearAllSessions() {
   saveSessions([]);
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('focustep:sessionLogged', { detail: null }));
+    window.dispatchEvent(new CustomEvent('focustep:statsUpdated'));
   }
 }
 
@@ -419,24 +418,33 @@ export function undoLastSessionDelete() {
 
 export function logSession(subjectId, durationSec) {
   if (durationSec < 1) return null; // Log sessions from 1 second
-  if (!subjectId || subjectId === 'none') return null; // Do not log if no subject is selected (Choose subject / Add subject)
   const subjects = getSubjects();
-  const subject = subjects.find(s => s.id === subjectId);
-  if (!subject) return null; // Only log for real, existing subjects
+  if (!subjectId || subjectId === 'none' || !subjects.some(s => s.id === subjectId)) {
+    subjectId = subjects.find(s => s.id === 'other')?.id || (subjects.length > 0 ? subjects[0].id : 'other');
+  }
+  let subject = subjects.find(s => s.id === subjectId);
+  if (!subject) {
+    subject = { id: 'other', name: 'Other', color: '#4ec9b0', icon: 'more-horizontal' };
+  }
 
   let sessions = getSessions();
+  const nowTs = getEffectiveNow().getTime();
+  const durationRounded = Math.max(1, Math.round(durationSec));
+  const startTs = nowTs - (durationRounded * 1000);
+
   const newSession = {
-    id: String(Date.now() + '_' + Math.floor(Math.random() * 1000)),
+    id: 's_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
     subjectId: subject.id,
     subjectName: getSubjectName(subject),
-    durationSec: Math.round(durationSec),
-    timestamp: Date.now()
+    durationSec: durationRounded,
+    timestamp: startTs
   };
   sessions.unshift(newSession);
   saveSessions(sessions);
 
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('focustep:sessionLogged', { detail: newSession }));
+    window.dispatchEvent(new CustomEvent('focustep:statsUpdated', { detail: { session: newSession } }));
   }
   return newSession;
 }

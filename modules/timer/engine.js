@@ -11,7 +11,7 @@ import {
   incrementCompletedSessions,
   getNextBreakType
 } from '../pomodoro.js';
-import { getActiveSubjectId, logSession } from '../subjects.js';
+import { getActiveSubjectId, getSubjects, logSession } from '../subjects.js';
 import { timerState, getBase, notifyStateChange, ICON_PLAY, ICON_PAUSE } from './state.js';
 import {
   renderTimer,
@@ -26,10 +26,12 @@ let activeSessionAccumulatedSec = 0;
 
 function checkAndLogActiveSession() {
   if (activeSessionAccumulatedSec >= 1) {
-    const activeSubjId = getActiveSubjectId();
-    if (activeSubjId && activeSubjId !== 'none') {
-      logSession(activeSubjId, activeSessionAccumulatedSec);
+    let activeSubjId = getActiveSubjectId();
+    const subjects = getSubjects();
+    if (!activeSubjId || activeSubjId === 'none' || !subjects.some(s => s.id === activeSubjId)) {
+      activeSubjId = subjects.find(s => s.id === 'other')?.id || (subjects.length > 0 ? subjects[0].id : 'other');
     }
+    logSession(activeSubjId, activeSessionAccumulatedSec);
     activeSessionAccumulatedSec = 0;
   }
 }
@@ -42,15 +44,11 @@ if (typeof window !== 'undefined') {
 
 export function saveTimerState() {
   try {
-    const activeSubjId = getActiveSubjectId();
-    // Only write day progress/stats/calendar data when a real subject is chosen
-    if (activeSubjId && activeSubjId !== 'none') {
-      localStorage.setItem(todayKey('timer'), JSON.stringify({
-        remaining: timerState.remaining,
-        total: timerState.total,
-        extraAdded: timerState.extraAdded
-      }));
-    }
+    localStorage.setItem(todayKey('timer'), JSON.stringify({
+      remaining: timerState.remaining,
+      total: timerState.total,
+      extraAdded: timerState.extraAdded
+    }));
   } catch(e){}
   notifyStateChange();
 }

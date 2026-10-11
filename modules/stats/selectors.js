@@ -1,3 +1,6 @@
+import { getEffectiveNow } from './time.js';
+import { getLang } from '../i18n.js';
+
 /**
  * Pure, memoized selectors for Stats & Goals
  *
@@ -32,9 +35,28 @@ export function toLocalDateKey(dateObj) {
   return `${y}-${m}-${d}`;
 }
 
+export function formatTimeHM(timestamp) {
+  if (!timestamp) return '';
+  const d = new Date(timestamp);
+  const h = String(d.getHours()).padStart(2, '0');
+  const m = String(d.getMinutes()).padStart(2, '0');
+  return `${h}:${m}`;
+}
+
+export function formatIntervalsText(intervals = []) {
+  if (!intervals || intervals.length === 0) return '';
+  return intervals.map(inv => {
+    const s = formatTimeHM(inv.start);
+    const e = formatTimeHM(inv.end);
+    if (!s && !e) return '';
+    if (s && e) return `${s} – ${e}`;
+    return s || e;
+  }).filter(Boolean).join(', ');
+}
+
 /**
  * Splits a session that crosses local midnight into individual day segments
- * Returns array of: { dateKey, durationSec, subjectId, originalSessionId }
+ * Returns array of: { dateKey, durationSec, subjectId, originalSessionId, startTimestamp, endTimestamp }
  */
 export function splitSessionByDays(session) {
   const startTs = Number(session.timestamp) || 0;
@@ -64,7 +86,9 @@ export function splitSessionByDays(session) {
         dateKey: toLocalDateKey(curDate),
         durationSec: segDurSec,
         subjectId: session.subjectId || 'other',
-        originalSessionId: session.id
+        originalSessionId: session.id,
+        startTimestamp: currentStart,
+        endTimestamp: segEnd
       });
     }
 
@@ -77,7 +101,7 @@ export function splitSessionByDays(session) {
 /**
  * Returns the Monday 00:00:00.000 local time of the week containing the given date
  */
-export function getWeekMonday(date = new Date()) {
+export function getWeekMonday(date = getEffectiveNow()) {
   const d = new Date(date);
   const day = (d.getDay() + 6) % 7; // Monday = 0, Sunday = 6
   return new Date(d.getFullYear(), d.getMonth(), d.getDate() - day, 0, 0, 0, 0);
@@ -86,7 +110,7 @@ export function getWeekMonday(date = new Date()) {
 /**
  * Returns start of current period timestamp in local time
  */
-export function getStartOfPeriodTimestamp(period, now = new Date()) {
+export function getStartOfPeriodTimestamp(period, now = getEffectiveNow()) {
   if (period === 'week') {
     return getWeekMonday(now).getTime();
   } else if (period === 'month') {
@@ -99,7 +123,7 @@ export function getStartOfPeriodTimestamp(period, now = new Date()) {
  * Selector: getWeekDays(weekMonday, sessions, subjects, now)
  * Returns 7 days (Mon..Sun) with stacked subject totals, last week's ghost totals, and states.
  */
-export function getWeekDays(weekMonday = getWeekMonday(), sessions = [], subjects = [], now = new Date()) {
+export function getWeekDays(weekMonday = getWeekMonday(), sessions = [], subjects = [], now = getEffectiveNow()) {
   const todayKey = toLocalDateKey(now);
   const days = [];
 
@@ -143,18 +167,54 @@ export function getWeekDays(weekMonday = getWeekMonday(), sessions = [], subject
 
     segments.forEach(seg => {
       totalSec += seg.durationSec;
-      bySubjectMap.set(seg.subjectId, (bySubjectMap.get(seg.subjectId) || 0) + seg.durationSec);
+      if (!bySubjectMap.has(seg.subjectId)) {
+        bySubjectMap.set(seg.subjectId, {
+          durationSec: 0,
+          intervals: []
+        });
+      }
+      const entry = bySubjectMap.get(seg.subjectId);
+      entry.durationSec += seg.durationSec;
+      if (seg.startTimestamp && seg.endTimestamp) {
+        entry.intervals.push({
+          start: seg.startTimestamp,
+          end: seg.endTimestamp
+        });
+      }
     });
 
     // Subject breakdown sorted by duration
     const bySubject = [];
-    bySubjectMap.forEach((timeSec, sid) => {
+    bySubjectMap.forEach((entry, sid) => {
       const subj = subjectMap.get(sid) || { name: 'Other', color: '#4ec9b0' };
+      
+      // Sort intervals chronologically
+      entry.intervals.sort((a, b) => a.start - b.start);
+
+      // Merge overlapping/contiguous intervals (e.g. paused/resumed within 60s)
+      const merged = [];
+      for (const inv of entry.intervals) {
+        if (merged.length === 0) {
+          merged.push({ start: inv.start, end: inv.end });
+        } else {
+          const prev = merged[merged.length - 1];
+          if (inv.start <= prev.end + 60000) {
+            prev.end = Math.max(prev.end, inv.end);
+          } else {
+            merged.push({ start: inv.start, end: inv.end });
+          }
+        }
+      }
+
+      const timeRangeText = formatIntervalsText(merged);
+
       bySubject.push({
         subjectId: sid,
         subjectName: subj.name,
         color: subj.color,
-        timeSec
+        timeSec: entry.durationSec,
+        intervals: merged,
+        timeRangeText
       });
     });
     bySubject.sort((a, b) => b.timeSec - a.timeSec);
@@ -190,17 +250,31 @@ export function getPeakWindow(weekMonday = getWeekMonday(), sessions = []) {
   const weekStartTs = weekMonday.getTime();
   const weekEndTs = weekStartTs + 7 * 86400000;
 
-  // Filter sessions in this week
-  const weekSessions = sessions.filter(s => s.timestamp >= weekStartTs && s.timestamp < weekEndTs);
+  // Filter sessions touching this week
+  const weekSessions = sessions.filter(s => {
+    const end = (Number(s.timestamp) || 0) + (Number(s.durationSec) || 0) * 1000;
+    return end > weekStartTs && (Number(s.timestamp) || 0) < weekEndTs;
+  });
   if (weekSessions.length === 0) return '–';
 
   // 24 one-hour buckets
   const hourlyBuckets = new Array(24).fill(0);
 
   weekSessions.forEach(s => {
-    const d = new Date(s.timestamp);
-    const hour = d.getHours();
-    hourlyBuckets[hour] += (s.durationSec || 0);
+    const start = Math.max(Number(s.timestamp) || 0, weekStartTs);
+    const end = Math.min((Number(s.timestamp) || 0) + (Number(s.durationSec) || 0) * 1000, weekEndTs);
+    if (end <= start) return;
+
+    let cur = start;
+    while (cur < end) {
+      const curDate = new Date(cur);
+      const curHour = curDate.getHours();
+      const nextHour = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate(), curHour + 1, 0, 0, 0).getTime();
+      const sliceEnd = Math.min(end, nextHour);
+      const sliceSec = Math.round((sliceEnd - cur) / 1000);
+      hourlyBuckets[curHour] += sliceSec;
+      cur = sliceEnd;
+    }
   });
 
   // Find max 2-hour sliding window
@@ -228,43 +302,60 @@ export function getPeakWindow(weekMonday = getWeekMonday(), sessions = []) {
  * Selector: getWeekComparison(weekMonday, sessions, now)
  * Compares this week's total up to now with last week's total for the same elapsed days
  */
-export function getWeekComparison(weekMonday = getWeekMonday(), sessions = [], now = new Date()) {
+export function getWeekComparison(weekMonday = getWeekMonday(), sessions = [], now = getEffectiveNow()) {
   const daysThisWeek = getWeekDays(weekMonday, sessions, [], now);
   
-  // Elapsed days including today (1..7)
-  const elapsedDayCount = Math.min(7, Math.max(1, ((now.getDay() + 6) % 7) + 1));
+  // Elapsed days: for current week, up to today (1..7); for past weeks, all 7 days
+  const isCurrentWeek = toLocalDateKey(weekMonday) === toLocalDateKey(getWeekMonday(now));
+  const elapsedDayCount = isCurrentWeek 
+    ? Math.min(7, Math.max(1, ((now.getDay() + 6) % 7) + 1))
+    : 7;
 
   let thisWeekTotalSec = 0;
   let lastWeekTotalSec = 0;
+  let fullWeekTotalSec = 0;
+  let fullLastWeekTotalSec = 0;
 
-  for (let i = 0; i < elapsedDayCount; i++) {
-    thisWeekTotalSec += daysThisWeek[i].totalSec;
-    lastWeekTotalSec += daysThisWeek[i].lastWeekTotalSec;
+  for (let i = 0; i < 7; i++) {
+    fullWeekTotalSec += daysThisWeek[i].totalSec;
+    fullLastWeekTotalSec += daysThisWeek[i].lastWeekTotalSec;
+    if (i < elapsedDayCount) {
+      thisWeekTotalSec += daysThisWeek[i].totalSec;
+      lastWeekTotalSec += daysThisWeek[i].lastWeekTotalSec;
+    }
   }
 
   let deltaPct = null;
   if (lastWeekTotalSec > 0) {
     deltaPct = Math.round(((thisWeekTotalSec - lastWeekTotalSec) / lastWeekTotalSec) * 100);
+  } else if (thisWeekTotalSec > 0) {
+    deltaPct = 100;
   }
 
   // Daily average for this week
-  const dailyAverageSec = Math.round(thisWeekTotalSec / elapsedDayCount);
+  const daysForAvg = Math.max(1, elapsedDayCount);
+  const totalForAvg = Math.max(thisWeekTotalSec, fullWeekTotalSec);
+  const dailyAverageSec = Math.round(totalForAvg / daysForAvg);
 
-  // Longest session this week
+  // Longest session touching this week
   const weekStartTs = weekMonday.getTime();
   const weekEndTs = weekStartTs + 7 * 86400000;
   let longestSessionSec = 0;
   sessions.forEach(s => {
-    if (s.timestamp >= weekStartTs && s.timestamp < weekEndTs) {
-      if ((s.durationSec || 0) > longestSessionSec) {
-        longestSessionSec = s.durationSec;
+    const end = (Number(s.timestamp) || 0) + (Number(s.durationSec) || 0) * 1000;
+    if (end > weekStartTs && (Number(s.timestamp) || 0) < weekEndTs) {
+      const dur = Number(s.durationSec) || 0;
+      if (dur > longestSessionSec) {
+        longestSessionSec = dur;
       }
     }
   });
 
   return {
     thisWeekTotalSec,
+    fullWeekTotalSec,
     lastWeekTotalSec,
+    fullLastWeekTotalSec,
     deltaPct,
     dailyAverageSec,
     longestSessionSec
@@ -274,7 +365,7 @@ export function getWeekComparison(weekMonday = getWeekMonday(), sessions = [], n
 /**
  * Selector: getStreak(period, sessions, now)
  */
-export function getStreak(period = 'week', sessions = [], now = new Date()) {
+export function getStreak(period = 'week', sessions = [], now = getEffectiveNow()) {
   if (sessions.length === 0) return { daysCount: 0, text: '0 days' };
 
   // Collect days with active study (>= 60s)
@@ -339,19 +430,34 @@ export function getStreak(period = 'week', sessions = [], now = new Date()) {
 }
 
 /**
- * Selector: getBestDay(period, sessions, now, locale)
+ * Selector: getBestDay(period, sessions, now, locale, weekOffset)
  */
-export function getBestDay(period = 'week', sessions = [], now = new Date(), locale = 'en-US') {
-  const startTs = getStartOfPeriodTimestamp(period, now);
-  const relevantSessions = sessions.filter(s => s.timestamp >= startTs);
-
-  if (relevantSessions.length === 0) return '–';
+export function getBestDay(period = 'week', sessions = [], now = getEffectiveNow(), locale = 'en-US', weekOffset = 0) {
+  let filterFn;
+  if (period === 'week') {
+    const baseMonday = getWeekMonday(now);
+    const monday = new Date(baseMonday.getFullYear(), baseMonday.getMonth(), baseMonday.getDate() + weekOffset * 7, 0, 0, 0, 0);
+    const sunday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6);
+    const startKey = toLocalDateKey(monday);
+    const endKey = toLocalDateKey(sunday);
+    filterFn = (dateKey) => dateKey >= startKey && dateKey <= endKey;
+  } else if (period === 'month') {
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const startKey = toLocalDateKey(new Date(year, month, 1));
+    const endKey = toLocalDateKey(new Date(year, month + 1, 0));
+    filterFn = (dateKey) => dateKey >= startKey && dateKey <= endKey;
+  } else {
+    filterFn = () => true;
+  }
 
   const dayTotals = new Map();
-  relevantSessions.forEach(sess => {
+  sessions.forEach(sess => {
     const segs = splitSessionByDays(sess);
     segs.forEach(seg => {
-      dayTotals.set(seg.dateKey, (dayTotals.get(seg.dateKey) || 0) + seg.durationSec);
+      if (filterFn(seg.dateKey)) {
+        dayTotals.set(seg.dateKey, (dayTotals.get(seg.dateKey) || 0) + seg.durationSec);
+      }
     });
   });
 
@@ -384,21 +490,18 @@ export function getBestDay(period = 'week', sessions = [], now = new Date(), loc
 }
 
 /**
- * Selector: getPeriodStats(period, sessions, subjects, now, locale)
+ * Selector: getPeriodStats(period, sessions, subjects, now, locale, weekOffset)
  */
-export function getPeriodStats(period = 'week', sessions = [], subjects = [], now = new Date(), locale = 'en-US') {
-  const startTs = getStartOfPeriodTimestamp(period, now);
-  const relevantSessions = sessions.filter(s => s.timestamp >= startTs);
-
-  let studyTimeSec = 0;
-  relevantSessions.forEach(s => {
-    studyTimeSec += (s.durationSec || 0);
-  });
+export function getPeriodStats(period = 'week', sessions = [], subjects = [], now = getEffectiveNow(), locale = 'en-US', weekOffset = 0) {
+  const bySubjectData = getBySubject(period, sessions, subjects, now, weekOffset);
+  const studyTimeSec = bySubjectData.totalPeriodSec;
 
   // Calculate delta percentage vs previous period
   let deltaPct = null;
   if (period === 'week') {
-    const comp = getWeekComparison(getWeekMonday(now), sessions, now);
+    const baseMonday = getWeekMonday(now);
+    const targetMonday = new Date(baseMonday.getFullYear(), baseMonday.getMonth(), baseMonday.getDate() + weekOffset * 7, 0, 0, 0, 0);
+    const comp = getWeekComparison(targetMonday, sessions, now);
     deltaPct = comp.deltaPct;
   } else if (period === 'month') {
     // Compare this month up to now vs last month up to same day
@@ -411,14 +514,17 @@ export function getPeriodStats(period = 'week', sessions = [], subjects = [], no
     const lastMonthDays = new Date(lastMonthYear, lastMonth + 1, 0).getDate();
     const targetDay = Math.min(curDay, lastMonthDays);
 
-    const lastMonthStartTs = new Date(lastMonthYear, lastMonth, 1, 0, 0, 0, 0).getTime();
-    const lastMonthEndTs = new Date(lastMonthYear, lastMonth, targetDay, now.getHours(), now.getMinutes(), now.getSeconds()).getTime();
+    const startKey = toLocalDateKey(new Date(lastMonthYear, lastMonth, 1));
+    const endKey = toLocalDateKey(new Date(lastMonthYear, lastMonth, targetDay));
 
     let lastMonthSec = 0;
-    sessions.forEach(s => {
-      if (s.timestamp >= lastMonthStartTs && s.timestamp <= lastMonthEndTs) {
-        lastMonthSec += (s.durationSec || 0);
-      }
+    sessions.forEach(sess => {
+      const segs = splitSessionByDays(sess);
+      segs.forEach(seg => {
+        if (seg.dateKey >= startKey && seg.dateKey <= endKey) {
+          lastMonthSec += seg.durationSec;
+        }
+      });
     });
 
     if (lastMonthSec > 0) {
@@ -426,14 +532,47 @@ export function getPeriodStats(period = 'week', sessions = [], subjects = [], no
     }
   }
 
+  // Count unique sessions that contributed to this period
+  const uniqueSessionIds = new Set();
+  if (period === 'week') {
+    const baseMonday = getWeekMonday(now);
+    const monday = new Date(baseMonday.getFullYear(), baseMonday.getMonth(), baseMonday.getDate() + weekOffset * 7, 0, 0, 0, 0);
+    const sunday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6);
+    const startKey = toLocalDateKey(monday);
+    const endKey = toLocalDateKey(sunday);
+    sessions.forEach(sess => {
+      splitSessionByDays(sess).forEach(seg => {
+        if (seg.dateKey >= startKey && seg.dateKey <= endKey) {
+          uniqueSessionIds.add(seg.originalSessionId);
+        }
+      });
+    });
+  } else if (period === 'month') {
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const startKey = toLocalDateKey(new Date(year, month, 1));
+    const endKey = toLocalDateKey(new Date(year, month + 1, 0));
+    sessions.forEach(sess => {
+      splitSessionByDays(sess).forEach(seg => {
+        if (seg.dateKey >= startKey && seg.dateKey <= endKey) {
+          uniqueSessionIds.add(seg.originalSessionId);
+        }
+      });
+    });
+  } else {
+    sessions.forEach(sess => {
+      if ((sess.durationSec || 0) > 0) uniqueSessionIds.add(sess.id);
+    });
+  }
+
   const streak = getStreak(period, sessions, now);
-  const bestDay = getBestDay(period, sessions, now, locale);
+  const bestDay = getBestDay(period, sessions, now, locale, weekOffset);
 
   return {
     studyTimeSec,
     studyTimeStr: formatDurationHM(studyTimeSec),
     deltaPct, // null for All time or when prev period was 0
-    sessionsCount: relevantSessions.length,
+    sessionsCount: uniqueSessionIds.size,
     streakCount: streak.daysCount,
     streakStr: streak.text,
     bestDay
@@ -441,27 +580,50 @@ export function getPeriodStats(period = 'week', sessions = [], subjects = [], no
 }
 
 /**
- * Selector: getBySubject(period, sessions, subjects, now)
+ * Selector: getBySubject(period, sessions, subjects, now, weekOffset)
  */
-export function getBySubject(period = 'week', sessions = [], subjects = [], now = new Date()) {
-  const startTs = getStartOfPeriodTimestamp(period, now);
-  const relevantSessions = sessions.filter(s => s.timestamp >= startTs);
+export function getBySubject(period = 'week', sessions = [], subjects = [], now = getEffectiveNow(), weekOffset = 0) {
+  const lang = getLang();
+  let filterFn;
+
+  if (period === 'week') {
+    const baseMonday = getWeekMonday(now);
+    const monday = new Date(baseMonday.getFullYear(), baseMonday.getMonth(), baseMonday.getDate() + weekOffset * 7, 0, 0, 0, 0);
+    const sunday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6);
+    const startKey = toLocalDateKey(monday);
+    const endKey = toLocalDateKey(sunday);
+    filterFn = (dateKey) => dateKey >= startKey && dateKey <= endKey;
+  } else if (period === 'month') {
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const startKey = toLocalDateKey(new Date(year, month, 1));
+    const endKey = toLocalDateKey(new Date(year, month + 1, 0));
+    filterFn = (dateKey) => dateKey >= startKey && dateKey <= endKey;
+  } else {
+    filterFn = () => true;
+  }
 
   let totalPeriodSec = 0;
   const timeMap = new Map();
 
-  relevantSessions.forEach(s => {
-    const dur = s.durationSec || 0;
-    totalPeriodSec += dur;
-    timeMap.set(s.subjectId, (timeMap.get(s.subjectId) || 0) + dur);
+  sessions.forEach(sess => {
+    const segs = splitSessionByDays(sess);
+    segs.forEach(seg => {
+      if (filterFn(seg.dateKey)) {
+        totalPeriodSec += seg.durationSec;
+        timeMap.set(seg.subjectId, (timeMap.get(seg.subjectId) || 0) + seg.durationSec);
+      }
+    });
   });
 
   const subjectList = subjects.map(s => {
     const timeSec = timeMap.get(s.id) || 0;
     const sharePct = totalPeriodSec > 0 ? (timeSec / totalPeriodSec) * 100 : 0;
+    const localizedName = (s.names && s.names[lang]) || s.name;
     return {
       id: s.id,
-      name: s.name,
+      name: localizedName,
+      rawName: s.name,
       names: s.names,
       color: s.color || '#4ec9b0',
       icon: s.icon || 'more-horizontal',
@@ -471,7 +633,7 @@ export function getBySubject(period = 'week', sessions = [], subjects = [], now 
     };
   });
 
-  // Sort by time descending; 0m subjects last
+  // Sort by time descending; 0m subjects last, then alphabetical
   subjectList.sort((a, b) => {
     if (b.timeSec !== a.timeSec) {
       return b.timeSec - a.timeSec;

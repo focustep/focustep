@@ -1,3 +1,4 @@
+import './style.css';
 import { initI18n, onLanguageChange } from './modules/i18n.js';
 import { initUI } from './modules/ui.js';
 import { initTheme } from './modules/theme.js';
@@ -56,4 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
   setOnTodosChanged((dateKeyStr) => {
     renderDayDetail(dateKeyStr);
   });
+
+  // 4. Dev-only testing toolkit (tree-shaken out in production build)
+  if (import.meta.env.DEV) {
+    import('./modules/dev/index.js').then(({ initDevToolkit }) => {
+      initDevToolkit();
+    });
+  }
 });

@@ -3,8 +3,15 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig(({ command, mode }) => {
+  const isBuild = command === 'build';
   return {
+    define: isBuild
+      ? {
+          'import.meta.env.DEV': 'false',
+          'import.meta.env.PROD': 'true',
+        }
+      : {},
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

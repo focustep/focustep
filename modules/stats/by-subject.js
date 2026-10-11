@@ -16,6 +16,7 @@
  */
 
 import { statsStore } from './store.js';
+import { getEffectiveNow } from './time.js';
 import { getBySubject, formatDurationHM } from './selectors.js';
 import { getSubjectSvg } from '../subjects-db.js';
 import { tr, getLang } from '../i18n.js';
@@ -35,8 +36,9 @@ export function renderBySubjectCard() {
   const sessions = statsStore.getSessions();
   const subjects = statsStore.getSubjects();
   const activeFilterId = statsStore.getSubjectFilter();
+  const weekOffset = statsStore.getWeekOffset();
 
-  const data = getBySubject(period, sessions, subjects, new Date());
+  const data = getBySubject(period, sessions, subjects, getEffectiveNow(), weekOffset);
   const totalSec = data.totalPeriodSec;
   const formattedTotal = data.formattedTotal;
   const subjectList = data.subjects;
@@ -51,7 +53,9 @@ export function renderBySubjectCard() {
 
   let ringSvgMarkup = '';
 
-  if (totalSec <= 0) {
+  const activeSubjects = subjectList.filter(s => s.timeSec > 0);
+
+  if (totalSec <= 0 || activeSubjects.length === 0) {
     // Neutral gray track
     ringSvgMarkup = `
       <circle
@@ -62,36 +66,54 @@ export function renderBySubjectCard() {
         class="by-subject-empty-ring"
       />
     `;
+  } else if (activeSubjects.length === 1) {
+    // Single subject: full solid ring without gap
+    const s = activeSubjects[0];
+    ringSvgMarkup = `
+      <circle
+        cx="75" cy="75" r="${rRing}"
+        pathLength="100"
+        fill="none"
+        stroke="${s.color || '#4ec9b0'}"
+        stroke-width="${strokeWidth}"
+        stroke-linecap="round"
+        stroke-dasharray="100 0"
+        stroke-dashoffset="0"
+        class="by-subject-segment"
+        data-subject-id="${s.id}"
+        tabindex="0"
+        role="button"
+        aria-label="${s.name}: ${s.formattedTime} (100%)"
+      />
+    `;
   } else {
-    // Proportional segments
+    // Multiple subjects: proportional segments with 1.6% gap
     let accumulatedOffset = 0;
 
-    const segmentsMarkup = subjectList
-      .filter(s => s.timeSec > 0)
-      .map(s => {
-        const share = s.sharePct;
-        const dash = Math.max(0.6, share - gap);
-        const offset = -accumulatedOffset;
-        accumulatedOffset += share;
+    const segmentsMarkup = activeSubjects.map(s => {
+      const share = s.sharePct;
+      const dash = Math.max(0.6, share - gap);
+      const offset = -accumulatedOffset;
+      accumulatedOffset += share;
 
-        return `
-          <circle
-            cx="75" cy="75" r="${rRing}"
-            pathLength="100"
-            fill="none"
-            stroke="${s.color || '#4ec9b0'}"
-            stroke-width="${strokeWidth}"
-            stroke-linecap="round"
-            stroke-dasharray="${dash.toFixed(2)} ${(100 - dash).toFixed(2)}"
-            stroke-dashoffset="${offset.toFixed(2)}"
-            class="by-subject-segment"
-            data-subject-id="${s.id}"
-            tabindex="0"
-            role="button"
-            aria-label="${s.name}: ${s.formattedTime} (${Math.round(s.sharePct)}%)"
-          />
-        `;
-      }).join('');
+      return `
+        <circle
+          cx="75" cy="75" r="${rRing}"
+          pathLength="100"
+          fill="none"
+          stroke="${s.color || '#4ec9b0'}"
+          stroke-width="${strokeWidth}"
+          stroke-linecap="round"
+          stroke-dasharray="${dash.toFixed(2)} ${(100 - dash).toFixed(2)}"
+          stroke-dashoffset="${offset.toFixed(2)}"
+          class="by-subject-segment"
+          data-subject-id="${s.id}"
+          tabindex="0"
+          role="button"
+          aria-label="${s.name}: ${s.formattedTime} (${Math.round(s.sharePct)}%)"
+        />
+      `;
+    }).join('');
 
     ringSvgMarkup = segmentsMarkup;
   }
@@ -152,18 +174,13 @@ export function renderBySubjectCard() {
   // Cached Elements
   const containerBox = container.querySelector('#by-subject-container');
   const scroller = container.querySelector('#by-subject-chips-scroller');
-  const gridEl = container.querySelector('#by-subject-grid');
+  const gridEl = container.querySelector('#by-subject-chips-grid');
+  const ringBox = container.querySelector('.by-subject-ring-box');
   const centerSub = container.querySelector('#by-subject-ring-sub');
   const centerVal = container.querySelector('#by-subject-ring-val');
 
   const segments = container.querySelectorAll('.by-subject-segment');
   const chips = container.querySelectorAll('.by-subject-chip');
-
-  const segmentMap = new Map();
-  segments.forEach(s => segmentMap.set(s.getAttribute('data-subject-id'), s));
-
-  const chipMap = new Map();
-  chips.forEach(c => chipMap.set(c.getAttribute('data-subject-id'), c));
 
   let currentHoveredId = null;
 
@@ -210,7 +227,7 @@ export function renderBySubjectCard() {
     segments.forEach(s => s.classList.remove('active-hover'));
   }
 
-  // Event Delegation for Chips
+  // Event Delegation for Chips Grid
   const onGridOver = (e) => {
     const chip = e.target.closest('.by-subject-chip');
     if (!chip) return;
@@ -219,14 +236,6 @@ export function renderBySubjectCard() {
     const color = chip.getAttribute('data-subject-color');
     const time = chip.getAttribute('data-subject-time');
     highlightSubject(id, name, color, time);
-  };
-
-  const onGridOut = (e) => {
-    const chip = e.target.closest('.by-subject-chip');
-    if (!chip) return;
-    const related = e.relatedTarget;
-    if (chip.contains(related)) return;
-    resetHighlight();
   };
 
   const onGridClick = (e) => {
@@ -250,14 +259,16 @@ export function renderBySubjectCard() {
 
   if (gridEl) {
     gridEl.addEventListener('mouseover', onGridOver);
-    gridEl.addEventListener('mouseout', onGridOut);
+    gridEl.addEventListener('mouseleave', resetHighlight);
     gridEl.addEventListener('focusin', onGridOver);
-    gridEl.addEventListener('focusout', onGridOut);
+    gridEl.addEventListener('focusout', (e) => {
+      if (!gridEl.contains(e.relatedTarget)) resetHighlight();
+    });
     gridEl.addEventListener('click', onGridClick);
     gridEl.addEventListener('keydown', onGridKey);
   }
 
-  // Hover on SVG Segments
+  // Hover & click on SVG Segments
   segments.forEach(seg => {
     const id = seg.getAttribute('data-subject-id');
     const item = subjectList.find(s => s.id === id);
@@ -274,15 +285,22 @@ export function renderBySubjectCard() {
   activeCleanup = () => {
     if (gridEl) {
       gridEl.removeEventListener('mouseover', onGridOver);
-      gridEl.removeEventListener('mouseout', onGridOut);
+      gridEl.removeEventListener('mouseleave', resetHighlight);
       gridEl.removeEventListener('focusin', onGridOver);
-      gridEl.removeEventListener('focusout', onGridOut);
       gridEl.removeEventListener('click', onGridClick);
       gridEl.removeEventListener('keydown', onGridKey);
     }
   };
 }
 
+let bySubjectSubscribed = false;
+
 export function initBySubjectCard() {
   renderBySubjectCard();
+  if (!bySubjectSubscribed) {
+    bySubjectSubscribed = true;
+    statsStore.subscribe(() => {
+      renderBySubjectCard();
+    });
+  }
 }

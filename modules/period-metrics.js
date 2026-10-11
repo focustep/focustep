@@ -11,6 +11,7 @@
  */
 
 import { statsStore } from './stats/store.js';
+import { getEffectiveNow } from './stats/time.js';
 import { getPeriodStats } from './stats/selectors.js';
 import { renderThisWeekCard } from './stats/this-week.js';
 import { renderBySubjectCard } from './stats/by-subject.js';
@@ -31,26 +32,16 @@ export function renderOverviewMetrics() {
   const sessions = statsStore.getSessions();
   const subjects = statsStore.getSubjects();
   const locale = (tr() && tr().localeCode) || 'en-US';
+  const weekOffset = statsStore.getWeekOffset();
 
-  const stats = getPeriodStats(period, sessions, subjects, new Date(), locale);
+  const stats = getPeriodStats(period, sessions, subjects, getEffectiveNow(), locale, weekOffset);
 
   const studyTimeEl = document.getElementById('metric-study-time');
-  const studyDeltaEl = document.getElementById('metric-study-delta');
   const sessionsEl = document.getElementById('metric-sessions');
   const streakEl = document.getElementById('metric-streak');
   const bestDayEl = document.getElementById('metric-best-day');
 
   if (studyTimeEl) studyTimeEl.textContent = stats.studyTimeStr;
-
-  if (studyDeltaEl) {
-    if (stats.deltaPct !== null) {
-      studyDeltaEl.style.display = 'inline-flex';
-      studyDeltaEl.textContent = `${stats.deltaPct >= 0 ? '+' : ''}${stats.deltaPct}%`;
-      studyDeltaEl.className = `stats-metric-delta-chip ${stats.deltaPct >= 0 ? 'positive' : 'negative'}`;
-    } else {
-      studyDeltaEl.style.display = 'none';
-    }
-  }
 
   if (sessionsEl) sessionsEl.textContent = String(stats.sessionsCount);
   if (streakEl) streakEl.textContent = stats.streakStr;

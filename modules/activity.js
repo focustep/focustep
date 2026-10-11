@@ -2,6 +2,7 @@ import { getRecentActivitySessions, clearAllSessions, deleteSession, undoLastSes
 import { renderTimerSubjectBadge, renderTimerSubjectDropdown, updateDropdownPosition } from './timer-subject-badge.js';
 import { renderStats } from './stats.js';
 import { statsStore } from './stats/store.js';
+import { getEffectiveNow } from './stats/time.js';
 import { tr } from './i18n.js';
 
 function formatSessionDuration(sec) {
@@ -22,7 +23,7 @@ function formatSessionDuration(sec) {
 
 function formatSessionTimestamp(timestamp) {
   const date = new Date(timestamp);
-  const now = new Date();
+  const now = getEffectiveNow();
   
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
