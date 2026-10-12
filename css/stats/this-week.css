@@ -768,7 +768,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #3ddbb6;
+  background: #54CBB1;
   color: #0b0f12;
   border: none;
   border-radius: 999px;
@@ -776,13 +776,24 @@
   font-size: 13.5px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 3px 12px rgba(61, 219, 182, 0.28);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 3px 12px rgba(84, 203, 177, 0.28);
+  transition: background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
-.week-empty-start-btn:hover {
+.week-empty-start-btn:hover,
+.week-empty-start-btn:focus-visible {
+  background: #33FFD3;
+  color: #0b0f12;
+  box-shadow: 0 0 16px rgba(51, 255, 211, 0.45);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(61, 219, 182, 0.45);
+  outline: none;
+}
+
+.week-empty-start-btn:active {
+  background: #2EE6BD;
+  color: #0b0f12;
+  box-shadow: 0 0 10px rgba(46, 230, 189, 0.35);
+  transform: translateY(0);
 }
 
 /* Keyframes */
