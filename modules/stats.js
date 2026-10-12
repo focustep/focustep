@@ -1,7 +1,7 @@
 import { tr } from './i18n.js';
 import { fmtHM, dateKey, getDayData, getDayStatus } from './helpers.js';
 import { getBase } from './timer.js';
-import { initActivityFeed, renderActivityFeed } from './activity.js';
+import { initActivityFeed, renderActivityFeed, updateActivityCardHeight } from './activity.js';
 import { initPeriodMetrics, renderOverviewMetrics } from './period-metrics.js';
 import { initSubjectModal } from './subject-modal.js';
 import { initThisWeekCard, renderThisWeekCard } from './stats/this-week.js';
@@ -50,6 +50,7 @@ export function renderStats() {
   renderThisWeekCard();
   renderBySubjectCard();
   renderActivityFeed();
+  updateActivityCardHeight();
 }
 
 export function renderGoal() {

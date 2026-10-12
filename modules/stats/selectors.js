@@ -226,6 +226,11 @@ export function getWeekDays(weekMonday = getWeekMonday(), sessions = [], subject
       lastWeekTotalSec += seg.durationSec;
     });
 
+    let deltaPct = null;
+    if (totalSec > 0 && lastWeekTotalSec > 0 && !isFuture) {
+      deltaPct = Math.round(((totalSec - lastWeekTotalSec) / lastWeekTotalSec) * 100);
+    }
+
     days.push({
       date: dateObj,
       dateKey,
@@ -235,11 +240,49 @@ export function getWeekDays(weekMonday = getWeekMonday(), sessions = [], subject
       isFuture,
       totalSec,
       bySubject,
-      lastWeekTotalSec
+      lastWeekTotalSec,
+      deltaPct
     });
   }
 
   return days;
+}
+
+/**
+ * Selector: getDayDelta(dateKey, sessions, now)
+ * Compares dateKey's total study seconds against the same weekday last week
+ * dayDeltaPct = Math.round((thisDaySec - lastWeekSameDaySec) / lastWeekSameDaySec * 100)
+ * Returns number when BOTH thisDaySec > 0 AND lastWeekSameDaySec > 0, otherwise null
+ */
+export function getDayDelta(dateKey, sessions = [], now = getEffectiveNow()) {
+  if (!dateKey) return null;
+  const parts = typeof dateKey === 'string' ? dateKey.split('-').map(Number) : [dateKey.getFullYear(), dateKey.getMonth() + 1, dateKey.getDate()];
+  const thisDate = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0, 0);
+  const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+  if (thisDate > nowDate) return null; // future day is null
+
+  const lastWeekDate = new Date(parts[0], parts[1] - 1, parts[2] - 7, 0, 0, 0, 0);
+  const thisKey = toLocalDateKey(thisDate);
+  const lastKey = toLocalDateKey(lastWeekDate);
+
+  let thisDaySec = 0;
+  let lastWeekSameDaySec = 0;
+
+  for (const s of sessions) {
+    const segs = splitSessionByDays(s);
+    for (const seg of segs) {
+      if (seg.dateKey === thisKey) {
+        thisDaySec += seg.durationSec;
+      } else if (seg.dateKey === lastKey) {
+        lastWeekSameDaySec += seg.durationSec;
+      }
+    }
+  }
+
+  if (thisDaySec > 0 && lastWeekSameDaySec > 0) {
+    return Math.round(((thisDaySec - lastWeekSameDaySec) / lastWeekSameDaySec) * 100);
+  }
+  return null;
 }
 
 /**
@@ -305,14 +348,16 @@ export function getPeakWindow(weekMonday = getWeekMonday(), sessions = []) {
 export function getWeekComparison(weekMonday = getWeekMonday(), sessions = [], now = getEffectiveNow()) {
   const daysThisWeek = getWeekDays(weekMonday, sessions, [], now);
   
-  // Elapsed days: for current week, up to today (1..7); for past weeks, all 7 days
-  const isCurrentWeek = toLocalDateKey(weekMonday) === toLocalDateKey(getWeekMonday(now));
-  const elapsedDayCount = isCurrentWeek 
-    ? Math.min(7, Math.max(1, ((now.getDay() + 6) % 7) + 1))
-    : 7;
+  // Let N = today's weekday index in the week (Monday = 1 ... Sunday = 7), local time
+  const dayOfWeek = now.getDay(); // 0 = Sun, 1 = Mon ... 6 = Sat
+  const N = ((dayOfWeek + 6) % 7) + 1; // 1 = Mon ... 7 = Sun
 
-  let thisWeekTotalSec = 0;
-  let lastWeekTotalSec = 0;
+  // Elapsed days: for current week, day-aligned span Monday up to and including today (N); for past weeks, all 7 days
+  const isCurrentWeek = toLocalDateKey(weekMonday) === toLocalDateKey(getWeekMonday(now));
+  const elapsedDayCount = isCurrentWeek ? N : 7;
+
+  let thisPeriodSec = 0;
+  let lastPeriodSec = 0;
   let fullWeekTotalSec = 0;
   let fullLastWeekTotalSec = 0;
 
@@ -320,21 +365,23 @@ export function getWeekComparison(weekMonday = getWeekMonday(), sessions = [], n
     fullWeekTotalSec += daysThisWeek[i].totalSec;
     fullLastWeekTotalSec += daysThisWeek[i].lastWeekTotalSec;
     if (i < elapsedDayCount) {
-      thisWeekTotalSec += daysThisWeek[i].totalSec;
-      lastWeekTotalSec += daysThisWeek[i].lastWeekTotalSec;
+      thisPeriodSec += daysThisWeek[i].totalSec;
+      lastPeriodSec += daysThisWeek[i].lastWeekTotalSec;
     }
   }
 
+  // Visibility rules: render the delta text ONLY when BOTH are true:
+  // a) the user has completed at least 1 session this week (today or earlier days of this week: thisPeriodSec > 0)
+  // b) lastPeriodSec > 0 (there is something to compare against)
+  // Otherwise deltaPct = null
   let deltaPct = null;
-  if (lastWeekTotalSec > 0) {
-    deltaPct = Math.round(((thisWeekTotalSec - lastWeekTotalSec) / lastWeekTotalSec) * 100);
-  } else if (thisWeekTotalSec > 0) {
-    deltaPct = 100;
+  if (thisPeriodSec > 0 && lastPeriodSec > 0) {
+    deltaPct = Math.round(((thisPeriodSec - lastPeriodSec) / lastPeriodSec) * 100);
   }
 
   // Daily average for this week
   const daysForAvg = Math.max(1, elapsedDayCount);
-  const totalForAvg = Math.max(thisWeekTotalSec, fullWeekTotalSec);
+  const totalForAvg = Math.max(thisPeriodSec, fullWeekTotalSec);
   const dailyAverageSec = Math.round(totalForAvg / daysForAvg);
 
   // Longest session touching this week
@@ -352,9 +399,11 @@ export function getWeekComparison(weekMonday = getWeekMonday(), sessions = [], n
   });
 
   return {
-    thisWeekTotalSec,
+    thisWeekTotalSec: thisPeriodSec,
+    thisPeriodSec,
     fullWeekTotalSec,
-    lastWeekTotalSec,
+    lastWeekTotalSec: lastPeriodSec,
+    lastPeriodSec,
     fullLastWeekTotalSec,
     deltaPct,
     dailyAverageSec,

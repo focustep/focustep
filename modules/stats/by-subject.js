@@ -20,6 +20,7 @@ import { getEffectiveNow } from './time.js';
 import { getBySubject, formatDurationHM } from './selectors.js';
 import { getSubjectSvg } from '../subjects-db.js';
 import { tr, getLang } from '../i18n.js';
+import { showTooltip, hideTooltip } from '../tooltips.js';
 
 let activeCleanup = null;
 
@@ -153,8 +154,7 @@ export function renderBySubjectCard() {
                    data-subject-color="${item.color}"
                    data-subject-name="${encodeURIComponent(item.name)}"
                    data-subject-time="${item.formattedTime}"
-                   aria-label="${item.name}: ${item.formattedTime}"
-                   title="${item.name} (${item.formattedTime})">
+                   aria-label="${item.name}: ${item.formattedTime}">
                 <div class="by-subject-chip-icon" style="background-color: ${item.color}24; color: ${item.color}; border-color: ${item.color}44;">
                   ${iconHtml}
                 </div>
@@ -172,6 +172,7 @@ export function renderBySubjectCard() {
   container.innerHTML = cardHtml;
 
   // Cached Elements
+  const cardEl = container.closest('.stats-by-subject-card') || container;
   const containerBox = container.querySelector('#by-subject-container');
   const scroller = container.querySelector('#by-subject-chips-scroller');
   const gridEl = container.querySelector('#by-subject-chips-grid');
@@ -211,6 +212,7 @@ export function renderBySubjectCard() {
   }
 
   function resetHighlight() {
+    hideTooltip();
     if (currentHoveredId === null) return;
     currentHoveredId = null;
 
@@ -236,6 +238,14 @@ export function renderBySubjectCard() {
     const color = chip.getAttribute('data-subject-color');
     const time = chip.getAttribute('data-subject-time');
     highlightSubject(id, name, color, time);
+
+    // Show tooltip only when name is actually truncated
+    const nameEl = chip.querySelector('.by-subject-chip-name');
+    if (nameEl && nameEl.scrollWidth > nameEl.clientWidth) {
+      showTooltip(chip, decodeURIComponent(name), 'top');
+    } else {
+      hideTooltip();
+    }
   };
 
   const onGridClick = (e) => {
@@ -268,6 +278,31 @@ export function renderBySubjectCard() {
     gridEl.addEventListener('keydown', onGridKey);
   }
 
+  // Vertical wheel scrolling works anywhere over the By Subject card
+  const onCardWheel = (e) => {
+    if (!scroller || !isScrollable) return;
+
+    const maxScroll = scroller.scrollHeight - scroller.clientHeight;
+    if (maxScroll <= 1) return; // Nothing to scroll, let page scroll normally
+
+    const delta = e.deltaY;
+    if (!delta) return;
+
+    const isAtTop = scroller.scrollTop <= 1;
+    const isAtBottom = scroller.scrollTop >= maxScroll - 1;
+
+    // Scroll chaining at edges: let page scroll normally if at boundaries
+    if ((delta < 0 && isAtTop) || (delta > 0 && isAtBottom)) {
+      return;
+    }
+
+    e.preventDefault();
+    scroller.scrollTop += delta;
+    hideTooltip();
+  };
+
+  cardEl.addEventListener('wheel', onCardWheel, { passive: false });
+
   // Hover & click on SVG Segments
   segments.forEach(seg => {
     const id = seg.getAttribute('data-subject-id');
@@ -290,6 +325,10 @@ export function renderBySubjectCard() {
       gridEl.removeEventListener('click', onGridClick);
       gridEl.removeEventListener('keydown', onGridKey);
     }
+    if (cardEl) {
+      cardEl.removeEventListener('wheel', onCardWheel);
+    }
+    hideTooltip();
   };
 }
 

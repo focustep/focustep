@@ -1,12 +1,20 @@
 /**
- * Custom Floating Tooltips System for Focus Step
- * Adds smooth, accessible, non-intrusive hover tooltips
+ * Shared Reusable Tooltip Component for Focustep
+ * Renders an accessible floating popover card positioned next to trigger
  */
 
 let tooltipEl = null;
+let currentTrigger = null;
+let isVisible = false;
+let dismissTimer = null;
 
 function createTooltipElement() {
-  if (tooltipEl) return tooltipEl;
+  if (tooltipEl && document.body.contains(tooltipEl)) return tooltipEl;
+
+  if (tooltipEl) {
+    try { tooltipEl.remove(); } catch (e) {}
+  }
+
   tooltipEl = document.createElement('div');
   tooltipEl.className = 'focustep-tooltip';
   tooltipEl.setAttribute('role', 'tooltip');
@@ -15,85 +23,178 @@ function createTooltipElement() {
   tooltipEl.style.top = '-9999px';
   tooltipEl.style.left = '-9999px';
   tooltipEl.style.pointerEvents = 'none';
+  tooltipEl.style.zIndex = '100000';
   tooltipEl.style.opacity = '0';
-  tooltipEl.style.zIndex = '999999';
+  tooltipEl.style.transform = 'scale(0.96)';
+
   document.body.appendChild(tooltipEl);
   return tooltipEl;
 }
 
 export function showTooltip(target, text, placement = 'top') {
-  if (!text) return;
+  if (!target || !text) return;
+  if (dismissTimer) {
+    clearTimeout(dismissTimer);
+    dismissTimer = null;
+  }
+
   const tip = createTooltipElement();
+  currentTrigger = target;
   tip.textContent = text;
-  tip.classList.add('visible');
   tip.setAttribute('aria-hidden', 'false');
-  tip.style.opacity = '1';
 
-  const rect = target.getBoundingClientRect();
+  // Suppress duplicate native browser tooltip
+  if (target.hasAttribute('title')) {
+    const rawTitle = target.getAttribute('title');
+    if (rawTitle) target.setAttribute('data-stored-title', rawTitle);
+    target.removeAttribute('title');
+  }
+
+  // Measure initial dimensions while invisible
+  tip.style.display = 'block';
+  tip.style.visibility = 'hidden';
+  tip.style.opacity = '0';
+  tip.style.transform = 'scale(1)';
+
+  const triggerRect = target.getBoundingClientRect();
   const tipRect = tip.getBoundingClientRect();
+  const pad = 10;
+  const gap = 8;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
 
-  let top = 0;
-  let left = 0;
+  // Center horizontally over target
+  let left = triggerRect.left + (triggerRect.width - tipRect.width) / 2;
+
+  // Clamp horizontally within viewport
+  if (left < pad) {
+    left = pad;
+  } else if (left + tipRect.width > vw - pad) {
+    left = Math.max(pad, vw - pad - tipRect.width);
+  }
+
+  // Vertical calculation: prefer above
+  let top = triggerRect.top - tipRect.height - gap;
 
   if (placement === 'top') {
-    top = rect.top - tipRect.height - 8;
-    left = rect.left + (rect.width - tipRect.width) / 2;
+    // Auto-flip to bottom if clipping top
+    if (top < pad && triggerRect.bottom + tipRect.height + gap <= vh - pad) {
+      top = triggerRect.bottom + gap;
+    }
   } else if (placement === 'bottom') {
-    top = rect.bottom + 8;
-    left = rect.left + (rect.width - tipRect.width) / 2;
-  } else if (placement === 'left') {
-    top = rect.top + (rect.height - tipRect.height) / 2;
-    left = rect.left - tipRect.width - 8;
-  } else if (placement === 'right') {
-    top = rect.top + (rect.height - tipRect.height) / 2;
-    left = rect.right + 8;
+    top = triggerRect.bottom + gap;
+    // Auto-flip to top if clipping bottom
+    if (top + tipRect.height > vh - pad && triggerRect.top - tipRect.height - gap >= pad) {
+      top = triggerRect.top - tipRect.height - gap;
+    }
   }
 
-  // Viewport bounds protection
-  const pad = 10;
-  if (left < pad) left = pad;
-  if (left + tipRect.width > window.innerWidth - pad) {
-    left = window.innerWidth - pad - tipRect.width;
-  }
+  // Clamp vertically within viewport
   if (top < pad) {
-    // Flip to bottom if clipping top
-    top = rect.bottom + 8;
+    top = pad;
+  } else if (top + tipRect.height > vh - pad) {
+    top = Math.max(pad, vh - pad - tipRect.height);
   }
 
   tip.style.top = `${Math.round(top)}px`;
   tip.style.left = `${Math.round(left)}px`;
+  tip.style.visibility = 'visible';
+
+  requestAnimationFrame(() => {
+    tip.classList.add('visible');
+    tip.style.opacity = '1';
+    tip.style.transform = 'scale(1)';
+    isVisible = true;
+  });
 }
 
 export function hideTooltip() {
-  if (!tooltipEl) return;
+  if (!tooltipEl || !isVisible) return;
+  isVisible = false;
+  currentTrigger = null;
+
   tooltipEl.classList.remove('visible');
   tooltipEl.setAttribute('aria-hidden', 'true');
   tooltipEl.style.opacity = '0';
-  tooltipEl.style.top = '-9999px';
-  tooltipEl.style.left = '-9999px';
+  tooltipEl.style.transform = 'scale(0.96)';
+
+  if (dismissTimer) clearTimeout(dismissTimer);
+  dismissTimer = setTimeout(() => {
+    if (!isVisible && tooltipEl) {
+      tooltipEl.style.visibility = 'hidden';
+      tooltipEl.style.top = '-9999px';
+      tooltipEl.style.left = '-9999px';
+    }
+  }, 160);
 }
 
+let tooltipsInitialized = false;
+
 export function initTooltips() {
+  if (tooltipsInitialized) return;
+  tooltipsInitialized = true;
   createTooltipElement();
 
-  // Attach event delegation for [data-tooltip]
-  document.addEventListener('mouseover', (e) => {
-    const el = e.target.closest('[data-tooltip]');
-    if (el) {
-      const tipText = el.getAttribute('data-tooltip');
-      const placement = el.getAttribute('data-tooltip-pos') || 'top';
-      showTooltip(el, tipText, placement);
+  const handleTriggerEnter = (target) => {
+    if (!target) return;
+    const el = target.closest('[data-tooltip]');
+    if (!el) return;
+
+    if (el.hasAttribute('title')) {
+      const rawTitle = el.getAttribute('title');
+      if (rawTitle) el.setAttribute('data-stored-title', rawTitle);
+      el.removeAttribute('title');
     }
+
+    const tipText = el.getAttribute('data-tooltip');
+    if (!tipText) return;
+    const placement = el.getAttribute('data-tooltip-pos') || 'top';
+    showTooltip(el, tipText, placement);
+  };
+
+  const handleTriggerLeave = (target, relatedTarget) => {
+    if (!currentTrigger) return;
+    if (relatedTarget && currentTrigger.contains(relatedTarget)) return;
+    hideTooltip();
+  };
+
+  // Mouse hover
+  document.addEventListener('mouseover', (e) => {
+    handleTriggerEnter(e.target);
   });
 
   document.addEventListener('mouseout', (e) => {
-    const el = e.target.closest('[data-tooltip]');
-    if (el) {
+    handleTriggerLeave(e.target, e.relatedTarget);
+  });
+
+  // Keyboard focus & blur
+  document.addEventListener('focusin', (e) => {
+    handleTriggerEnter(e.target);
+  });
+
+  document.addEventListener('focusout', (e) => {
+    handleTriggerLeave(e.target, e.relatedTarget);
+  });
+
+  // Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
       hideTooltip();
     }
   });
 
-  // Hide tooltip on scroll or click
-  window.addEventListener('scroll', hideTooltip, { passive: true });
-  document.addEventListener('click', hideTooltip);
+  // Touch devices: tap on trigger shows tooltip, tap outside dismisses
+  document.addEventListener('touchstart', (e) => {
+    const el = e.target.closest('[data-tooltip]');
+    if (el) {
+      handleTriggerEnter(el);
+    } else if (isVisible) {
+      hideTooltip();
+    }
+  }, { passive: true });
+
+  // Dismiss on window scroll
+  window.addEventListener('scroll', () => {
+    if (isVisible) hideTooltip();
+  }, { passive: true });
 }

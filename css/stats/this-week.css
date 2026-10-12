@@ -191,6 +191,18 @@
   border: 1px solid rgba(244, 63, 94, 0.24);
 }
 
+.week-delta-chip.neutral {
+  background: rgba(255, 255, 255, 0.08);
+  color: #8b98a3;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="light"] .week-delta-chip.neutral {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-muted);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
 /* Body (Split Chart + Insights) */
 .week-card-body {
   display: flex;
@@ -220,7 +232,7 @@
 .week-bars-wrapper {
   position: relative;
   width: 100%;
-  height: 150px;
+  height: 188px;
 }
 
 /* Dashed Horizontal Average Line */
@@ -276,24 +288,40 @@
   align-items: center;
   position: relative;
   height: 100%;
+  width: 100%;
   cursor: pointer;
   outline: none;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.week-bar-col:hover,
-.week-bar-col:focus-visible {
+.week-bar-col:hover .week-bar-track,
+.week-bar-col:focus-visible .week-bar-track,
+.week-bar-col:focus .week-bar-track,
+.week-bar-col.is-active .week-bar-track {
   transform: translateY(-3px);
 }
 
 .week-bar-track {
   width: clamp(34px, 5.2vw, 54px);
-  height: 100%;
+  height: 150px;
+  flex-shrink: 0;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.week-empty-bars-wrapper .week-bar-track {
+  height: 110px;
+}
+
+.week-col-label-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
 }
 
 /* Last Week Ghost Pill */
@@ -373,10 +401,10 @@
   background: rgba(0, 0, 0, 0.2);
 }
 
-/* Glass Tooltip on Hover / Focus / Tap */
+/* Glass Tooltip on Hover / Focus / Tap - Auto-positioned near bar top */
 .week-glass-tooltip {
   position: absolute;
-  bottom: calc(100% + 12px);
+  bottom: calc(var(--bar-height-pct, 100%) + 10px);
   left: 50%;
   transform: translateX(-50%) translateY(4px);
   background: rgba(18, 23, 27, 0.92);
@@ -403,9 +431,12 @@
 }
 
 .week-bar-col:hover .week-glass-tooltip,
-.week-bar-col:focus-visible .week-glass-tooltip {
+.week-bar-col:focus-visible .week-glass-tooltip,
+.week-bar-col:focus .week-glass-tooltip,
+.week-bar-col.is-active .week-glass-tooltip {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
   transform: translateX(-50%) translateY(0);
 }
 
@@ -414,7 +445,9 @@
   transform: translateX(0) translateY(4px);
 }
 .week-bar-col:first-child:hover .week-glass-tooltip,
-.week-bar-col:first-child:focus-visible .week-glass-tooltip {
+.week-bar-col:first-child:focus-visible .week-glass-tooltip,
+.week-bar-col:first-child:focus .week-glass-tooltip,
+.week-bar-col:first-child.is-active .week-glass-tooltip {
   transform: translateX(0) translateY(0);
 }
 
@@ -424,8 +457,78 @@
   transform: translateX(0) translateY(4px);
 }
 .week-bar-col:last-child:hover .week-glass-tooltip,
-.week-bar-col:last-child:focus-visible .week-glass-tooltip {
+.week-bar-col:last-child:focus-visible .week-glass-tooltip,
+.week-bar-col:last-child:focus .week-glass-tooltip,
+.week-bar-col:last-child.is-active .week-glass-tooltip {
   transform: translateX(0) translateY(0);
+}
+
+/* Flipped below bar top when clipping top or bar is tall */
+.week-bar-col.flip-below .week-glass-tooltip,
+.week-glass-tooltip.flip-below {
+  bottom: auto;
+  top: calc(100% - var(--bar-height-pct, 100%) + 10px);
+  transform: translateX(-50%) translateY(-4px);
+}
+.week-bar-col.flip-below:hover .week-glass-tooltip,
+.week-bar-col.flip-below:focus-visible .week-glass-tooltip,
+.week-bar-col.flip-below:focus .week-glass-tooltip,
+.week-bar-col.flip-below.is-active .week-glass-tooltip,
+.week-bar-col:hover .week-glass-tooltip.flip-below,
+.week-bar-col:focus-visible .week-glass-tooltip.flip-below,
+.week-bar-col:focus .week-glass-tooltip.flip-below,
+.week-bar-col.is-active .week-glass-tooltip.flip-below {
+  transform: translateX(-50%) translateY(0);
+}
+
+.week-bar-col:first-child.flip-below .week-glass-tooltip,
+.week-bar-col:first-child .week-glass-tooltip.flip-below {
+  left: 0;
+  transform: translateX(0) translateY(-4px);
+}
+.week-bar-col:first-child.flip-below:hover .week-glass-tooltip,
+.week-bar-col:first-child.flip-below:focus-visible .week-glass-tooltip,
+.week-bar-col:first-child.flip-below:focus .week-glass-tooltip,
+.week-bar-col:first-child.flip-below.is-active .week-glass-tooltip,
+.week-bar-col:first-child:hover .week-glass-tooltip.flip-below,
+.week-bar-col:first-child:focus-visible .week-glass-tooltip.flip-below,
+.week-bar-col:first-child:focus .week-glass-tooltip.flip-below,
+.week-bar-col:first-child.is-active .week-glass-tooltip.flip-below {
+  transform: translateX(0) translateY(0);
+}
+
+.week-bar-col:last-child.flip-below .week-glass-tooltip,
+.week-bar-col:last-child .week-glass-tooltip.flip-below {
+  left: auto;
+  right: 0;
+  transform: translateX(0) translateY(-4px);
+}
+.week-bar-col:last-child.flip-below:hover .week-glass-tooltip,
+.week-bar-col:last-child.flip-below:focus-visible .week-glass-tooltip,
+.week-bar-col:last-child.flip-below:focus .week-glass-tooltip,
+.week-bar-col:last-child.flip-below.is-active .week-glass-tooltip,
+.week-bar-col:last-child:hover .week-glass-tooltip.flip-below,
+.week-bar-col:last-child:focus-visible .week-glass-tooltip.flip-below,
+.week-bar-col:last-child:focus .week-glass-tooltip.flip-below,
+.week-bar-col:last-child.is-active .week-glass-tooltip.flip-below {
+  transform: translateX(0) translateY(0);
+}
+
+.week-tooltip-delta-row {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+}
+
+[data-theme="light"] .week-tooltip-delta-row {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.week-tooltip-delta-row .week-delta-chip {
+  padding: 2px 8px;
+  font-size: 11px;
 }
 
 .week-glass-tooltip-header {
@@ -712,22 +815,24 @@
   color: var(--text);
 }
 
-/* Centered Empty State Overlay */
+/* Centered Empty State Block (Upper region above bars) */
+.week-empty-block,
 .week-empty-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  z-index: 10;
-  pointer-events: auto;
-  padding: 16px;
+  width: 100%;
+  padding: 6px 16px 20px;
   box-sizing: border-box;
+  position: relative;
+  z-index: 5;
+}
+
+.week-empty-bars-wrapper {
+  height: 110px;
+  min-height: 90px;
 }
 
 .week-empty-title {

@@ -415,3 +415,44 @@ footer.foot, .foot {
 .top-site-notification.shake {
   animation: notificationShake 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
+
+/* ==========================================================================
+   Shared Reusable Tooltip Component
+   Small styled popover card (modal-like)
+   ========================================================================== */
+.focustep-tooltip {
+  position: fixed;
+  z-index: 100000;
+  pointer-events: none;
+  background: #1c242a;
+  color: #f2f4f5;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  max-width: 240px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+[data-theme="light"] .focustep-tooltip {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.focustep-tooltip.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+

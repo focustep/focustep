@@ -38,6 +38,66 @@ function getWeekDateRangeStr(weekMonday, locale = 'en-US') {
   return `${startMonth} ${startDay} – ${endMonth} ${endDay}`;
 }
 
+let activeTouchCleanup = null;
+
+function renderDayPopover(day, dayShort, totalSec, hasTime, tooltipRows, barHeightPct) {
+  let deltaHtml = '';
+  if (day.totalSec > 0 && day.lastWeekTotalSec > 0 && day.deltaPct !== null) {
+    const deltaVal = day.deltaPct;
+    let deltaClass = 'neutral';
+    let sign = '';
+    let arrowSvg = '';
+
+    if (deltaVal > 0) {
+      deltaClass = 'positive';
+      sign = '+';
+      arrowSvg = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>`;
+    } else if (deltaVal < 0) {
+      deltaClass = 'negative';
+      arrowSvg = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+    }
+
+    const fn = tr().vsLastWeekday;
+    const vsLabel = typeof fn === 'function' ? fn(dayShort) : (fn ? `${fn} ${dayShort}` : `vs last ${dayShort}`);
+
+    deltaHtml = `
+      <div class="week-tooltip-delta-row">
+        <span class="week-delta-chip ${deltaClass}">
+          ${arrowSvg}
+          <span>${sign}${deltaVal}% ${vsLabel}</span>
+        </span>
+      </div>
+    `;
+  }
+
+  if (hasTime) {
+    return `
+      <div class="week-glass-tooltip" style="--bar-height-pct: ${barHeightPct}%;">
+        <div class="week-glass-tooltip-header">
+          <span class="week-tooltip-title">${dayShort} · ${formatDurationHM(totalSec)}</span>
+        </div>
+        <div class="week-glass-tooltip-body">
+          ${tooltipRows}
+        </div>
+        ${deltaHtml}
+      </div>
+    `;
+  }
+
+  return `
+    <div class="week-glass-tooltip" style="--bar-height-pct: ${barHeightPct}%;">
+      <div class="week-glass-tooltip-header">
+        <span class="week-tooltip-title">${dayShort} · 0m</span>
+      </div>
+      <div class="week-glass-tooltip-body">
+        <div class="week-glass-tooltip-row">
+          <span class="week-tooltip-subname">${tr().noActivity || 'No activity this day'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 export function renderThisWeekCard() {
   const container = document.getElementById('stats-this-week-card');
   if (!container) return;
@@ -76,43 +136,24 @@ export function renderThisWeekCard() {
     titleText = `${Math.abs(currentWeekOffset)} ${tr().weeksAgo || 'weeks ago'}`;
   }
 
-  // Delta chip comparison with last week (percentage diff vs previous week)
-  let deltaChipHtml = '';
-  if (weekComp.deltaPct !== null) {
-    const deltaVal = weekComp.deltaPct;
-    const isPositive = deltaVal >= 0;
-    const deltaClass = isPositive ? 'positive' : 'negative';
-    const sign = isPositive ? '+' : '';
-    const arrowSvg = isPositive
-      ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>`
-      : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
-    const vsText = tr().vsLastWeek || 'vs last week';
-    deltaChipHtml = `
-      <div class="week-delta-chip ${deltaClass}">
-        ${arrowSvg}
-        <span>${sign}${deltaVal}% ${vsText}</span>
-      </div>
-    `;
-  }
-
   const headerHtml = `
     <div class="week-card-header">
       <div class="week-card-title-group">
         <div class="week-card-title-row">
           <h3 class="week-card-title">${titleText}</h3>
           <div class="week-nav-controls">
-            <button type="button" class="week-nav-btn ${!canGoPrev ? 'is-disabled' : ''}" id="week-nav-prev" aria-label="Previous week" title="${tr().prevWeek || 'Previous week'}" ${!canGoPrev ? 'disabled' : ''}>
+            <button type="button" class="week-nav-btn ${!canGoPrev ? 'is-disabled' : ''}" id="week-nav-prev" aria-label="Previous week" data-tooltip="${tr().prevWeek || 'Previous week'}" ${!canGoPrev ? 'disabled' : ''}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
               </svg>
             </button>
-            <button type="button" class="week-nav-btn ${currentWeekOffset === 0 ? 'is-disabled' : ''}" id="week-nav-next" aria-label="Next week" title="${tr().nextWeek || 'Next week'}" ${currentWeekOffset === 0 ? 'disabled' : ''}>
+            <button type="button" class="week-nav-btn ${currentWeekOffset === 0 ? 'is-disabled' : ''}" id="week-nav-next" aria-label="Next week" data-tooltip="${tr().nextWeek || 'Next week'}" ${currentWeekOffset === 0 ? 'disabled' : ''}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
             ${currentWeekOffset !== 0 ? `
-              <button type="button" class="week-nav-reset-btn" id="week-nav-reset" title="${tr().currentWeek || 'This week'}">
+              <button type="button" class="week-nav-reset-btn" id="week-nav-reset" data-tooltip="${tr().currentWeek || 'This week'}" aria-label="${tr().currentWeek || 'This week'}">
                 <span>${tr().currentWeek || 'This week'}</span>
               </button>
             ` : ''}
@@ -120,11 +161,6 @@ export function renderThisWeekCard() {
         </div>
         <span class="week-card-range">${dateRangeStr}</span>
       </div>
-      ${deltaChipHtml ? `
-        <div class="week-card-header-right">
-          ${deltaChipHtml}
-        </div>
-      ` : ''}
     </div>
   `;
 
@@ -160,36 +196,40 @@ export function renderThisWeekCard() {
     bodyHtml = `
       <div class="week-card-body is-empty">
         <div class="week-chart-area empty-full-width">
-          <!-- 7 Ghost Bars -->
-          <div class="week-bars-container" style="height: ${chartHeightPx}px;">
-            ${weekDays.map((day, idx) => {
-              const ghostH = ghostHeightsEmpty[idx];
-              const isToday = day.isToday;
-              return `
-                <div class="week-bar-col ${isToday ? 'is-today' : ''}">
-                  <div class="week-bar-track" style="height: ${chartHeightPx}px;">
-                    <div class="week-bar-ghost-pill empty-ghost ${isToday ? 'today-pulse' : ''}" style="height: ${ghostH}%;"></div>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-
-            <!-- Centered Empty State Overlay -->
-            <div class="week-empty-overlay">
-              ${emptyOverlayContent}
-            </div>
+          <!-- Top Region: Centered Empty State Info & CTA -->
+          <div class="week-empty-block week-empty-overlay">
+            ${emptyOverlayContent}
           </div>
 
-          <!-- Weekday Labels -->
-          <div class="week-labels-row">
-            ${weekDays.map((day) => {
-              const dayShort = day.date.toLocaleDateString(locale, { weekday: 'short' });
-              return `
-                <div class="week-label-col">
-                  <span class="week-day-label ${day.isToday ? 'today-pill' : ''}">${dayShort}</span>
-                </div>
-              `;
-            }).join('')}
+          <!-- Region Below: 7 Ghost Bars -->
+          <div class="week-bars-wrapper week-empty-bars-wrapper">
+            <div class="week-bars-container">
+              ${weekDays.map((day, idx) => {
+                const ghostH = ghostHeightsEmpty[idx];
+                const isToday = day.isToday;
+                const dayShort = day.date.toLocaleDateString(locale, { weekday: 'short' });
+                const dayFull = day.date.toLocaleDateString(locale, { weekday: 'long' });
+                const tooltipHtml = renderDayPopover(day, dayShort, 0, false, '', ghostH);
+                return `
+                  <div class="week-bar-col ${isToday ? 'is-today' : ''}"
+                       data-date-key="${day.dateKey}"
+                       data-bar-height="${ghostH}"
+                       style="--bar-height-pct: ${ghostH}%;"
+                       tabindex="0"
+                       role="button"
+                       aria-label="${dayFull}: ${formatDurationHM(0)}">
+                    <div class="week-bar-track">
+                      <div class="week-bar-ghost-pill empty-ghost ${isToday ? 'today-pulse' : ''}" style="height: ${ghostH}%;"></div>
+                      <!-- Day Hover Info Popover -->
+                      ${tooltipHtml}
+                    </div>
+                    <div class="week-col-label-wrap">
+                      <span class="week-day-label ${isToday ? 'today-pill' : ''}">${dayShort}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
           </div>
 
           <!-- Streak Chain Row (7 Circles) -->
@@ -205,7 +245,7 @@ export function renderThisWeekCard() {
       <div class="week-card-body">
         <!-- Left: Chart Area -->
         <div class="week-chart-area">
-          <div class="week-bars-wrapper" style="height: ${chartHeightPx}px;">
+          <div class="week-bars-wrapper">
             <!-- 7 Columns -->
             <div class="week-bars-container">
               ${weekDays.map((day) => {
@@ -223,45 +263,51 @@ export function renderThisWeekCard() {
                 let segmentsHtml = '';
                 if (hasTime && day.bySubject.length > 0) {
                   segmentsHtml = day.bySubject.map((subj) => {
-                    const rangeInfo = subj.timeRangeText ? ` (${subj.timeRangeText})` : '';
                     return `
                       <div class="week-bar-segment" 
                            style="flex: ${Math.max(1, subj.timeSec)} 1 0px; min-height: 2px; background-color: ${subj.color || '#3ddbb6'};"
-                           data-subject-id="${subj.subjectId}"
-                           title="${subj.subjectName}: ${formatDurationHM(subj.timeSec)}${rangeInfo}">
+                           data-subject-id="${subj.subjectId}">
                       </div>
                     `;
                   }).join('');
                 }
 
                 // Tooltip rows
-                const tooltipRows = day.bySubject.map(s => `
-                  <div class="week-glass-tooltip-row">
-                    <span class="week-tooltip-dot" style="background-color: ${s.color};"></span>
-                    <div class="week-tooltip-sub-details">
-                      <div class="week-tooltip-sub-main">
-                        <span class="week-tooltip-subname">${s.subjectName}</span>
-                        <span class="week-tooltip-subtime">${formatDurationHM(s.timeSec)}</span>
-                      </div>
-                      ${s.timeRangeText ? `
-                        <div class="week-tooltip-subrange">
-                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="week-tooltip-clock-icon">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                          </svg>
-                          <span>${s.timeRangeText}</span>
+                let tooltipRows = '';
+                if (hasTime && day.bySubject.length > 0) {
+                  tooltipRows = day.bySubject.map(s => `
+                    <div class="week-glass-tooltip-row">
+                      <span class="week-tooltip-dot" style="background-color: ${s.color};"></span>
+                      <div class="week-tooltip-sub-details">
+                        <div class="week-tooltip-sub-main">
+                          <span class="week-tooltip-subname">${s.subjectName}</span>
+                          <span class="week-tooltip-subtime">${formatDurationHM(s.timeSec)}</span>
                         </div>
-                      ` : ''}
+                        ${s.timeRangeText ? `
+                          <div class="week-tooltip-subrange">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="week-tooltip-clock-icon">
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>${s.timeRangeText}</span>
+                          </div>
+                        ` : ''}
+                      </div>
                     </div>
-                  </div>
-                `).join('');
+                  `).join('');
+                }
 
                 const dayShort = day.date.toLocaleDateString(locale, { weekday: 'short' });
                 const dayFull = day.date.toLocaleDateString(locale, { weekday: 'long' });
 
+                const isFlipped = barHeightPct > 78;
+                const tooltipHtml = renderDayPopover(day, dayShort, totalSec, hasTime, tooltipRows, barHeightPct);
+
                 return `
-                  <div class="week-bar-col ${isToday ? 'is-today' : ''} ${hasTime ? 'has-data' : ''}" 
+                  <div class="week-bar-col ${isToday ? 'is-today' : ''} ${hasTime ? 'has-data' : ''} ${isFlipped ? 'flip-below' : ''}" 
                        data-date-key="${day.dateKey}"
+                       data-bar-height="${barHeightPct}"
+                       style="--bar-height-pct: ${barHeightPct}%;"
                        tabindex="0"
                        role="button"
                        aria-label="${dayFull}: ${formatDurationHM(totalSec)}">
@@ -279,38 +325,21 @@ export function renderThisWeekCard() {
                         <div class="week-bar-pill ${isToday ? 'today-glow' : ''}" style="height: ${barHeightPct}%;">
                           ${segmentsHtml}
                         </div>
-                      ` : (isPast ? `
+                      ` : (isPast || isToday ? `
                         <div class="week-bar-zero-dot"></div>
                       ` : '')}
+
+                      <!-- Glass Tooltip (On Hover / Focus / Tap) -->
+                      ${tooltipHtml}
                     </div>
 
-                    <!-- Glass Tooltip (On Hover / Focus) -->
-                    ${hasTime ? `
-                      <div class="week-glass-tooltip">
-                        <div class="week-glass-tooltip-header">
-                          <span class="week-tooltip-title">${dayShort} · ${formatDurationHM(totalSec)}</span>
-                        </div>
-                        <div class="week-glass-tooltip-body">
-                          ${tooltipRows}
-                        </div>
-                      </div>
-                    ` : ''}
+                    <div class="week-col-label-wrap">
+                      <span class="week-day-label ${isToday ? 'today-pill' : ''}">${dayShort}</span>
+                    </div>
                   </div>
                 `;
               }).join('')}
             </div>
-          </div>
-
-          <!-- Weekday Labels -->
-          <div class="week-labels-row">
-            ${weekDays.map((day) => {
-              const dayShort = day.date.toLocaleDateString(locale, { weekday: 'short' });
-              return `
-                <div class="week-label-col">
-                  <span class="week-day-label ${day.isToday ? 'today-pill' : ''}">${dayShort}</span>
-                </div>
-              `;
-            }).join('')}
           </div>
 
           <!-- Streak Chain Row (7 Circles) -->
@@ -412,9 +441,83 @@ export function renderThisWeekCard() {
     });
   }
 
-  // Click on Day Bar -> Switch to Calendar & History view at that date
+  // Auto-position day hover info popover near the bar top dynamically
+  function adjustPopoverPosition(col) {
+    const tooltip = col.querySelector('.week-glass-tooltip');
+    if (!tooltip) return;
+
+    const barPill = col.querySelector('.week-bar-pill') || col.querySelector('.week-bar-ghost-pill') || col.querySelector('.week-bar-zero-dot') || col.querySelector('.week-bar-track');
+    const chartCard = col.closest('.stats-this-week-card') || document.body;
+    const cardRect = chartCard.getBoundingClientRect();
+    const pillRect = barPill ? barPill.getBoundingClientRect() : col.getBoundingClientRect();
+    const tipRect = tooltip.getBoundingClientRect();
+
+    const spaceAbove = pillRect.top - cardRect.top;
+    const tipHeight = tipRect.height || 60;
+
+    if (spaceAbove < tipHeight + 10) {
+      col.classList.add('flip-below');
+      tooltip.classList.add('flip-below');
+    } else {
+      col.classList.remove('flip-below');
+      tooltip.classList.remove('flip-below');
+    }
+  }
+
+  // Touch and click handling
+  let activeCol = null;
+
+  function showColPopover(col) {
+    if (activeCol && activeCol !== col) {
+      activeCol.classList.remove('is-active');
+    }
+    activeCol = col;
+    col.classList.add('is-active');
+    adjustPopoverPosition(col);
+  }
+
+  // Outside tap to hide active popover
+  const onOutsidePointer = (e) => {
+    if (activeCol && !activeCol.contains(e.target)) {
+      activeCol.classList.remove('is-active');
+      activeCol = null;
+    }
+  };
+  document.addEventListener('pointerdown', onOutsidePointer);
+
+  if (activeTouchCleanup) {
+    activeTouchCleanup();
+    activeTouchCleanup = null;
+  }
+  activeTouchCleanup = () => {
+    document.removeEventListener('pointerdown', onOutsidePointer);
+  };
+
+  // Click / hover / touch on Day Bar
   const barCols = container.querySelectorAll('.week-bar-col[data-date-key]');
   barCols.forEach(col => {
+    col.addEventListener('pointerenter', () => adjustPopoverPosition(col));
+    col.addEventListener('focus', () => {
+      showColPopover(col);
+    });
+    col.addEventListener('blur', () => {
+      col.classList.remove('is-active');
+      if (activeCol === col) activeCol = null;
+    });
+
+    // Touch support: tap to show, tap again to open calendar
+    col.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') {
+        const isAlreadyActive = col.classList.contains('is-active');
+        if (!isAlreadyActive) {
+          e.preventDefault();
+          showColPopover(col);
+          return;
+        }
+      }
+      adjustPopoverPosition(col);
+    });
+
     col.addEventListener('click', () => {
       const dateKey = col.getAttribute('data-date-key');
       openCalendarAtDate(dateKey);
@@ -495,13 +598,40 @@ function openCalendarAtDate(dateKey) {
 }
 
 let thisWeekSubscribed = false;
+let midnightTimer = null;
+
+function scheduleMidnightRollover() {
+  if (midnightTimer) {
+    clearTimeout(midnightTimer);
+    midnightTimer = null;
+  }
+  const now = getEffectiveNow();
+  const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 100);
+  const msUntil = Math.max(1000, nextMidnight.getTime() - now.getTime());
+
+  midnightTimer = setTimeout(() => {
+    renderThisWeekCard();
+    scheduleMidnightRollover();
+  }, msUntil);
+}
 
 export function initThisWeekCard() {
   renderThisWeekCard();
+  scheduleMidnightRollover();
+
   if (!thisWeekSubscribed) {
     thisWeekSubscribed = true;
     statsStore.subscribe(() => {
       renderThisWeekCard();
     });
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('focustep:sessionLogged', () => {
+        renderThisWeekCard();
+      });
+      window.addEventListener('focustep:statsUpdated', () => {
+        renderThisWeekCard();
+      });
+    }
   }
 }

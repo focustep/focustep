@@ -4,6 +4,7 @@ import {
   getWeekDays,
   getPeakWindow,
   getWeekComparison,
+  getDayDelta,
   getStreak,
   getBestDay,
   getPeriodStats,
@@ -115,22 +116,111 @@ console.log('--- RUNNING STATS SELECTOR TESTS ---\n');
   assert(peak.includes('21:00') || peak.includes('22:00'), `Peak 2-hour window correctly detected: ${peak}`);
 }
 
-// 6. Test Week Comparison & Delta
+// 6. Test Per-Day Comparison with Same Weekday Last Week
 {
-  const weekMonday = new Date(2026, 9, 5, 0, 0, 0, 0);
-  const now = new Date(2026, 9, 10, 12, 0, 0, 0);
+  const weekMonday = new Date(2026, 9, 5, 0, 0, 0, 0); // Oct 5, 2026 (Mon)
+  const now = new Date(2026, 9, 7, 16, 0, 0, 0); // Wednesday Oct 7
 
-  const sessions = [
-    // This week: 10 hours
-    { id: '1', timestamp: new Date(2026, 9, 6, 10, 0).getTime(), durationSec: 36000, subjectId: 'math' },
-    // Last week (Sep 29): 5 hours
-    { id: '2', timestamp: new Date(2026, 8, 29, 10, 0).getTime(), durationSec: 18000, subjectId: 'math' }
-  ];
+  // 6.1: Today with sessions vs last same weekday (+100%)
+  {
+    const sessions = [
+      // This Wednesday (2026-10-07): 2 hours (7200s)
+      { id: '1', timestamp: new Date(2026, 9, 7, 10, 0).getTime(), durationSec: 7200, subjectId: 'math' },
+      // Last Wednesday (2026-09-30): 1 hour (3600s)
+      { id: '2', timestamp: new Date(2026, 8, 30, 10, 0).getTime(), durationSec: 3600, subjectId: 'math' }
+    ];
+    const delta = getDayDelta('2026-10-07', sessions, now);
+    assert(delta === 100, 'Today with sessions vs last same weekday (+100%)');
+    const days = getWeekDays(weekMonday, sessions, [], now);
+    assert(days[2].deltaPct === 100, 'Wednesday deltaPct in getWeekDays is 100%');
+  }
 
-  const comp = getWeekComparison(weekMonday, sessions, now);
-  assert(comp.thisWeekTotalSec === 36000, 'This week total is 36000s');
-  assert(comp.lastWeekTotalSec === 18000, 'Last week total is 18000s');
-  assert(comp.deltaPct === 100, 'Delta percentage is +100% vs last week');
+  // 6.2: A negative case (-50%)
+  {
+    const sessions = [
+      // This Wednesday: 1 hour (3600s)
+      { id: '1', timestamp: new Date(2026, 9, 7, 10, 0).getTime(), durationSec: 3600, subjectId: 'math' },
+      // Last Wednesday: 2 hours (7200s)
+      { id: '2', timestamp: new Date(2026, 8, 30, 10, 0).getTime(), durationSec: 7200, subjectId: 'math' }
+    ];
+    const delta = getDayDelta('2026-10-07', sessions, now);
+    assert(delta === -50, 'A negative case (-50%)');
+    const days = getWeekDays(weekMonday, sessions, [], now);
+    assert(days[2].deltaPct === -50, 'Wednesday deltaPct in getWeekDays is -50%');
+  }
+
+  // 6.3: 0% case
+  {
+    const sessions = [
+      // This Wednesday: 2 hours (7200s)
+      { id: '1', timestamp: new Date(2026, 9, 7, 10, 0).getTime(), durationSec: 7200, subjectId: 'math' },
+      // Last Wednesday: 2 hours (7200s)
+      { id: '2', timestamp: new Date(2026, 8, 30, 10, 0).getTime(), durationSec: 7200, subjectId: 'math' }
+    ];
+    const delta = getDayDelta('2026-10-07', sessions, now);
+    assert(delta === 0, '0% case');
+    const days = getWeekDays(weekMonday, sessions, [], now);
+    assert(days[2].deltaPct === 0, 'Wednesday deltaPct in getWeekDays is 0%');
+  }
+
+  // 6.4: Last week's same day is 0 (null)
+  {
+    const sessions = [
+      // This Wednesday: 2 hours (7200s)
+      { id: '1', timestamp: new Date(2026, 9, 7, 10, 0).getTime(), durationSec: 7200, subjectId: 'math' }
+      // Last Wednesday: 0s
+    ];
+    const delta = getDayDelta('2026-10-07', sessions, now);
+    assert(delta === null, "Last week's same day is 0 (null)");
+    const days = getWeekDays(weekMonday, sessions, [], now);
+    assert(days[2].deltaPct === null, 'Wednesday deltaPct in getWeekDays is null when last week is 0');
+  }
+
+  // 6.5: This day has no sessions (null)
+  {
+    const sessions = [
+      // This Wednesday: 0s
+      // Last Wednesday: 2 hours (7200s)
+      { id: '1', timestamp: new Date(2026, 8, 30, 10, 0).getTime(), durationSec: 7200, subjectId: 'math' }
+    ];
+    const delta = getDayDelta('2026-10-07', sessions, now);
+    assert(delta === null, 'This day has no sessions (null)');
+    const days = getWeekDays(weekMonday, sessions, [], now);
+    assert(days[2].deltaPct === null, 'Wednesday deltaPct in getWeekDays is null when this day has no sessions');
+  }
+
+  // 6.6: A future day (null)
+  {
+    const sessions = [
+      // Last Thursday (2026-10-01): 2 hours (7200s)
+      { id: '1', timestamp: new Date(2026, 9, 1, 10, 0).getTime(), durationSec: 7200, subjectId: 'math' }
+    ];
+    // This Thursday (2026-10-08) is a future day relative to now (Wednesday Oct 7)
+    const delta = getDayDelta('2026-10-08', sessions, now);
+    assert(delta === null, 'A future day (null)');
+    const days = getWeekDays(weekMonday, sessions, [], now);
+    assert(days[3].deltaPct === null, 'Future day deltaPct in getWeekDays is null');
+  }
+
+  // 6.7: A case where logging one more session changes the value
+  {
+    const initialSessions = [
+      // This Wednesday: 1 hour (3600s)
+      { id: 'w1', timestamp: new Date(2026, 9, 7, 10, 0).getTime(), durationSec: 3600, subjectId: 'math' },
+      // Last Wednesday: 1 hour (3600s)
+      { id: 'lw1', timestamp: new Date(2026, 8, 30, 10, 0).getTime(), durationSec: 3600, subjectId: 'math' }
+    ];
+    const initialDelta = getDayDelta('2026-10-07', initialSessions, now);
+    assert(initialDelta === 0, 'Initial delta is 0% (3600 vs 3600)');
+
+    // Log one more session today (Wednesday): +3600s -> total 7200s
+    const updatedSessions = [
+      ...initialSessions,
+      { id: 'w2_new', timestamp: new Date(2026, 9, 7, 11, 0).getTime(), durationSec: 3600, subjectId: 'math' }
+    ];
+    const updatedDelta = getDayDelta('2026-10-07', updatedSessions, now);
+    assert(updatedDelta === 100, 'A case where logging one more session changes the value (0% -> +100%)');
+  }
 }
 
 // 7. Test Empty State

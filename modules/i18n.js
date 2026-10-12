@@ -26,7 +26,7 @@ export const I18N = {
     thisWeek: "Bu hafta", thisMonth: "Bu oy",
     lastWeek: "o'tgan hafta", lastWeekTitle: "O'tgan hafta", weeksAgo: "hafta oldin", currentWeek: "Bu hafta",
     prevWeek: "Oldingi hafta", nextWeek: "Keyingi hafta", prevWeekGhost: "o'tgan hafta",
-    vsLastWeek: "o'tgan haftaga nisbatan", avgLabel: "o'rtacha",
+    vsLastWeek: "o'tgan haftaga nisbatan", vsLastWeekday: function(day){ return "o'tgan " + day + " nisbatan"; }, avgLabel: "o'rtacha",
     weekEmptyTitle: "Haftangiz shu yerdan boshlanadi",
     weekEmptySub: "Birinchi sessiyangizni bajaring va bugungi ustun o'sa boshlaydi.",
     weekEmptyPast: "Bu haftada hech narsa qilinmagan",
@@ -108,7 +108,13 @@ export const I18N = {
     activityRestored: "Faoliyat qaytarildi",
     allActivitiesRestored: "Barcha faoliyatlar qaytarildi",
     activityDeleted: "Faoliyat o'chirildi (Ctrl+Z)",
-    allActivitiesCleared: "Barcha faoliyatlar tozalandi (Ctrl+Z)"
+    allActivitiesCleared: "Barcha faoliyatlar tozalandi (Ctrl+Z)",
+    activityEmptyTitle: "Hozircha faoliyat yo'q, boshlaymizmi!",
+    activityGoToTimer: "Taymerga o'tish",
+    studyFallback: "Dars",
+    sessionWord: "sessiya",
+    todayWord: "Bugun",
+    yesterdayWord: "Kecha"
   },
   ru: {
     localeCode: 'ru-RU',
@@ -137,7 +143,7 @@ export const I18N = {
     thisWeek: "На этой неделе", thisMonth: "В этом месяце",
     lastWeek: "прошлая неделя", lastWeekTitle: "Прошлая неделя", weeksAgo: "нед. назад", currentWeek: "Эта неделя",
     prevWeek: "Предыдущая неделя", nextWeek: "Следующая неделя", prevWeekGhost: "прошлая нед.",
-    vsLastWeek: "по сравн. с прошл. нед.", avgLabel: "средн.",
+    vsLastWeek: "по сравн. с прошл. нед.", vsLastWeekday: function(day){ return "по сравн. с прошл. " + day; }, avgLabel: "средн.",
     weekEmptyTitle: "Ваша неделя начинается здесь",
     weekEmptySub: "Завершите первую сессию, и сегодняшняя колонка начнет расти.",
     weekEmptyPast: "На этой неделе ничего не сделано",
@@ -219,7 +225,13 @@ export const I18N = {
     activityRestored: "Активность восстановлена",
     allActivitiesRestored: "Все активности восстановлены",
     activityDeleted: "Активность удалена (Ctrl+Z)",
-    allActivitiesCleared: "Все активности очищены (Ctrl+Z)"
+    allActivitiesCleared: "Все активности очищены (Ctrl+Z)",
+    activityEmptyTitle: "Активностей пока нет, погнали!",
+    activityGoToTimer: "Перейти к таймеру",
+    studyFallback: "Учёба",
+    sessionWord: "сессия",
+    todayWord: "Сегодня",
+    yesterdayWord: "Вчера"
   },
   en: {
     localeCode: 'en-US',
@@ -248,7 +260,7 @@ export const I18N = {
     thisWeek: "This week", thisMonth: "This month",
     lastWeek: "last week", lastWeekTitle: "Last week", weeksAgo: "weeks ago", currentWeek: "This week",
     prevWeek: "Previous week", nextWeek: "Next week", prevWeekGhost: "prev week",
-    vsLastWeek: "vs last week", avgLabel: "avg",
+    vsLastWeek: "vs last week", vsLastWeekday: function(day){ return "vs last " + day; }, avgLabel: "avg",
     weekEmptyTitle: "Your week starts here",
     weekEmptySub: "Log your first session and today's bar will grow.",
     weekEmptyPast: "Nothing was done this week",
@@ -330,7 +342,13 @@ export const I18N = {
     activityRestored: "Activity restored",
     allActivitiesRestored: "All activities restored",
     activityDeleted: "Activity deleted (Ctrl+Z)",
-    allActivitiesCleared: "All activities cleared (Ctrl+Z)"
+    allActivitiesCleared: "All activities cleared (Ctrl+Z)",
+    activityEmptyTitle: "No activities yet, let's start!",
+    activityGoToTimer: "Go to Timer",
+    studyFallback: "Study",
+    sessionWord: "session",
+    todayWord: "Today",
+    yesterdayWord: "Yesterday"
   }
 };
 
